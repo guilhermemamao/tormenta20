@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+
+@theme {
+  --color-tormenta-red: #8B1A1A;
+  --color-tormenta-red-dark: #6B1414;
+  --color-tormenta-red-light: #A52020;
+  --color-tormenta-cream: #F5F0E8;
+  --color-tormenta-cream-dark: #E8E0D0;
+  --color-tormenta-dark: #1A1A1A;
+  --font-display: 'Cinzel', serif;
+}
+
+@layer base {
+  body {
+    @apply bg-stone-50 text-stone-900;
+  }
+  button:not(:disabled), a, label {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-tormenta-red text-white px-4 py-2 rounded-lg hover:bg-tormenta-red-dark transition-colors font-medium text-sm cursor-pointer;
+  }
+  .btn-secondary {
+    @apply border border-tormenta-red text-tormenta-red px-4 py-2 rounded-lg hover:bg-tormenta-red hover:text-white transition-colors font-medium text-sm cursor-pointer;
+  }
+  .card {
+    @apply bg-white border border-stone-200 rounded-xl p-4 shadow-sm;
+  }
+  .tag-arcana {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-800;
+  }
+  .tag-divina {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-800;
+  }
+  .tag-universal {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full bg-teal-100 text-teal-800;
+  }
+  .tag-trick {
+    @apply text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700;
+  }
+}
