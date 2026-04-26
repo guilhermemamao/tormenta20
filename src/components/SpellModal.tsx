@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { X, Pencil, Shield, Eye, Sparkles, Heart, Zap, EyeOff, Skull, RefreshCw } from 'lucide-react'
-import type { Spell, SpellSchool, SpellType } from '../types'
+import { X, Pencil, Shield, Eye, Sparkles, Heart, Zap, EyeOff, Skull, RefreshCw, Check } from 'lucide-react'
+import type { Spell, SpellSchool, SpellType, CharacterSpell } from '../types'
 import { CONDITION_DEFS } from '../data/spells'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../hooks/useAuth'
 
 const SCHOOL_ICONS: Record<SpellSchool, React.ElementType> = {
   Abjuração: Shield,
@@ -142,6 +144,76 @@ function ConditionModal({ termKey, onClose }: { termKey: string; onClose: () => 
   )
 }
 
+// ─── Add to sheet ────────────────────────────────────────────────────────────
+
+type CharRow = { id: string; name: string; spells: CharacterSpell[] }
+
+function AddToSheet({ spell }: { spell: Spell }) {
+  const { user } = useAuth()
+  const [chars, setChars] = useState<CharRow[]>([])
+  const [selected, setSelected] = useState('')
+  const [adding, setAdding] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+    supabase
+      .from('characters')
+      .select('id, name, spells')
+      .eq('user_id', user.id)
+      .then(({ data }) => { if (data) setChars(data as CharRow[]) })
+  }, [user])
+
+  if (!user || chars.length === 0) return null
+
+  const char = chars.find(c => c.id === selected)
+  const alreadyIn = !!char?.spells?.some(s => s.spellId === spell.id)
+
+  async function add() {
+    if (!char || !spell.id || alreadyIn) return
+    setAdding(true)
+    const entry: CharacterSpell = {
+      spellId: spell.id,
+      spellName: spell.name,
+      circle: spell.circle,
+      school: spell.school,
+      type: spell.type,
+    }
+    const updated = [...(char.spells ?? []), entry]
+    await supabase.from('characters').update({ spells: updated }).eq('id', char.id)
+    setChars(cs => cs.map(c => c.id === char.id ? { ...c, spells: updated } : c))
+    setAdding(false)
+  }
+
+  return (
+    <div className="mt-2 flex items-center gap-1.5">
+      {selected && alreadyIn ? (
+        <span className="text-xs text-emerald-600 font-medium">Já na ficha</span>
+      ) : (
+        <>
+          <select
+            value={selected}
+            onChange={e => setSelected(e.target.value)}
+            className="text-xs border border-stone-200 rounded-md px-1.5 py-1 bg-stone-50 text-stone-600 focus:outline-none focus:ring-1 focus:ring-tormenta-red max-w-[150px] truncate"
+          >
+            <option value="">Adicionar à ficha…</option>
+            {chars.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+          {selected && (
+            <button
+              onClick={add}
+              disabled={adding}
+              className="p-1 rounded-md bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50 transition-colors"
+              aria-label="Confirmar"
+            >
+              <Check size={13} />
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
 // ─── Spell modal ─────────────────────────────────────────────────────────────
 
 interface Props {
@@ -265,6 +337,7 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
                   >
                     {spell.name}
                   </h2>
+                  <AddToSheet spell={spell} />
                 </div>
                 <div className="flex items-center gap-1 shrink-0 mt-1">
                   {onEdit && (

@@ -1,3 +1,10 @@
+export interface SkillEntry {
+  trained: boolean
+  training: number
+  outros: number
+  notes?: string
+}
+
 export interface Amplifier {
   cost: number
   effect: string
@@ -140,7 +147,7 @@ export interface Character {
     other: number
     penalty: number
   }
-  skills: Record<string, number>
+  skills: Record<string, SkillEntry>
   spells: CharacterSpell[]
   powers: CharacterPower[]
   equipment: {
@@ -153,5 +160,6 @@ export interface Character {
   money: number
   carryLimit: number
   notes: string
+  spellKeyAttr?: string
   userId?: string
 }

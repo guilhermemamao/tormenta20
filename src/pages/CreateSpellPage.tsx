@@ -111,11 +111,13 @@ export default function CreateSpellPage() {
             isPublic: data.is_public,
           })
           setAmplifiers(
-            (data.amplifiers ?? []).map((a: { cost: number; effect: string; isTrick?: boolean }) => ({
-              cost: String(a.cost),
-              effect: a.effect,
-              isTrick: a.isTrick ?? false,
-            }))
+            (data.amplifiers ?? []).map((a: { cost: unknown; effect: string; isTrick?: boolean }) => {
+              if (a.isTrick || a.cost === 'Truque') {
+                return { cost: '0', effect: a.effect, isTrick: true }
+              }
+              const match = String(a.cost ?? 0).match(/\d+/)
+              return { cost: match ? match[0] : '0', effect: a.effect, isTrick: a.isTrick ?? false }
+            })
           )
         } else {
           setError('Magia não encontrada.')
@@ -168,13 +170,27 @@ export default function CreateSpellPage() {
       is_public: form.isPublic,
     }
 
-    const { error: err } = isEdit
-      ? await supabase.from('spells').update(payload).eq('id', id!)
-      : await supabase.from('spells').insert({ ...payload, created_by: user.id })
+    let err: { message: string } | null = null
+
+    if (isEdit) {
+      const { data, error } = await supabase
+        .from('spells')
+        .update(payload)
+        .eq('id', id!)
+        .select()
+      console.log('update result:', data, error)
+      err = error
+    } else {
+      const { error } = await supabase
+        .from('spells')
+        .insert({ ...payload, created_by: user.id })
+      err = error
+    }
 
     setSaving(false)
 
     if (err) {
+      console.error('[CreateSpellPage] save error:', err)
       setError(err.message)
     } else {
       navigate('/magias')
@@ -381,7 +397,7 @@ export default function CreateSpellPage() {
                       <input
                         type="number"
                         min={1}
-                        max={9}
+                        max={99}
                         value={amp.cost}
                         onChange={e => updateAmplifier(i, 'cost', e.target.value)}
                         placeholder="2"

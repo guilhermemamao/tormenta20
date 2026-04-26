@@ -1,10 +1,10 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
   Shield, Eye, Sparkles, Heart, Zap, EyeOff, Skull, RefreshCw,
   Search, X, Plus, Pencil, HelpCircle,
 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
-import type { Spell, SpellSchool, SpellType } from '../types'
+import type { Spell, SpellSchool, SpellType, Amplifier } from '../types'
 import { supabase } from '../lib/supabase'
 import SpellModal from '../components/SpellModal'
 import { useAuth } from '../hooks/useAuth'
@@ -47,11 +47,24 @@ const SORT_ORDER: SortBy[] = ['circle', 'alpha', 'type', 'execution']
 
 // ─── Filter types ─────────────────────────────────────────────────────────────
 
+function normalizeStr(str: string) {
+  return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+}
+
 interface Filters {
   search: string
   types: Set<SpellType>
   schools: Set<SpellSchool>
   circles: Set<number>
+  onlyFavorites: boolean
+}
+
+const EMPTY_FILTERS: Filters = {
+  search: '',
+  types: new Set(),
+  schools: new Set(),
+  circles: new Set(),
+  onlyFavorites: false,
 }
 
 function toggleSet<T>(set: Set<T>, value: T): Set<T> {
@@ -109,11 +122,14 @@ function SectionHeader({ title }: { title: string }) {
   )
 }
 
-function SpellCard({ spell, onClick, isOwner, onEdit }: {
+function SpellCard({ spell, onClick, isOwner, onEdit, isFavorited, onFavorite, isLoggedIn }: {
   spell: Spell
   onClick: () => void
   isOwner?: boolean
   onEdit?: () => void
+  isFavorited?: boolean
+  onFavorite?: () => void
+  isLoggedIn?: boolean
 }) {
   const Icon = SCHOOL_ICONS[spell.school]
   const hasTrick = spell.amplifiers?.some(a => a.isTrick) ?? false
@@ -144,19 +160,36 @@ function SpellCard({ spell, onClick, isOwner, onEdit }: {
         <Icon size={12} className="text-stone-400 shrink-0" />
         <span>{spell.school}</span>
       </div>
-      <div className="flex items-center gap-4 text-xs text-stone-400">
-        <span title="Execução">⚡ {spell.execution}</span>
-        <span title="Alcance">◎ {spell.range}</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 text-xs text-stone-400">
+          <span title="Execução">⚡ {spell.execution}</span>
+          <span title="Alcance">◎ {spell.range}</span>
+        </div>
+        {isLoggedIn && (
+          <button
+            onClick={e => { e.stopPropagation(); onFavorite?.() }}
+            aria-label={isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+            className="p-1 -mr-1 rounded transition-colors hover:bg-stone-100"
+          >
+            <Heart
+              size={15}
+              fill={isFavorited ? 'currentColor' : 'none'}
+              className={isFavorited ? 'text-tormenta-red' : 'text-stone-300'}
+            />
+          </button>
+        )}
       </div>
     </div>
   )
 }
 
-function SpellGrid({ spells, onCardClick, userId, onEdit }: {
+function SpellGrid({ spells, onCardClick, userId, onEdit, favorites, onFavorite }: {
   spells: Spell[]
   onCardClick: (spell: Spell) => void
   userId?: string
   onEdit: (id: string) => void
+  favorites: Set<string>
+  onFavorite: (id: string) => void
 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -165,8 +198,11 @@ function SpellGrid({ spells, onCardClick, userId, onEdit }: {
           key={spell.id ?? spell.name}
           spell={spell}
           onClick={() => onCardClick(spell)}
-          isOwner={!!userId && spell.createdBy === userId}
+          isOwner={!!userId && (spell.createdBy === userId || spell.createdBy == null)}
           onEdit={spell.id ? () => onEdit(spell.id!) : undefined}
+          isLoggedIn={!!userId}
+          isFavorited={!!spell.id && favorites.has(spell.id)}
+          onFavorite={spell.id ? () => onFavorite(spell.id!) : undefined}
         />
       ))}
     </div>
@@ -174,6 +210,14 @@ function SpellGrid({ spells, onCardClick, userId, onEdit }: {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
+
+type RawAmplifier = {
+  cost: unknown
+  effect: string
+  isTrick?: boolean
+  requiresCircle?: number
+  requiresDevotee?: string
+}
 
 interface SpellRow {
   id: string
@@ -188,9 +232,17 @@ interface SpellRow {
   resistance: string | null
   publication: string | null
   effect: string
-  amplifiers: Spell['amplifiers']
+  amplifiers: RawAmplifier[] | null
   is_public: boolean
   created_by: string | null
+}
+
+function normalizeAmplifier(raw: RawAmplifier): Amplifier {
+  if (raw.isTrick || raw.cost === 'Truque') {
+    return { cost: 0, effect: raw.effect, isTrick: true, requiresCircle: raw.requiresCircle, requiresDevotee: raw.requiresDevotee }
+  }
+  const match = String(raw.cost ?? 0).match(/\d+/)
+  return { cost: match ? parseInt(match[0], 10) : 0, effect: raw.effect, isTrick: raw.isTrick, requiresCircle: raw.requiresCircle, requiresDevotee: raw.requiresDevotee }
 }
 
 function rowToSpell(row: SpellRow): Spell {
@@ -207,7 +259,7 @@ function rowToSpell(row: SpellRow): Spell {
     resistance: row.resistance ?? '—',
     publication: row.publication ?? '',
     effect: row.effect,
-    amplifiers: row.amplifiers ?? [],
+    amplifiers: (row.amplifiers ?? []).map(normalizeAmplifier),
     isPublic: row.is_public,
     createdBy: row.created_by ?? undefined,
   }
@@ -223,14 +275,10 @@ export default function SpellsPage() {
   const [spells, setSpells] = useState<Spell[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [filters, setFilters] = useState<Filters>({
-    search: '',
-    types: new Set(),
-    schools: new Set(),
-    circles: new Set(),
-  })
+  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS)
   const [sort, setSort] = useState<SortBy>('circle')
   const [modalSpell, setModalSpell] = useState<Spell | null>(null)
+  const [favorites, setFavorites] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     supabase
@@ -246,8 +294,33 @@ export default function SpellsPage() {
       })
   }, [])
 
+  useEffect(() => {
+    if (!user) { setFavorites(new Set()); return }
+    supabase
+      .from('spell_favorites')
+      .select('spell_id')
+      .eq('user_id', user.id)
+      .then(({ data }) => {
+        if (data) setFavorites(new Set(data.map((r: { spell_id: string }) => r.spell_id)))
+      })
+  }, [user])
+
+  const toggleFavorite = useCallback(async (spellId: string) => {
+    if (!user) return
+    if (favorites.has(spellId)) {
+      setFavorites(f => { const n = new Set(f); n.delete(spellId); return n })
+      await supabase.from('spell_favorites').delete()
+        .eq('user_id', user.id).eq('spell_id', spellId)
+    } else {
+      setFavorites(f => new Set(f).add(spellId))
+      await supabase.from('spell_favorites').insert({ user_id: user.id, spell_id: spellId })
+    }
+  }, [user, favorites])
+
   const filtered = useMemo(() => spells.filter(spell => {
-    if (filters.search && !spell.name.toLowerCase().includes(filters.search.toLowerCase()))
+    if (filters.search && !normalizeStr(spell.name).includes(normalizeStr(filters.search)))
+      return false
+    if (filters.onlyFavorites && !(spell.id && favorites.has(spell.id)))
       return false
     if (filters.types.size > 0) {
       const showUniversal = filters.types.has('Arcana') || filters.types.has('Divina')
@@ -260,7 +333,7 @@ export default function SpellsPage() {
     if (filters.schools.size > 0 && !filters.schools.has(spell.school)) return false
     if (filters.circles.size > 0 && !filters.circles.has(spell.circle)) return false
     return true
-  }), [spells, filters])
+  }), [spells, filters, favorites])
 
   const byCircle = useMemo(() => {
     const map = new Map<number, Spell[]>()
@@ -273,12 +346,15 @@ export default function SpellsPage() {
   }, [filtered])
 
   const activeCount =
-    filters.types.size + filters.schools.size + filters.circles.size + (filters.search ? 1 : 0)
+    filters.types.size + filters.schools.size + filters.circles.size +
+    (filters.search ? 1 : 0) + (filters.onlyFavorites ? 1 : 0)
 
   const gridProps = {
     onCardClick: (spell: Spell) => setModalSpell(spell),
     userId: user?.id,
     onEdit: (id: string) => navigate(`/magias/editar/${id}`),
+    favorites,
+    onFavorite: toggleFavorite,
   }
 
   function renderContent() {
@@ -363,7 +439,7 @@ export default function SpellsPage() {
 
         {activeCount > 0 && (
           <button
-            onClick={() => setFilters({ search: '', types: new Set(), schools: new Set(), circles: new Set() })}
+            onClick={() => setFilters(EMPTY_FILTERS)}
             className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark mb-4 transition-colors"
           >
             <X size={11} />
@@ -400,6 +476,16 @@ export default function SpellsPage() {
             />
           ))}
         </FilterSection>
+
+        {user && (
+          <FilterSection title="Favoritos">
+            <CheckboxItem
+              label="Mostrar apenas favoritas"
+              checked={filters.onlyFavorites}
+              onChange={() => setFilters(f => ({ ...f, onlyFavorites: !f.onlyFavorites }))}
+            />
+          </FilterSection>
+        )}
       </aside>
 
       {/* ── Main area ── */}
@@ -459,7 +545,7 @@ export default function SpellsPage() {
           spell={modalSpell}
           onClose={() => setModalSpell(null)}
           onEdit={
-            user && modalSpell.id && modalSpell.createdBy === user.id
+            user && modalSpell.id && (modalSpell.createdBy === user.id || !modalSpell.createdBy)
               ? () => { setModalSpell(null); navigate(`/magias/editar/${modalSpell.id}`) }
               : undefined
           }

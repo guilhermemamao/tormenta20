@@ -124,6 +124,34 @@ create policy "Usuário edita suas magias"
   on spells for update
   using (auth.uid() = created_by);
 
+-- Usuários logados podem editar magias importadas (sem dono)
+create policy "Usuários logados editam magias sem dono"
+  on spells for update
+  using (created_by is null and auth.uid() is not null);
+
+-- Tabela de magias favoritas
+create table spell_favorites (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  spell_id uuid not null references spells(id) on delete cascade,
+  created_at timestamp with time zone default timezone('utc'::text, now()),
+  unique(user_id, spell_id)
+);
+
+alter table spell_favorites enable row level security;
+
+create policy "Usuário vê seus favoritos"
+  on spell_favorites for select
+  using (auth.uid() = user_id);
+
+create policy "Usuário adiciona favoritos"
+  on spell_favorites for insert
+  with check (auth.uid() = user_id);
+
+create policy "Usuário remove favoritos"
+  on spell_favorites for delete
+  using (auth.uid() = user_id);
+
 -- Personagens apenas do próprio usuário
 create policy "Usuário vê seus personagens"
   on characters for select

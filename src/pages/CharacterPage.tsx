@@ -4,7 +4,7 @@ import {
   BookOpen, Package, Shield, Sword, User, X, Plus, Trash2,
   Search, Star, ChevronDown, ChevronRight, ArrowLeft,
 } from 'lucide-react'
-import type { Character, CharacterSpell, CharacterPower, Spell } from '../types'
+import type { Character, CharacterSpell, CharacterPower, Spell, SkillEntry } from '../types'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import SpellModal from '../components/SpellModal'
@@ -63,14 +63,15 @@ function rowToCharacter(row: any): Character {
     mp:         row.mp         ?? { max: 0, current: 0 },
     attacks:    row.attacks    ?? [],
     defense:    row.defense    ?? { base: 10, armor: 0, shield: 0, other: 0, penalty: 0 },
-    skills:     row.skills     ?? {},
+    skills:     normalizeSkills(row.skills ?? {}),
     spells:     row.spells     ?? [],
     powers:     row.powers     ?? [],
     equipment:  row.equipment  ?? [],
     money:      row.money      ?? 0,
     carryLimit: row.carry_limit ?? 0,
-    notes:      row.notes      ?? '',
-    userId:     row.user_id,
+    notes:         row.notes          ?? '',
+    spellKeyAttr:  row.spell_key_attr ?? '',
+    userId:        row.user_id,
   }
 }
 
@@ -93,35 +94,35 @@ const DEITY_OPTIONS = [
 ]
 
 const ALL_SKILLS: SkillDef[] = [
-  { name: 'Acrobacia',    attr: 'dex', armorPenalty: true,  trainedOnly: false },
-  { name: 'Adestramento', attr: 'cha', armorPenalty: false, trainedOnly: false },
-  { name: 'Atletismo',    attr: 'str', armorPenalty: true,  trainedOnly: false },
-  { name: 'Atualidades',  attr: 'int', armorPenalty: false, trainedOnly: false },
-  { name: 'Cavalgar',     attr: 'dex', armorPenalty: false, trainedOnly: false },
-  { name: 'Ciências',     attr: 'int', armorPenalty: false, trainedOnly: true  },
-  { name: 'Crime',        attr: 'dex', armorPenalty: true,  trainedOnly: false },
-  { name: 'Diplomacia',   attr: 'cha', armorPenalty: false, trainedOnly: false },
-  { name: 'Enganação',    attr: 'cha', armorPenalty: false, trainedOnly: false },
-  { name: 'Fortitude',    attr: 'con', armorPenalty: false, trainedOnly: false },
-  { name: 'Furtividade',  attr: 'dex', armorPenalty: true,  trainedOnly: false },
-  { name: 'Iniciativa',   attr: 'dex', armorPenalty: true,  trainedOnly: false },
-  { name: 'Intimidação',  attr: 'cha', armorPenalty: false, trainedOnly: false },
-  { name: 'Intuição',     attr: 'wis', armorPenalty: false, trainedOnly: false },
-  { name: 'Investigação', attr: 'int', armorPenalty: false, trainedOnly: false },
-  { name: 'Luta',         attr: 'str', armorPenalty: true,  trainedOnly: false },
-  { name: 'Magia',        attr: 'int', armorPenalty: false, trainedOnly: true  },
-  { name: 'Medicina',     attr: 'wis', armorPenalty: false, trainedOnly: false },
-  { name: 'Misticismo',   attr: 'int', armorPenalty: false, trainedOnly: true  },
-  { name: 'Nobreza',      attr: 'int', armorPenalty: false, trainedOnly: true  },
-  { name: 'Ocultismo',    attr: 'int', armorPenalty: false, trainedOnly: true  },
-  { name: 'Ofício',       attr: 'int', armorPenalty: false, trainedOnly: true  },
-  { name: 'Percepção',    attr: 'wis', armorPenalty: false, trainedOnly: false },
-  { name: 'Pilotagem',    attr: 'dex', armorPenalty: false, trainedOnly: true  },
-  { name: 'Pontaria',     attr: 'dex', armorPenalty: true,  trainedOnly: false },
-  { name: 'Reflexos',     attr: 'dex', armorPenalty: false, trainedOnly: false },
-  { name: 'Religião',     attr: 'wis', armorPenalty: false, trainedOnly: true  },
-  { name: 'Sobrevivência',attr: 'wis', armorPenalty: false, trainedOnly: false },
-  { name: 'Vontade',      attr: 'wis', armorPenalty: false, trainedOnly: false },
+  { name: 'Acrobacia',     attr: 'dex', armorPenalty: true,  trainedOnly: false },
+  { name: 'Adestramento',  attr: 'cha', armorPenalty: false, trainedOnly: true  },
+  { name: 'Atletismo',     attr: 'str', armorPenalty: true,  trainedOnly: false },
+  { name: 'Atuação',       attr: 'cha', armorPenalty: false, trainedOnly: false },
+  { name: 'Cavalgar',      attr: 'dex', armorPenalty: false, trainedOnly: false },
+  { name: 'Conhecimento',  attr: 'int', armorPenalty: false, trainedOnly: true  },
+  { name: 'Cura',          attr: 'wis', armorPenalty: false, trainedOnly: false },
+  { name: 'Diplomacia',    attr: 'cha', armorPenalty: false, trainedOnly: false },
+  { name: 'Enganação',     attr: 'cha', armorPenalty: false, trainedOnly: false },
+  { name: 'Fortitude',     attr: 'con', armorPenalty: false, trainedOnly: true  },
+  { name: 'Furtividade',   attr: 'dex', armorPenalty: true,  trainedOnly: false },
+  { name: 'Guerra',        attr: 'int', armorPenalty: false, trainedOnly: true  },
+  { name: 'Iniciativa',    attr: 'dex', armorPenalty: false, trainedOnly: true  },
+  { name: 'Intimidação',   attr: 'cha', armorPenalty: false, trainedOnly: false },
+  { name: 'Intuição',      attr: 'wis', armorPenalty: false, trainedOnly: false },
+  { name: 'Investigação',  attr: 'int', armorPenalty: false, trainedOnly: false },
+  { name: 'Jogatina',      attr: 'cha', armorPenalty: false, trainedOnly: true  },
+  { name: 'Ladinagem',     attr: 'dex', armorPenalty: true,  trainedOnly: true  },
+  { name: 'Luta',          attr: 'str', armorPenalty: false, trainedOnly: false },
+  { name: 'Misticismo',    attr: 'int', armorPenalty: false, trainedOnly: true  },
+  { name: 'Nobreza',       attr: 'int', armorPenalty: false, trainedOnly: true  },
+  { name: 'Ofício',        attr: 'int', armorPenalty: false, trainedOnly: true  },
+  { name: 'Percepção',     attr: 'wis', armorPenalty: false, trainedOnly: false },
+  { name: 'Pilotagem',     attr: 'dex', armorPenalty: false, trainedOnly: true  },
+  { name: 'Pontaria',      attr: 'dex', armorPenalty: false, trainedOnly: false },
+  { name: 'Reflexos',      attr: 'dex', armorPenalty: false, trainedOnly: false },
+  { name: 'Religião',      attr: 'wis', armorPenalty: false, trainedOnly: true  },
+  { name: 'Sobrevivência', attr: 'wis', armorPenalty: false, trainedOnly: false },
+  { name: 'Vontade',       attr: 'wis', armorPenalty: false, trainedOnly: false },
 ]
 
 const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
@@ -135,12 +136,36 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function normalizeStr(str: string) {
+  return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+}
+
 function attrMod(v: number) { return Math.floor((v - 10) / 2) }
 function fmtMod(v: number)  { const m = attrMod(v); return m >= 0 ? `+${m}` : `${m}` }
 function fmtBonus(n: number) { return n >= 0 ? `+${n}` : `${n}` }
 function totalLevel(c: Character) { return c.classes.reduce((s, cl) => s + cl.level, 0) }
-function skillTotal(attrVal: number, training: number, lvl: number) {
-  return 2 + Math.floor(lvl / 2) + attrMod(attrVal) + training
+
+const DEFAULT_SKILL: SkillEntry = { trained: false, training: 0, outros: 0 }
+
+function calcSkillTotal(
+  attrVal: number, sk: SkillEntry, lvl: number,
+  trainedOnly: boolean, armorPen: number,
+): number {
+  if (trainedOnly && !sk.trained) return 0
+  return Math.floor(lvl / 2) + attrMod(attrVal) + (sk.trained ? 2 : 0) + sk.training + sk.outros - armorPen
+}
+
+function normalizeSkills(raw: Record<string, unknown>): Record<string, SkillEntry> {
+  const out: Record<string, SkillEntry> = {}
+  for (const [k, v] of Object.entries(raw)) {
+    if (typeof v === 'number') {
+      out[k] = { trained: v >= 5, training: 0, outros: 0 }
+    } else if (v && typeof v === 'object') {
+      const s = v as Partial<SkillEntry>
+      out[k] = { trained: s.trained ?? false, training: s.training ?? 0, outros: s.outros ?? 0, notes: s.notes ?? '' }
+    }
+  }
+  return out
 }
 function rowToSpell(row: DbSpellRow): Spell {
   return {
@@ -230,8 +255,9 @@ function SpellPicker({ onAdd, onClose, alreadyAdded }: {
   }, [])
 
   const filtered = useMemo(() => {
-    const q = search.toLowerCase()
-    return q ? spells.filter(s => s.name.toLowerCase().includes(q)) : spells
+    if (!search) return spells
+    const q = normalizeStr(search)
+    return spells.filter(s => normalizeStr(s.name).includes(q))
   }, [spells, search])
 
   return (
@@ -341,19 +367,24 @@ export default function CharacterPage() {
         attacks: char.attacks, defense: char.defense, skills: char.skills,
         spells: char.spells, powers: char.powers, equipment: char.equipment,
         money: char.money, carry_limit: char.carryLimit, notes: char.notes,
+        spell_key_attr: char.spellKeyAttr ?? '',
       })
       .eq('id', id)
     setSaveState(error ? 'error' : 'saved')
     setTimeout(() => setSaveState('idle'), 2000)
   }
 
-  // ── Skill toggle ──
+  // ── Skill helpers ──
   function toggleSkill(name: string) {
     setChar(c => {
-      const trained = (c.skills[name] ?? 0) >= 5
-      const next = { ...c.skills }
-      if (trained) delete next[name]; else next[name] = 5
-      return { ...c, skills: next }
+      const cur = c.skills[name] ?? DEFAULT_SKILL
+      return { ...c, skills: { ...c.skills, [name]: { ...cur, trained: !cur.trained } } }
+    })
+  }
+  function patchSkill(name: string, field: 'training' | 'outros', value: number) {
+    setChar(c => {
+      const cur = c.skills[name] ?? DEFAULT_SKILL
+      return { ...c, skills: { ...c.skills, [name]: { ...cur, [field]: value } } }
     })
   }
 
@@ -528,7 +559,7 @@ export default function CharacterPage() {
             </div>
             <div className="flex items-center gap-3 pt-3 border-t border-stone-100">
               {saves.map(({ label, attr }) => {
-                const total = skillTotal(char.attributes[attr], char.skills[label] ?? 0, level)
+                const total = calcSkillTotal(char.attributes[attr], char.skills[label] ?? DEFAULT_SKILL, level, false, 0)
                 return (
                   <div key={label} className="flex items-center gap-2 bg-stone-50 border border-stone-200 rounded-lg px-3 py-1.5">
                     <span className="text-xs font-medium text-stone-500">{label}</span>
@@ -592,39 +623,123 @@ export default function CharacterPage() {
   // ─────────────────────────────────────────────────────────────────────────────
   function renderPericias() {
     const abbr = Object.fromEntries(ATTR_CONFIG.map(a => [a.key, a.abbr]))
+    const halfLevel = Math.floor(level / 2)
+
+    const ICON_STYLE: React.CSSProperties = { filter: 'grayscale(1) opacity(0.45)', fontSize: '0.55rem' }
+
+    // Fixed grid columns: [checkbox][name][attr abbr][½N][ATR][TRE][OUT][TOT]
+    const ROW_COLS = '16px 120px 30px 35px 35px 35px 45px 40px'
+    const ROW_GRID: React.CSSProperties = {
+      display: 'grid',
+      gridTemplateColumns: ROW_COLS,
+      alignItems: 'center',
+    }
+
+    const HDR = 'text-[9px] font-semibold uppercase tracking-wider text-stone-400'
+    const VAL = 'text-[11px] tabular-nums text-stone-400 text-center'
+    const NUM_INPUT = 'w-full text-center text-[11px] border border-stone-200 rounded px-0 py-0.5 bg-stone-50 focus:outline-none focus:ring-1 focus:ring-tormenta-red'
+
+    const sortedSkills = [...ALL_SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt'))
+    const numRows = Math.ceil(sortedSkills.length / 2)
+
+    // Header row — rendered once per column via explicit grid placement
+    function HeaderRow({ col }: { col: number }) {
+      return (
+        <div style={{ ...ROW_GRID, gridColumn: col, gridRow: 1 }}
+          className="border-b border-stone-200 pb-1.5">
+          <div />
+          <div className={`${HDR} text-left`}>Perícia</div>
+          <div />
+          <div className={`${HDR} text-center`}>½N</div>
+          <div className={`${HDR} text-center`}>ATR</div>
+          <div className={`${HDR} text-center`}>TRE</div>
+          <div className={`${HDR} text-center`}>OUT</div>
+          <div className={`${HDR} text-right`}>TOT</div>
+        </div>
+      )
+    }
+
     return (
       <div className="card">
-        <div className="flex items-baseline justify-between mb-4">
-          <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">Perícias</h3>
-          <span className="text-[10px] text-stone-400">
-            2 + ½ nív + mod + treino &nbsp;·&nbsp; ★ pen. armadura &nbsp;·&nbsp; ☆ só treinado
-          </span>
-        </div>
-        <div className="grid grid-cols-3 gap-x-6">
-          {ALL_SKILLS.map(skill => {
-            const attrVal  = char.attributes[skill.attr]
-            const training = char.skills[skill.name] ?? 0
-            const trained  = training >= 5
-            const total    = skillTotal(attrVal, training, level) - (skill.armorPenalty ? char.defense.penalty : 0)
+        <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400 mb-3">
+          Perícias
+        </h3>
+
+        {/*
+          Outer grid: 2 columns, items flow column-first.
+          Headers are explicitly placed at (col, row=1).
+          Skill rows are auto-placed starting at row 2 in each column.
+        */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gridAutoFlow: 'column',
+          gridTemplateRows: `auto repeat(${numRows}, auto)`,
+          columnGap: '24px',
+        }}>
+          <HeaderRow col={1} />
+          <HeaderRow col={2} />
+
+          {sortedSkills.map(skill => {
+            const sk       = char.skills[skill.name] ?? DEFAULT_SKILL
+            const aVal     = char.attributes[skill.attr]
+            const armorPen = skill.armorPenalty ? char.defense.penalty : 0
+            const total    = calcSkillTotal(aVal, sk, level, skill.trainedOnly, armorPen)
+            const inactive = skill.trainedOnly && !sk.trained
+
             return (
-              <label key={skill.name}
-                className="flex items-center gap-1.5 py-1.5 border-b border-stone-50 last:border-0 cursor-pointer">
-                <input type="checkbox" checked={trained} onChange={() => toggleSkill(skill.name)}
-                  className="rounded border-stone-300 accent-tormenta-red shrink-0"
+              <div key={skill.name} style={ROW_GRID} className="border-b border-stone-50 py-px">
+                {/* Checkbox */}
+                <input
+                  type="checkbox" checked={sk.trained}
+                  onChange={() => toggleSkill(skill.name)}
+                  className="rounded border-stone-300 accent-tormenta-red"
                 />
-                <span className={`text-xs ${trained ? 'font-semibold text-stone-800' : 'text-stone-500'}`}>
+
+                {/* Name — fixed width, truncated */}
+                <div
+                  style={{ width: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                  className={`text-[11px] ${sk.trained ? 'font-semibold text-stone-800' : 'text-stone-500'}`}
+                  title={skill.name}
+                >
                   {skill.name}
-                </span>
-                <span className="text-[9px] text-stone-400">{abbr[skill.attr]}</span>
-                <span className={`text-sm font-bold tabular-nums ${trained ? 'text-tormenta-red' : 'text-stone-400'}`}>
+                  {skill.trainedOnly  && <span className="ml-0.5" style={ICON_STYLE}>⭐</span>}
+                  {skill.armorPenalty && <span className="ml-0.5" style={ICON_STYLE}>🛡</span>}
+                </div>
+
+                {/* Attr abbreviation */}
+                <div className="text-[8px] text-stone-300 text-center">{abbr[skill.attr]}</div>
+
+                {/* ½N */}
+                <div className={`${VAL} ${inactive ? 'opacity-30' : ''}`}>{fmtBonus(halfLevel)}</div>
+
+                {/* ATR mod */}
+                <div className={`${VAL} ${inactive ? 'opacity-30' : ''}`}>{fmtMod(aVal)}</div>
+
+                {/* TRE */}
+                <div className={`${VAL} ${inactive ? 'opacity-30' : ''}`}>{sk.trained ? '+2' : '0'}</div>
+
+                {/* OUT input */}
+                <input
+                  type="number" value={sk.outros} disabled={inactive}
+                  onChange={e => patchSkill(skill.name, 'outros', parseInt(e.target.value) || 0)}
+                  className={`${NUM_INPUT} ${inactive ? 'opacity-30 cursor-not-allowed' : ''}`}
+                />
+
+                {/* TOT */}
+                <div className={`text-right text-xs font-bold tabular-nums ${
+                  inactive ? 'text-stone-300' : sk.trained ? 'text-tormenta-red' : 'text-stone-500'
+                }`}>
                   {fmtBonus(total)}
-                </span>
-                {skill.armorPenalty && <span className="text-[10px] text-amber-500">★</span>}
-                {skill.trainedOnly  && <span className="text-[10px] text-blue-400">☆</span>}
-              </label>
+                </div>
+              </div>
             )
           })}
         </div>
+
+        <p className="text-[10px] text-stone-400 text-center mt-3 pt-2 border-t border-stone-100">
+          <span style={ICON_STYLE}>⭐</span> somente treinado &nbsp;·&nbsp; <span style={ICON_STYLE}>🛡</span> penalidade de armadura
+        </p>
       </div>
     )
   }
@@ -772,14 +887,52 @@ export default function CharacterPage() {
     })
     const circles = [...byCircle.keys()].sort()
 
+    const keyAttrKey = (char.spellKeyAttr || 'int') as keyof Character['attributes']
+    const spellMod   = Math.floor(level / 2) + attrMod(char.attributes[keyAttrKey])
+    const spellDC    = 10 + spellMod
+
+    async function handleKeyAttrChange(newKey: string) {
+      patch({ spellKeyAttr: newKey })
+      if (id) {
+        await supabase.from('characters').update({ spell_key_attr: newKey }).eq('id', id)
+      }
+    }
+
     return (
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">Grimório</h3>
-          <button onClick={() => setShowPicker(true)}
-            className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark font-medium">
-            <Plus size={13} /> Adicionar ao grimório
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Spell stat panel */}
+            <div className="flex items-center gap-3 bg-stone-50 border border-stone-100 rounded-lg px-3 py-1.5">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 whitespace-nowrap">
+                  Attr. Chave
+                </span>
+                <select
+                  value={char.spellKeyAttr || 'int'}
+                  onChange={e => handleKeyAttrChange(e.target.value)}
+                  className="text-xs border border-stone-200 rounded-md px-1.5 py-0.5 bg-white focus:outline-none focus:ring-1 focus:ring-tormenta-red text-stone-700"
+                >
+                  {ATTR_CONFIG.map(a => (
+                    <option key={a.key} value={a.key}>{a.abbr}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="text-center">
+                <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 leading-none mb-0.5">MOD</p>
+                <p className="text-sm font-bold text-tormenta-red leading-none">{fmtBonus(spellMod)}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 leading-none mb-0.5">Teste de Res.</p>
+                <p className="text-sm font-bold text-tormenta-red leading-none">{spellDC}</p>
+              </div>
+            </div>
+            <button onClick={() => setShowPicker(true)}
+              className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark font-medium">
+              <Plus size={13} /> Adicionar ao grimório
+            </button>
+          </div>
         </div>
 
         {char.spells.length === 0
