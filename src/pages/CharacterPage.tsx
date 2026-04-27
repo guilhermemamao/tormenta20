@@ -168,12 +168,20 @@ function normalizeSkills(raw: Record<string, unknown>): Record<string, SkillEntr
   return out
 }
 function rowToSpell(row: DbSpellRow): Spell {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const amplifiers = (row.amplifiers ?? []).map((amp: any) => {
+    if (amp.isTrick || amp.cost === 'Truque') {
+      return { cost: 0, effect: amp.effect, isTrick: true, requiresCircle: amp.requiresCircle, requiresDevotee: amp.requiresDevotee }
+    }
+    const match = String(amp.cost ?? 0).match(/\d+/)
+    return { cost: match ? parseInt(match[0], 10) : 0, effect: amp.effect, isTrick: amp.isTrick, requiresCircle: amp.requiresCircle, requiresDevotee: amp.requiresDevotee }
+  })
   return {
     id: row.id, name: row.name, type: row.type, circle: row.circle,
     school: row.school, execution: row.execution, range: row.range,
     duration: row.duration, target: row.target,
     resistance: row.resistance ?? '—', publication: row.publication ?? '',
-    effect: row.effect, amplifiers: row.amplifiers ?? [],
+    effect: row.effect, amplifiers,
     isPublic: row.is_public, createdBy: row.created_by ?? undefined,
   }
 }
@@ -539,10 +547,10 @@ export default function CharacterPage() {
             </div>
             <div>
               <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Deslocamento</label>
-              <div className="flex items-baseline gap-1.5">
+              <div className="flex items-baseline gap-1">
                 <input type="number" min={0} step={1.5} value={char.movement}
                   onChange={e => patch({ movement: parseFloat(e.target.value) || 0 })}
-                  className={`${INP} w-14`}
+                  className={`${INP} !w-14 shrink-0`}
                 />
                 <span className="text-xs text-stone-400 whitespace-nowrap">m · {squares} quad.</span>
               </div>
