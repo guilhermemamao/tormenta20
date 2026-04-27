@@ -1,0 +1,288 @@
+{
+  "name": "Paladino",
+  "hp": 20,
+  "addHP": 5,
+  "pm": 3,
+  "skills": [
+    "Luta",
+    "Vontade"
+  ],
+  "extraSkillsQty": 2,
+  "extraSkills": [
+    "Adestramento",
+    "Atletismo",
+    "Cavalgar",
+    "Cura",
+    "Diplomacia",
+    "a Fortitude",
+    "Guerra",
+    "Iniciativa",
+    "Intuição",
+    "Nobreza",
+    "Percepção",
+    "Religião"
+  ],
+  "proficiencies": [
+    "Armas marciais",
+    "Armaduras pesadas",
+    "Escudos"
+  ],
+  "abilities": [
+    {
+      "name": "Abençoado",
+      "description": "Você soma seu Carisma no seu total de pontos de mana no 1º nível. Além disso, torna-se devoto de um deus disponível para paladinos (Azgher, Khalmyr, Lena, Lin-Wu, Marah, Tanna-Toh, Thyatis, Valkaria). Veja as regras de devotos na página 96. Ao contrário de devotos normais, você recebe dois poderes concedidos por se tornar devoto, em vez de apenas um. Como alternativa, você pode ser um paladino do bem, lutando em prol da bondade e da justiça como um todo. Não recebe nenhum Poder Concedido, mas não precisa seguir nenhuma Obrigação & Restrição (além do Código do Herói, abaixo). Cultuar o bem conta como sua devoção."
+    },
+    {
+      "name": "Código do Herói",
+      "description": "Você deve sempre manter sua palavra e nunca pode recusar um pedido de ajuda de alguém inocente. Além disso, nunca pode mentir, trapacear ou roubar. Se violar o código, você perde todos os seus PM e só pode recuperá-los a partir do próximo dia."
+    },
+    {
+      "name": "Golpe Divino",
+      "description": "Quando faz um ataque corpo a corpo, você pode gastar 2 PM para desferir um golpe destruidor. Você soma seu Carisma no teste de ataque e +1d8 na rolagem de dano. A cada quatro níveis, pode gastar +1 PM para aumentar o dano em +1d8."
+    },
+    {
+      "name": "Mensagem de Paz",
+      "description": "Você pode gastar uma ação padrão e 1 PM para diminuir o desejo de violência de uma criatura em alcance curto. Faça um teste de Diplomacia oposto ao teste de Vontade da criatura. Se você vencer, a criatura sofre uma penalidade cumulativa de –1 em testes de ataque e rolagens de dano e, se for um lacaio, fica também pasma por 1 rodada (uma criatura só pode ficar pasma por este efeito uma vez por cena). Para cada 10 pontos pelos quais você vencer o teste oposto, a penalidade aumenta em 1 e, se a criatura estava enfeitiçada, fascinada ou pasma, a penalidade aumenta em 1 para cada uma dessas condições. A cada rodada, a penalidade acumulada da criatura diminui em 1. A cada quatro níveis, você pode gastar +1 PM para receber +5 no teste de Diplomacia. A partir do 5º nível, quando usa esta habilidade, você pode gastar +2 PM. Se fizer isso, afeta todas as criaturas à sua escolha em alcance curto. Mental."
+    },
+    {
+      "name": "Cura pelas Mãos",
+      "description": "A partir do 2º nível, você pode gastar uma ação de movimento e 1 PM para curar 1d8+1 pontos de vida por luz em um alvo em alcance corpo a corpo (incluindo você). A cada quatro níveis, você pode gastar +1 PM para aumentar os PV curados em +1d8+1. Esta habilidade causa dano de luz a mortos-vivos (CD Car). A partir do 6º nível, você pode gastar +1 PM quando usa Cura pelas Mãos para anular uma condição afetando o alvo, entre abalado, apavorado, atordoado, cego, doente, exausto, fatigado ou surdo."
+    },
+    {
+      "name": "Arma Juramentada",
+      "description": "Se você estiver empunhando a arma preferida de sua divindade, ela recebe uma fração do poder divino. Em suas mãos, ela é considerada mágica e recebe os benefícios de uma melhoria (escolhido ao receber este poder, exceto material especial), cujos pré-requisitos ela cumpra. Essa melhoria não conta no limite da arma. Se você descumprir as Obrigações & Restrições da divindade, este efeito deixa de funcionar até você recuperar seus PM. Pré-requisito: devoto de uma divindade."
+    },
+    {
+      "name": "Arma Sacramentada",
+      "description": "A conexão de sua arma com sua divindade se torna mais forte. Em suas mãos, a arma também recebe os benefícios de um encanto (escolhido ao receber este poder) cujos pré-requisitos ela cumpra. Esse encanto não conta no limite da arma e também deixa de funcionar se você descumprir suas Obrigações & Restrições. Pré-requisitos: Arma Juramentada, 11º nível de paladino."
+    },
+    {
+      "name": "Arma Sagrada",
+      "description": "Quando usa Golpe Divino para atacar com a arma preferida de sua divindade, o dado de dano que você rola por Golpe Divino aumenta para d12. Pré-requisito: devoto de uma divindade (exceto Lena e Marah)."
+    },
+    {
+      "name": "Aumento de Atributo",
+      "description": "Você recebe +1 em um atributo. Você pode escolher este poder várias vezes, mas apenas uma vez por patamar para um mesmo atributo."
+    },
+    {
+      "name": "Aura Antimagia",
+      "description": "Enquanto sua aura estiver ativa, você e os aliados dentro da aura podem rolar novamente qualquer teste de resistência contra magia recém realizado. Pré-requisito: 14° nível de paladino."
+    },
+    {
+      "name": "Aura Ardente",
+      "description": "Enquanto sua aura estiver ativa, no início de cada um de seus turnos, espíritos e mortos-vivos a sua escolha dentro dela sofrem dano de luz igual a 5 + seu Carisma. Pré-requisito: 10° nível de paladino."
+    },
+    {
+      "name": "Aura de Cura",
+      "description": "Enquanto sua aura estiver ativa, no início de seus turnos, você e os aliados a sua escolha dentro dela curam um número de PV igual a 5 + seu Carisma. Pré-requisito: 6° nível de paladino."
+    },
+    {
+      "name": "Aura de Invencibilidade",
+      "description": "Enquanto sua aura estiver ativa, você ignora o primeiro dano que sofrer na cena. O mesmo se aplica a seus aliados dentro da aura. Pré-requisito: 18° nível de paladino."
+    },
+    {
+      "name": "Aura Poderosa",
+      "description": "O raio da sua aura aumenta para 30m. Pré-requisito: 6° nível de paladino."
+    },
+    {
+      "name": "Aura Vingadora",
+      "description": "Enquanto sua aura estiver ativa, você e cada aliado dentro dela recebem +1d6 de luz em uma rolagem de dano corpo a corpo uma vez por rodada. Pré-requisito: 8º nível de paladino."
+    },
+    {
+      "name": "Bloqueio Divino",
+      "description": "Quando sofre um ataque, se estiver empunhando um escudo, você pode gastar 2 PM para receber +5 na Defesa contra esse ataque. Pré-requisito: proficiência com escudos."
+    },
+    {
+      "name": "Convicção Heroica",
+      "description": "Uma vez por cena, quando seus pontos de vida forem reduzidos a 0 ou menos, você pode gastar 5 PM para curar 50 PV. Pré-requisito: 11º nível de paladino."
+    },
+    {
+      "name": "Expurgo Sagrado",
+      "description": "Quando você usa Golpe Divino contra um abissal ou um morto-vivo, seu custo diminui em –1 PM (cumulativo com outras reduções) e o bônus de dano da habilidade aumenta em mais um dado."
+    },
+    {
+      "name": "Escudo Fraterno",
+      "description": "Se você estiver empunhando um escudo, sua Égide Sagrada afeta aliados até 9m (em vez de apenas adjacentes). Pré-requisito: Égide Sagrada."
+    },
+    {
+      "name": "Escudo Sagrado",
+      "description": "Se estiver empunhando um escudo, você pode gastar uma ação de movimento e 1 PM para criar uma barreira sagrada com duração sustentada a partir dele. Você recebe redução de dano igual ao seu Carisma. Pré-requisitos: Bloqueio Divino, 7º nível de paladino."
+    },
+    {
+      "name": "Fulgor Ardente",
+      "description": "Quando usa Golpe Divino, você pode gastar +1 PM. Se fizer isso e acertar o ataque, todos os inimigos a até 6m do alvo do ataque sofrem dano de luz igual ao dano extra causado por essa habilidade. Pré-requisito: Fulgor Divino."
+    },
+    {
+      "name": "Fulgor Divino",
+      "description": "Quando usa Golpe Divino, todos os inimigos em alcance curto ficam ofuscados até o início do seu próximo turno."
+    },
+    {
+      "name": "Guardião Celestial",
+      "description": "Você pode gastar uma ação padrão e 10 PM para convocar um espírito para lutar ao seu lado. O guardião celestial flutua ao seu redor, é incorpóreo e imune a dano e possui 100 pontos de luz. Uma vez por rodada, quando você sofre dano, pode fazer o espírito absorver esse dano. Ele perde pontos de luz igual ao dano que você sofreria, e desaparece se seus pontos de luz forem reduzidos a 0. Além disso, uma vez por rodada, você pode gastar 2 PM para fazer o espírito atacar uma criatura em alcance curto (ataque igual a sua Religião com um bônus adicional de +10, dano 4d8 mais seu Carisma de luz, crítico 18/x3). Pré-requisito: 17º nível de paladino."
+    },
+    {
+      "name": "Investida Sagrada",
+      "description": "Quando faz uma investida montada, você pode pagar 1 PM para receber deslocamento de voo igual ao seu deslocamento base até o fim do seu turno e causar +1d8 pontos de dano. Pré-requisitos: Montaria Sagrada, 10º nível de paladino."
+    },
+    {
+      "name": "Julgamentos Divinos",
+      "description": "Alguns poderes do paladino são Julgamentos Divinos. Esses poderes compartilham as seguintes regras.\n• Proferir um julgamento gasta uma ação de movimento, a menos que a descrição diga o contrário.\n• Julgamentos que não têm um efeito instantâneo duram até o fim da cena.\n• Uma mesma criatura pode ser alvo de vários julgamentos diferentes, mas efeitos do mesmo julgamento não se acumulam."
+    },
+    {
+      "name": "Julgamento Divino: Arrependimento",
+      "description": "Você pode gastar 2 PM para marcar um inimigo em alcance curto. Na próxima vez que esse inimigo acertar um ataque em você ou em um de seus aliados, deve fazer um teste de Vontade (CD Car). Se falhar, fica atordoado no próximo turno dele (apenas uma vez por cena)."
+    },
+    {
+      "name": "Julgamento Divino: Autoridade",
+      "description": "Você pode gastar 1 PM para comandar uma criatura em alcance curto. Faça um teste de Diplomacia oposto pelo teste de Vontade do alvo. Se você vencer, ele obedece a um comando simples, como “pare” ou “largue a arma” (apenas uma vez por cena). Mental."
+    },
+    {
+      "name": "Julgamento Divino: Coragem",
+      "description": "Você pode gastar 2 PM para inspirar coragem em uma criatura em alcance curto, incluindo você mesmo. A criatura fica imune a efeitos de medo e recebe +2 em testes de ataque contra o inimigo com maior ND na cena."
+    },
+    {
+      "name": "Julgamento Divino: Desafio",
+      "description": "Você pode gastar 2 PM para marcar um inimigo em alcance curto. Sempre que esse inimigo ataca um de seus aliados, ele recebe uma penalidade cumulativa de –1 em testes de ataque (limitado pelo seu Carisma). Essa penalidade acaba se ele atacar você ou se você terminar seu turno além do alcance corpo a corpo dele."
+    },
+    {
+      "name": "Julgamento Divino: Iluminação",
+      "description": "Você pode marcar um inimigo em alcance curto. Quando acerta um ataque corpo a corpo nesse inimigo, você recebe 2 PM temporários. Você só pode proferir este julgamento uma vez por cena."
+    },
+    {
+      "name": "Julgamento Divino: Justiça",
+      "description": "Você pode gastar 2 PM para marcar um inimigo em alcance curto. A próxima vez que esse inimigo causar dano em você ou em um de seus aliados, deve fazer um teste de Vontade (CD Car). Se falhar, sofre dano de luz igual à metade do dano que causou."
+    },
+    {
+      "name": "Julgamento Divino: Libertação",
+      "description": "Você pode gastar 5 PM para cancelar uma condição negativa qualquer (como abalado, paralisado etc.) que esteja afetando uma criatura em alcance curto."
+    },
+    {
+      "name": "Julgamento Divino: Proteção",
+      "description": "Você pode gastar 2 PM para conceder 10 PV temporários e +2 na Defesa para uma criatura em alcance curto."
+    },
+    {
+      "name": "Julgamento Divino: Redenção",
+      "description": "Você é capaz de criar um vínculo espiritual com um aliado. Você pode lançar Escudo da Fé, mas apenas com o aprimoramento que divide o dano entre o alvo e você (mas não precisa cumprir seu requisito de círculo)."
+    },
+    {
+      "name": "Julgamento Divino: Retribuição",
+      "description": "Você pode marcar um inimigo em alcance curto. Na próxima vez em que esse inimigo causar dano em você, você pode gastar 2 PM para fazer um ataque corpo a corpo contra ele (desde que ele esteja em seu alcance)."
+    },
+    {
+      "name": "Julgamento Divino: Salvação",
+      "description": "Você pode gastar 2 PM para marcar um inimigo em alcance curto. Até o fim da cena, quando você acerta um ataque corpo a corpo nesse inimigo, recupera 5 pontos de vida."
+    },
+    {
+      "name": "Julgamento Divino: Vindicação",
+      "description": "Você pode gastar 2 PM para marcar um inimigo que tenha causado dano a você ou a seus aliados na cena. Você recebe +1 em testes de ataque e +1d8 em rolagens de dano contra o inimigo escolhido, mas sofre –5 em testes de ataque contra quaisquer outros alvos. No 5º nível, e a cada cinco níveis seguintes, você pode pagar +1 PM para aumentar o bônus de ataque em +1 e o bônus de dano em +1d8. O efeito termina caso o alvo fique inconsciente."
+    },
+    {
+      "name": "Julgamento Divino: Zelo",
+      "description": "Você pode gastar 1 PM para marcar um alvo em alcance longo. Pelo restante da cena, sempre que se mover na direção desse alvo, você se move com o dobro de seu deslocamento."
+    },
+    {
+      "name": "Luz Purificadora",
+      "description": "Quando usa Golpe Divino, você pode gastar +1 PM para converter todo o dano causado para luz e ignorar 10 pontos de redução de dano do alvo."
+    },
+    {
+      "name": "Manto de Batalha",
+      "description": "Você aprende e pode lançar Vestimenta da Fé, e pode usar seus aprimoramentos como se tivesse acesso aos mesmos círculos de magia que um clérigo de seu nível. Pré-requisito: 5º nível de paladino."
+    },
+    {
+      "name": "Orar",
+      "description": "Você aprende e pode lançar uma magia divina de 1º círculo a sua escolha. Seu atributo-chave para esta magia é Sabedoria. Você pode escolher este poder quantas vezes quiser."
+    },
+    {
+      "name": "Paladino do Reino",
+      "description": "Você recebe um poder de cavaleiro cujos pré-requisitos cumpra, usando seu nível como nível de cavaleiro. Pré-requisito: treinado em Nobreza."
+    },
+    {
+      "name": "Rajada Divina",
+      "description": "Quando faz um Golpe Divino com Luz Purificadora, você pode gastar +1 PM para aumentar o alcance desse ataque para curto (ele ainda conta como um ataque corpo a corpo). Pré-requisito: Luz Purificadora."
+    },
+    {
+      "name": "Sacrifício",
+      "description": "Uma vez por rodada, quando faz um ataque corpo a corpo, você pode sacrificar 5 PV por patamar para aumentar o dano desse ataque em +1d10 por patamar. Por exemplo, se você for um personagem de 5º nível, pode perder 10 PV para causar +2d10 pontos de dano."
+    },
+    {
+      "name": "Sentença Dobrada",
+      "description": "Quando profere um julgamento, você pode gastar +1 PM para proferir um segundo julgamento com a mesma ação (pagando o custo de ambos)."
+    },
+    {
+      "name": "Virtude Paladinesca: Caridade",
+      "description": "O custo de suas habilidades de paladino que tenham um aliado como alvo é reduzido em –1 PM."
+    },
+    {
+      "name": "Virtude Paladinesca: Castidade",
+      "description": "Você se torna imune a efeitos de encantamento e recebe +5 em testes de Intuição para perceber blefes."
+    },
+    {
+      "name": "Virtude Paladinesca: Compaixão",
+      "description": "Você pode usar Cura pelas Mãos em alcance curto e, para cada PM que gastar, cura 2d6+1 (em vez de 1d8+1)."
+    },
+    {
+      "name": "Virtude Paladinesca: Humildade",
+      "description": "Na primeira rodada de um combate, você pode gastar uma ação completa para rezar e pedir orientação. Você recebe uma quantidade de PM temporários igual ao seu Carisma (duram até o fim da cena)."
+    },
+    {
+      "name": "Virtude Paladinesca: Paciência",
+      "description": "Em combate, você pode ficar uma rodada inteira em meditação, sem fazer ações (exceto reações), para receber +2 em testes de perícia e na Defesa até o fim da cena."
+    },
+    {
+      "name": "Virtude Paladinesca: Temperança",
+      "description": "Quando ingere um alimento, item alquímico ou poção, você consome apenas metade do item. Na prática, cada item desses rende duas “doses” para você."
+    },
+    {
+      "name": "Aura Sagrada",
+      "description": "No 3º nível, você pode gastar 1 PM para gerar uma aura com 9m de raio a partir de você e duração sustentada. A aura emite uma luz dourada e agradável. Além disso, você e os aliados dentro da aura somam seu Carisma nos testes de resistência."
+    },
+    {
+      "name": "Bênção da Justiça",
+      "description": "No 5º nível, escolha entre égide sagrada e montaria sagrada. Uma vez feita, esta escolha não pode ser mudada."
+    },
+    {
+      "name": "Égide Sagrada",
+      "description": "Você pode gastar uma ação de movimento e 2 PM para recobrir de energia seu escudo ou símbolo sagrado. Até o fim da cena, você e todos os aliados adjacentes somam seu Carisma na Defesa (cumulativo com outros efeitos). A partir do 11º nível, quando faz um teste de resistência contra uma magia lançada contra você, você pode gastar 5 PM para rolá-lo novamente. Se você passar no teste de resistência e a magia tiver você como único alvo, ela é revertida de volta ao conjurador (que se torna o novo alvo da magia; todas as demais características da magia, incluindo CD do teste de resistência, se mantêm)."
+    },
+    {
+      "name": "Montaria Sagrada",
+      "description": "Você pode gastar uma ação de movimento e 2 PM para invocar uma montaria sagrada. Veja o quadro para mais detalhes."
+    },
+    {
+      "name": "Vingador Sagrado",
+      "description": "No 20º nível, você pode gastar uma ação completa e 10 PM para se cobrir de energia divina, assumindo a forma de um vingador sagrado até o fim da cena. Nesta forma, você recebe deslocamento de voo 18m e redução de dano 20. Além disso, seu Golpe Divino tem seu custo é reduzido à metade e causa mais dois dados de dano."
+    },
+    {
+      "name": "Ladainha de Combate (Santo)",
+      "description": "Você pode gastar uma ação padrão e 2 PM para gerar uma aura de 9m de raio com duração sustentada. Você e os aliados dentro da aura recebem +1 em testes de ataque, rolagens de dano e na Defesa. A cada quatro níveis, você pode gastar +2 PM para aumentar esses bônus em +1. Sua ladainha conta como Aura Sagrada (veja Tormenta20, p. 84) para pré-requisitos e efeitos de poderes de paladino.\nNo 5º nível, você e os aliados dentro da aura causam +1d8 pontos de dano de luz com ataques contra devotos de deuses que canalizam apenas energia negativa e criaturas malignas (a critério do mestre).\nNo 9º nível, suas armas e as dos aliados dentro da aura recebem o encanto veloz."
+    },
+    {
+      "name": "Santo Curandeiro (Santo)",
+      "description": "A partir do 2º nível, você pode gastar uma ação de movimento e uma quantidade de PM a sua escolha (limitada pelo seu Carisma). Para cada PM que você gastar, o aliado em alcance médio com a maior redução em seus PV (por dano ou perda de vida) recupera 2d8 pontos de vida por luz.\nA partir do 6º nível, quando usa Santo Curandeiro, você também pode remover uma condição do alvo entre abalado, apavorado, atordoado, cego, doente, exausto, fatigado ou surdo."
+    },
+    {
+      "name": "Vaso do Espírito (Santo)",
+      "description": "A partir do 3º nível, quando faz um teste de resistência, você pode gastar 1 PM para somar seu Carisma nesse teste."
+    },
+    {
+      "name": "Mártir (Santo)",
+      "description": "A partir do 6º nível, quando um aliado em alcance médio faz um teste de resistência, você pode gastar 1 PM para conceder a ele um bônus nesse teste igual ao seu próprio Carisma. A partir do 12º nível, uma vez por cena, se ele ainda assim falhar, você pode sofrer o efeito no lugar dele (mas você é afetado mesmo que seja imune ao efeito)."
+    },
+    {
+      "name": "Pira Santa (Santo)",
+      "description": "No 8º nível, enquanto estiver sob efeito de Ladainha de Combate, você pode gastar uma ação de movimento e uma quantidade de PM a sua escolha (limitada pelo seu Carisma). Para cada PM que gastar, o inimigo de maior ND em alcance médio sofre 2d8 pontos de dano de luz e fica ofuscado por 1 rodada (Fort CD Car reduz à metade)."
+    },
+    {
+      "name": "Vingador Santificado (Santo)",
+      "description": "No 20º nível, quando usa Ladainha de Combate, você pode gastar +5 PM. Se fizer isso, os bônus numéricos fornecidos por sua Ladainha dobram e você e os aliados dentro da aura recebem imunidade a acertos críticos e RD igual a 5 + seu Carisma."
+    },
+    {
+      "name": "Montaria Sagrada Detalhes",
+      "description": "Um paladino de 5º nível pode receber uma montaria sagrada, designada pelos deuses. Este animal vai atuar como um fiel companheiro de batalhas. Normalmente será um cavalo de guerra para paladinos de tamanho Médio ou um pônei para Pequenos, mas suplementos futuros trarão outras opções de montarias. Para invocar sua montaria você gasta uma ação de movimento e 2 PM. Ela aparece com um brilho de luz dourada ao seu lado e fica até o fim da cena, quando desaparece de volta para o mundo divino de onde veio. Como opção para campanhas mais realistas, a montaria sagrada pode ser um animal mundano, em vez de invocado. Neste caso, você nunca precisa gastar uma ação ou PM para ter a montaria — que já estará com você. Por outro lado, o animal pode não ser capaz de acompanhá-lo em todos os lugares (um cavalo, por exemplo, não conseguirá entrar num túnel apertado ou escalar uma montanha). Você e sua montaria têm um vínculo mental, sendo sempre capazes de entender um ao outro (não é preciso fazer testes de Adestramento). Ela fornece os benefícios de um parceiro veterano de seu tipo. No 11º nível, passa a fornecer os benefícios de um parceiro mestre. Veja a lista de parceiros na página 260. Uma montaria cumpre qualquer ordem sua, mesmo que signifique arriscar a vida. Se a montaria sagrada morrer, você fica atordoado por uma rodada. Você pode invocar uma nova montaria após um dia de prece e meditação."
+    },
+    {
+      "name": "Virtudes Paladinescas",
+      "description": "Este conjunto de poderes representa obediência veemente a um comportamento específico. Você recebe um bônus progressivo em seu total de pontos de mana de acordo com a quantidade de poderes desse tipo que possui: +1 PM para uma Virtude, +3 PM para duas, +6 PM para três, +10 PM para quatro e +15 PM para cinco Virtudes. Virtudes Paladinescas são poderosas, mas possuem uma contrapartida — você deve se comportar de acordo com quaisquer Virtudes que possuir. Um paladino caridoso, por exemplo, deve sempre ajudar os necessitados, enquanto um casto nunca pode cair em tentação. Não seguir uma Virtude Paladinesca que você possua conta como uma violação do Código do Herói. O mestre tem a palavra final sobre o que exatamente constitui uma violação."
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "name": "Bárbaro",
+  "hp": 24,
+  "addHP": 6,
+  "pm": 3,
+  "skills": [
+    "Fortitude",
+    "Luta"
+  ],
+  "extraSkillsQty": 4,
+  "extraSkills": [
+    "Adestramento",
+    "Atletismo",
+    "Cavalgar",
+    "Iniciativa",
+    "Intimidação",
+    "Ofício",
+    "Percepção",
+    "Pontaria",
+    "Sobrevivência",
+    "Vontade"
+  ],
+  "proficiencies": [
+    "Armas marciais",
+    "Escudos"
+  ],
+  "abilities": [
+    {
+      "name": "Fúria",
+      "description": "Você pode gastar 2 PM para invocar uma fúria selvagem. Você recebe +2 em testes de ataque e rolagens de dano corpo a corpo, mas não pode fazer nenhuma ação que exija calma e concentração (como usar a perícia Furtividade ou lançar magias). A cada cinco níveis, pode gastar +1 PM para aumentar os bônus em +1. A Fúria termina se, ao fim da rodada, você não tiver atacado nem sido alvo de um efeito (ataque, habilidade, magia...) hostil."
+    },
+    {
+      "name": "Alma de Bronze",
+      "description": "Quando entra em fúria, você recebe uma quantidade de pontos de vida temporários igual a seu nível + sua Força."
+    },
+    {
+      "name": "Alma Inabalável",
+      "description": "Quando faz um teste de resistência, você pode gastar 1 PM para substituir a perícia normal por Intimidação. Se você passar no teste e a fonte do efeito for uma criatura, ela fica abalada por 1d4 rodadas (Vontade CD igual ao resultado do teste de Intimidação evita). Pré-requisito: treinado em Intimidação."
+    },
+    {
+      "name": "Ampliar Brado",
+      "description": "O alcance de seus brados aumenta para médio e a CD para resistir a eles aumenta em +2."
+    },
+    {
+      "name": "Arremesso Violento",
+      "description": "Enquanto você está em fúria, o dano e o alcance de suas armas de arremesso aumenta em um passo (de curto para médio e de médio para longo) e a penalidade em ataques que você sofre por arremessar armas sem alcance diminui para –2. Pré-requisito: Fúria da Savana."
+    },
+    {
+      "name": "Aumento de Atributo",
+      "description": "Você recebe +1 em um atributo. Você pode escolher este poder várias vezes, mas apenas uma vez por patamar para um mesmo atributo."
+    },
+    {
+      "name": "Beberrão Selvagem",
+      "description": "Você pode gastar uma ação de movimento para ingerir um preparado alquímico que cause dano e tenha uma criatura como alvo. Se fizer isso, armazena o equivalente a 3 cargas do preparado em sua boca. Até o fim da cena, sempre que acerta um ataque corpo a corpo, você pode gastar uma carga para que o ataque cause dano adicional igual ao do preparado. Pré-requisito: Con 3."
+    },
+    {
+      "name": "Brado: Assombroso",
+      "description": "Você pode gastar uma quantidade de PM limitada pela sua Constituição. Para cada PM que gastar, você causa 1d6 pontos de dano psíquico em todos os inimigos no alcance do brado (Von CD Con reduz à metade). Medo. Pré-requisito: Brado Assustador."
+    },
+    {
+      "name": "Brado Assustador",
+      "description": "Você pode gastar uma ação de movimento e 1 PM para soltar um berro feroz. Todos os inimigos em alcance curto ficam vulneráveis até o fim da cena. Pré-requisito: treinado em Intimidação. Medo."
+    },
+    {
+      "name": "Brado: Retardante",
+      "description": "Você dá um berro que faz seus inimigos hesitarem. Criaturas a sua escolha no alcance do brado ficam lentas por 1 rodada. Medo."
+    },
+    {
+      "name": "Brado: Sísmico",
+      "description": "Você emite um brado que faz o chão tremer. Criaturas no alcance do brado ficam vulneráveis por 1d4 rodadas e caídas (Fort CD For reduz para vulneráveis por 1 rodada). Criaturas que já estavam vulneráveis, inclusive por este efeito, ficam desprevenidas pelo mesmo tempo. Pré-requisito: outro poder de brado."
+    },
+    {
+      "name": "Brado Vitorioso",
+      "description": "Quando faz um acerto crítico ou reduz um inimigo a 0 ou menos PV enquanto está em fúria, você pode usar um dos seus poderes de brado como ação livre. Pré-requisitos: Brado Assustador, Sangue dos Inimigos."
+    },
+    {
+      "name": "Crítico Brutal",
+      "description": "Seu multiplicador de crítico com armas corpo a corpo e de arremesso aumenta em +1. Por exemplo, seu multiplicador com um machado de batalha (normalmente x3) será x4. Pré-requisito: 6º nível de bárbaro."
+    },
+    {
+      "name": "Destruidor",
+      "description": "Quando causa dano com uma arma corpo a corpo de duas mãos, você pode rolar novamente qualquer resultado 1 ou 2 das rolagens de dano da arma. Pré-requisito: For 1."
+    },
+    {
+      "name": "Enigma do Aço",
+      "description": "Após tantas lutas e matanças, você descobriu que a verdadeira força não reside na arma, mas na mão de quem a empunha. Se estiver empunhando uma arma mundana, você recebe +5 em testes de ataque e causa dois dados extras de dano do mesmo tipo. Pré-requisito: 17º nível de bárbaro."
+    },
+    {
+      "name": "Espírito Inquebrável",
+      "description": "Enquanto está em fúria, você não fica inconsciente por estar com 0 PV ou menos (você ainda morre se chegar em um valor negativo igual à metade de seus pontos de vida máximos). Pré-requisito: Alma de Bronze."
+    },
+    {
+      "name": "Espiritualista",
+      "description": "Você recebe +1 PM a cada nível ímpar. Além disso, aprende e pode lançar uma magia adicional definida pelo seu animal totêmico (atributo-chave Sabedoria) e pode lançá-la e sustentá-la mesmo em fúria. As magias são: Coruja (Augúrio), Corvo (Voz Divina), Falcão (Mapear), Grifo (Físico Divino), Lobo (Localização), Raposa (Camuflagem Ilusória), Tartaruga (Vestimenta da Fé), Urso (Soco de Arsenal). Pré-requisitos: Sab 2, Totem Espiritual, 6º nível de bárbaro."
+    },
+    {
+      "name": "Esquiva Sobrenatural",
+      "description": "Seus instintos são tão apurados que você consegue reagir ao perigo antes que seus sentidos o percebam. Você nunca fica surpreendido."
+    },
+    {
+      "name": "Força Indomável",
+      "description": "Quando faz um teste de Força ou Atletismo, você pode gastar 1 PM para somar seu nível nele. Você pode usar esta habilidade depois de rolar o dado, mas deve usá-la antes de o mestre dizer se você passou ou não."
+    },
+    {
+      "name": "Frenesi",
+      "description": "Uma vez por rodada, se estiver em fúria e usar a ação agredir para fazer um ataque corpo a corpo ou com uma arma de arremesso, você pode gastar 2 PM para fazer um ataque adicional."
+    },
+    {
+      "name": "Fúria Bestial",
+      "description": "Enquanto você está em fúria, o dano das suas armas naturais aumenta em dois passos e o multiplicador de crítico delas aumenta em +1."
+    },
+    {
+      "name": "Fúria da Savana",
+      "description": "Seu deslocamento aumenta em +3m. Quando usa Fúria, você aplica o bônus em ataque e dano também a armas de arremesso."
+    },
+    {
+      "name": "Fúria Elemental",
+      "description": "Escolha um elemento entre ácido, eletricidade, fogo ou frio. Uma vez feita, essa escolha não pode ser mudada. Enquanto está em fúria e faz um ataque em que aplique seus benefícios, você causa +1d12 pontos de dano do tipo escolhido. Pré-requisitos: Totem Espiritual, 11º nível de bárbaro."
+    },
+    {
+      "name": "Fúria Raivosa",
+      "description": "Se sua Fúria for terminar por você não ter atacado nem sido alvo de um efeito hostil, você pode pagar 1 PM para continuar em fúria nesta rodada. Se você atacar ou for atacado na rodada seguinte, sua fúria continua normalmente."
+    },
+    {
+      "name": "Golpe Poderoso",
+      "description": "Ao acertar um ataque corpo a corpo ou com uma arma de arremesso, você pode gastar 1 PM para causar um dado extra de dano do mesmo tipo (por exemplo, com um montante, causa +1d6, para um dano total de 3d6; com um machado de guerra, causa +1d12, para um dano total de 2d12)."
+    },
+    {
+      "name": "Ímpeto",
+      "description": "Você pode gastar 1 PM para aumentar seu deslocamento em +6m por uma rodada."
+    },
+    {
+      "name": "Impiedoso",
+      "description": "Você recebe +2 em testes de ataque, rolagens de dano e na CD de suas habilidades contra criaturas vulneráveis."
+    },
+    {
+      "name": "Investida Imprudente",
+      "description": "Quando faz uma investida, você pode aumentar sua penalidade na Defesa pela investida para –5 para receber um bônus de +1d12 na rolagem de dano deste ataque."
+    },
+    {
+      "name": "Invocar os Ancestrais",
+      "description": "Você pode gastar uma ação completa e 2 PM para invocar 1d4+1 ancestrais capangas em espaços desocupados em alcance curto. Eles têm Defesa igual à sua, 1 PV, são incorpóreos e falham automaticamente em qualquer teste de resistência ou oposto. Você pode gastar uma ação de movimento para fazê-los se mover (deslocamento 9m). Cada ancestral fornece um bônus cumulativo de +2 em rolagens de dano a um personagem adjacente e, uma vez por rodada, quando faz a ação agredir, você pode gastar um ancestral pra fazer um ataque adicional. Pré-requisitos: Totem Espiritual, 11º nível de bárbaro."
+    },
+    {
+      "name": "Manifestar Totem",
+      "description": "Escolha um tipo de parceiro entre assassino, atirador, combatente, fortão, guardião, perseguidor ou montaria. Uma vez feita, essa escolha não pode ser mudada. Você pode gastar 3 PM e uma ação de movimento para invocar uma manifestação espiritual de seu animal totêmico até o fim da cena. Ele é um parceiro veterano do tipo escolhido. Pré-requisitos: Totem Espiritual, 7º nível de bárbaro."
+    },
+    {
+      "name": "Pele de Aço",
+      "description": "O bônus de Pele de Ferro aumenta para +8. Pré-requisitos: Pele de Ferro, 8º nível de bárbaro."
+    },
+    {
+      "name": "Pele de Ferro",
+      "description": "Você recebe +4 na Defesa, mas apenas se não estiver usando armadura pesada."
+    },
+    {
+      "name": "Poderes de Brado",
+      "description": "Poderes de brado compartilham as seguintes regras.\n• Emitir um brado gasta uma ação de movimento e 1 PM, a menos que a descrição diga o contrário.\n• Brados têm alcance curto.\nA critério do mestre, habilidades raciais baseadas em gritos, como o Rugido Imponente do moreau do leão (Ameaças de Arton, p. 305), podem ser consideradas poderes de brado para um bárbaro."
+    },
+    {
+      "name": "Recuperação Gutural",
+      "description": "Quando usa um brado enquanto está em fúria, você recebe uma quantidade de PV temporários igual à metade do seu nível + sua Força. Pré-requisitos: Alma de Bronze, um poder de brado."
+    },
+    {
+      "name": "Regeneração Sobrenatural",
+      "description": "Enquanto está em fúria e com menos da metade de seus PV máximos, você tem Cura Acelerada 5. Pré-requisitos: Con 5, Vigor Primal, 5º nível de bárbaro."
+    },
+    {
+      "name": "Revide",
+      "description": "Uma vez por rodada, quando sofre dano de um ataque corpo a corpo enquanto está em fúria, você pode gastar 2 PM para fazer um ataque corpo a corpo contra a criatura que o atacou, desde que ela esteja em seu alcance. Pré-requisitos: Frenesi, 11º nível de bárbaro."
+    },
+    {
+      "name": "Rigidez Selvagem",
+      "description": "Enquanto está em fúria, você soma o bônus da fúria na Defesa, em Fortitude e em RD."
+    },
+    {
+      "name": "Sangue dos Inimigos",
+      "description": "Enquanto está em fúria, quando faz um acerto crítico ou reduz um inimigo a 0 PV, você recebe um bônus cumulativo de +1 em testes de ataque e rolagens de dano, limitado pelo seu nível, até o fim da cena."
+    },
+    {
+      "name": "Sede Sanguinária",
+      "description": "Enquanto está em fúria, quando faz um acerto crítico ou reduz um inimigo a 0 PV ou menos, você recupera 10 PV e 2 PM. Pré-requisitos: Sangue dos Inimigos, 5º nível de bárbaro."
+    },
+    {
+      "name": "Superstição",
+      "description": "Você odeia magia, o que faz com que seja mais resistente a ela. Você recebe resistência a magia +5."
+    },
+    {
+      "name": "Totem Espiritual",
+      "description": "Você soma sua Sabedoria no seu total de pontos de mana. Escolha um animal totêmico (veja o quadro ao lado). Você aprende e pode lançar uma magia definida pelo animal escolhido (atributo-chave Sabedoria) e pode lançá-la mesmo em fúria. Pré-requisitos: Sab 1, 4º nível de bárbaro."
+    },
+    {
+      "name": "Vigor Primal",
+      "description": "Você pode gastar uma ação de movimento e uma quantidade de PM limitada por sua Constituição. Para cada PM que gastar, você recupera 1d12 pontos de vida."
+    },
+    {
+      "name": "Instinto Selvagem",
+      "description": "No 3º nível, você recebe +1 em rolagens de dano, Percepção e Reflexos. A cada seis níveis, esse bônus aumenta em +1."
+    },
+    {
+      "name": "Redução de Dano",
+      "description": "A partir do 5º nível, graças a seu vigor e força de vontade, você ignora parte de seus ferimentos. Você recebe redução de dano 2 (todo dano que sofre é reduzido em 2). A cada três níveis, sua RD aumenta em 2, até um máximo de RD 10 no 17º nível."
+    },
+    {
+      "name": "Fúria Titânica",
+      "description": "No 20º nível, o bônus que você recebe nos testes de ataque e rolagens de dano quando usa Fúria é dobrado. Por exemplo, se gastar 5 PM, em vez de um bônus de +5, recebe um bônus de +10."
+    },
+    {
+      "name": "Grunhidos (Machado de Pedra)",
+      "description": "Você conhece apenas o idioma rústico da pequena comunidade onde viveu e nenhum outro. Você não só é incapaz de compreender outros dialetos como não se importa com isso, comunicando-se com grunhidos e sons simples. Contudo, você conhece uma palavra no idioma valkar (o mais comum de Arton) por nível de machado de pedra."
+    },
+    {
+      "name": "Machado de Pedra (Machado de Pedra)",
+      "description": "Você não recebe proficiência com armas simples. Você sabe usar apenas adaga, azagaia, clava, funda, lança, machadinha e tacape. No 9° nível, aprende a usar uma arma simples ou marcial a sua escolha. Entretanto, quando ataca com uma arma natural, um ataque desarmado ou uma dessas armas, você recebe +1 no teste de ataque e na rolagem de dano."
+    },
+    {
+      "name": "Tanga de Peles (Machado de Pedra)",
+      "description": "Você não recebe proficiência com armaduras leves. Entretanto, se não estiver usando armadura, você soma sua Constituição na Defesa. Além disso, no 3º nível, e a cada quatro níveis seguintes, você recebe +1 na Defesa."
+    },
+    {
+      "name": "Fúria Primitiva (Machado de Pedra)",
+      "description": "A partir do 2º nível, se não estiver usando armadura e estiver empunhando uma das armas de sua habilidade Machado de Pedra, o custo de sua Fúria é reduzido em –1 PM. Além disso, uma vez por cena, quando entra em fúria, você recebe uma quantidade de PV temporários igual ao seu nível + sua Constituição."
+    },
+    {
+      "name": "Resiliência Primal (Machado de Pedra)",
+      "description": "A partir do 5º nível, graças a seu vigor e força de vontade, você ignora parte de seus ferimentos. Você recebe redução de dano 3. A cada três níveis, sua RD aumenta em 3, até um máximo de RD 15 no 17º nível."
+    },
+    {
+      "name": "Fúria Rústica (Machado de Pedra)",
+      "description": "No 20º nível, quando entra em fúria, você pode gastar 5 PM. Se fizer isso, durante a fúria você recebe Cura Acelerada 10 (cumulativo com outras Curas Aceleradas) e, quando faz a ação agredir, pode fazer um ataque desarmado adicional."
+    },
+    {
+      "name": "Animais Totêmicos",
+      "description": "A seguir está uma lista de animais venerados por tribos bárbaras de Arton.\n• Coruja. A sábia coruja guia seus discípulos. Você pode lançar Orientação.\n• Corvo. Um seguidor do corvo enxerga além do véu. Você pode lançar Visão Mística.\n• Falcão. Sempre atento, o falcão permite que você lance Detectar Ameaças.\n• Grifo. O mais veloz dos animais, o grifo permite que você lance Primor Atlético.\n• Lobo. O lobo é feroz e letal. Você pode lançar Concentração de Combate.\n• Raposa. A sagaz raposa nunca está onde se espera. Você pode lançar Imagem Espelhada.\n• Tartaruga. A tartaruga protege os seus. Você pode lançar Armadura Arcana.\n• Urso. O vigoroso urso permite que você lance Vitalidade Fantasma e possa usar seus aprimoramentos como se tivesse acesso aos mesmos círculos de magia que um druida de seu nível."
+    }
+  ]
+}

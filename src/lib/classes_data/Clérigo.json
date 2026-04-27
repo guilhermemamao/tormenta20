@@ -1,0 +1,310 @@
+{
+  "name": "Clérigo",
+  "hp": 16,
+  "addHP": 4,
+  "pm": 5,
+  "skills": [
+    "Religião",
+    "Vontade"
+  ],
+  "extraSkillsQty": 2,
+  "extraSkills": [
+    "Conhecimento",
+    "Cura",
+    "Diplomacia",
+    "Fortitude",
+    "Iniciativa",
+    "Intuição",
+    "Luta",
+    "Misticismo",
+    "Nobreza",
+    "Ofício",
+    "Percepção"
+  ],
+  "proficiencies": [
+    "Armaduras pesadas",
+    "Escudos"
+  ],
+  "abilities": [
+    {
+      "name": "Devoto Fiel",
+      "description": "Você se torna devoto de um deus maior. Veja as regras de devotos na página 96. Ao contrário de devotos normais, você recebe dois poderes concedidos por se tornar devoto, em vez de apenas um. Como alternativa, você pode cultuar o Panteão como um todo. Não recebe nenhum Poder Concedido, mas sua única obrigação e restrição é não usar armas cortantes ou perfurantes (porque derramam sangue, algo que clérigos do Panteão consideram proibido). Sua arma preferida é a maça e você pode canalizar energia positiva ou negativa a sua escolha (uma vez feita, essa escolha não pode ser mudada). Cultuar o Panteão conta como sua devoção."
+    },
+    {
+      "name": "Magias",
+      "description": "Você pode lançar magias divinas de 1º círculo. A cada quatro níveis, pode lançar magias de um círculo maior (2º círculo no 5º nível, 3º círculo no 9º nível e assim por diante). Você começa com três magias de 1º círculo. A cada nível, aprende uma magia de qualquer círculo que possa lançar. Seu atributo-chave para lançar magias é Sabedoria e você soma sua Sabedoria no seu total de PM. Veja o Capítulo 4 para as regras de magia."
+    },
+    {
+      "name": "Abençoar Arma",
+      "description": "Você se torna proficiente na arma preferida de sua divindade. Se estiver empunhando essa arma, pode gastar uma ação de movimento e 3 PM para infundi-la com poder divino. Até o final da cena, a arma é considerada mágica e emite luz dourada ou púrpura (como uma tocha). Além disso, o dano da arma aumenta em um passo e você pode usar sua Sabedoria em testes de ataque e rolagens de dano com ela, em vez do atributo padrão (não cumulativo com efeitos que somam este atributo)."
+    },
+    {
+      "name": "Acólito Escudeiro",
+      "description": "Você recebe os serviços de um acólito escudeiro, um parceiro especial que não conta em seu limite de parceiros. Você recebe +2 em Religião e o custo de uma de suas magias de 1º círculo, escolhida ao você receber este poder, diminui em –1 PM. Além disso, você pode gastar 1 PM para receber os efeitos de um esotérico ou catalisador em seu inventário, mesmo que não o esteja empunhando. Caso perca seu acólito, você pode treinar outro com uma semana de trabalho. Pré-requisito: Autoridade Eclesiástica."
+    },
+    {
+      "name": "Arma Divina",
+      "description": "Quando você usa Abençoar Arma, além dos efeitos normais, a sua arma adquire os efeitos do encanto sagrado (se você canalizar energia positiva) ou do encanto profano (se você canalizar energia negativa). Pré-requisitos: Abençoar Arma, 7º nível de clérigo."
+    },
+    {
+      "name": "Aumento de Atributo",
+      "description": "Você recebe +1 em um atributo. Você pode escolher este poder várias vezes, mas apenas uma vez por patamar para um mesmo atributo."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Básico)",
+      "description": "Você possui uma posição formal em uma igreja reconhecida pelos outros membros de sua fé. Os efeitos deste poder variam de acordo com a igreja e o deus — clérigos de Khalmyr, por exemplo, possuem autoridade como juízes no Reinado — e ficam a cargo do mestre. Como regra geral, você recebe +5 em testes de Diplomacia ou Intimidação ao lidar com devotos de sua divindade e paga metade do preço de itens alquímicos, poções e serviços em templos de sua divindade. Pré-requisitos: 5º nível de clérigo, devoto de um deus maior."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Deuses)",
+      "description": "Você possui uma posição formal e reconhecida em uma igreja. Você recebe +5 em testes de Diplomacia e Intimidação ao lidar com devotos de sua divindade, além do benefício específico de sua divindade. Pré-requisitos: 5º nível de clérigo ou frade, devoto de um deus maior."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Aharadak)",
+      "description": "Você aprende e pode lançar Sussurros Insanos (Tormenta20, p. 207) como uma magia divina. Além disso, se estiver em um templo de Aharadak, ou com pelo menos 5 outros devotos do Deus da Tormenta, pode gastar 1 hora para executar um ritual que o aproxima da Anticriação. Se fizer isso, você recebe um embrião rubro, uma larva que se aloja em seu corpo e ocupa 1 espaço. Até o fim da aventura, ou até executar esse ritual novamente, você pode despertar essa larva para receber 1 poder da Tormenta a sua escolha, cujos pré-requisitos cumpra, até o fim da cena. Ao fim da cena, a larva se desaloja e cai no chão como uma pequena poça de visco rubro."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Allihanna)",
+      "description": "Você recebe +5 em Adestramento e Cavalgar, e pode usar essas perícias com animais mesmo sem ser treinado. Além disso, quando descansa em terreno natural, recebe uma bênção dos espíritos locais. Para cada patamar, você recebe 1d4 de auxílio que pode ser adicionado como um bônus em um teste de perícia feito até o fim do dia."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Arsenal)",
+      "description": "Quando visita um templo do Deus da Guerra, você pode orar para que ele abençoe seu… arsenal. Escolha uma arma, armadura ou escudo; o item recebe uma melhoria a sua escolha (exceto material especial) cujos pré-requisitos ele cumpra. Essa melhoria não conta no limite de melhorias do item. Se tiver o poder Conjurar Arma, você pode aplicar esse benefício às armas ou munições conjuradas com ele. Esses efeitos duram até o fim da aventura ou até você orar por outra melhoria."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Azgher)",
+      "description": "Você recebe +5 em Sobrevivência. Além disso, uma vez por aventura, se visitar um templo de Azgher, você pode medir o peso de sua alma. Faça um teste de Religião com CD definida pelo mestre: 15 se você seguiu os preceitos de Azgher à risca durante o último mês; 20 se seguiu-os, mas não perfeitamente; 25 se quebrou suas Obrigações & Restrições. Você recebe 1 TO por patamar para cada ponto do resultado acima da CD."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Hyninn)",
+      "description": "Quando chega a uma comunidade, você pode fazer um teste de Sabedoria (CD 10). Se passar, faz contato com ladrões locais; até partir desse lugar, você recebe +5 em testes de Diplomacia para barganha e de Investigação para interrogar. Além disso, uma vez durante sua estadia pode ganhar a ajuda de um parceiro veterano de um tipo a sua escolha entre ajudante (Enganação, Furtividade e Ladinagem), assassino, fortão, perseguidor ou vigilante, que não conta em seu limite de parceiros."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Kallyadranoch)",
+      "description": "Você recebe +5 em Intimidação. Além disso, se visitar um templo de Kallyadranoch, você recebe uma fração da energia dominante do Deus dos Dragões. Durante uma cena a sua escolha, sempre que aplicar uma condição de medo em um ou mais inimigos, você recupera 1d4 PM."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Khalmyr)",
+      "description": "Você recebe +5 em testes de Diplomacia e Intimidação com agentes da lei (cavaleiros, paladinos, guardas e outros, a critério do mestre). Além disso, uma vez por aventura, se estiver em um templo de Khalmyr, você pode solicitar uma escolta: até dois parceiros iniciantes, cada um de um tipo a sua escolha entre combatente, guardião ou médico. Eles o acompanham até o fim da aventura."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Lena)",
+      "description": "Você recebe o poder Aparência Inofensiva (se já possuí-lo, a CD para resistir a ele aumenta em +2). Além disso, quando passa um dia descansando em um templo da Deusa da Vida, recebe +1 em testes de resistência e +1 PV por nível até o fim da aventura. A seu critério, aliados que façam o mesmo podem receber esses benefícios."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Lin-Wu)",
+      "description": "Você recebe +2 em testes de perícia e na CD de suas habilidades contra criaturas treinadas em ao menos uma perícia desonrada (Enganação, Furtividade e Ladinagem) ou que possuam a habilidade Ataque Furtivo."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Marah)",
+      "description": "Você é um conduíte para a beleza de Marah e recebe +1 em Carisma. Além disso, quando usa uma habilidade que cause uma condição entre enfeitiçado, fascinado ou pasmo, pode gastar 2 PM para fazer com que as criaturas afetadas rolem dois dados para seus testes de resistência e usem o pior resultado."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Megalokk)",
+      "description": "Você tem autoridade até mesmo sobre monstros irracionais. A atitude de qualquer monstro com Int –3 ou menor em relação a você aumenta em uma categoria. Se mesmo assim o monstro atacá-lo, você recebe +1 em testes de ataque e rolagens de dano contra ele."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Nimb)",
+      "description": "Essa conversa de autoridade não tem muito a ver com Nimb. Você está fora! Uma vez por dia, você pode conferir o status de autoridade de Nimb a outra criatura em alcance curto, que não seja devota do Deus do Caos. A vítima faz um teste de Vontade (CD Sab). Se ela passar, você fica confuso. Contudo, se ela falhar, fica sob efeito das Obrigações & Restrições de Nimb. Além disso, devotos do Deus do Caos procuram a vítima instintivamente, pedindo conselhos, infernizando sua vida e criando caos generalizado. Esse efeito dura um dia e, durante esse tempo, você fica livre das Obrigações & Restrições de Nimb. Conveniente, não?"
+    },
+    {
+      "name": "Autoridade Eclesiástica (Oceano)",
+      "description": "Você tem autoridade sobre as águas. Seu deslocamento nadando é dobrado. Além disso, uma vez por dia, se estiver em uma extensão de água natural, como um mar, lago ou rio, pode gastar 1 PM para convocar um animal anfíbio ou aquático, um parceiro iniciante a sua escolha entre combatente, fortão ou guardião, que não conta no seu limite de parceiros. O animal o acompanha até o fim do dia."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Sszzaas)",
+      "description": "Você pode conduzir uma cerimônia especial com devotos do Deus da Traição. Você precisa de no mínimo 3 outros devotos para essa cerimônia, ela dura 1 hora e precisa ser realizada num local totalmente escondido (envolve cânticos profanos e exaltações a Sszzaas). Se fizer isso, para cada outro devoto na cerimônia seu total de PM aumenta em +1 até o fim da aventura e você recebe +1 em Enganação (ambos limitados pelo seu nível). O bônus em Enganação dura indefinidamente, mas diminui em 1 sempre que você fizer um teste dessa perícia."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Tanna-Toh)",
+      "description": "Você recebe +5 em Conhecimento e em testes de perícia para identificar criatura, item e magia (veja Misticismo em Tormenta20, p. 121). Além disso, se visitar um templo da Deusa do Conhecimento, tem acesso a todo o conteúdo de sua biblioteca. Escolha uma perícia em que não seja treinado. Até o fim da aventura, ou até usar esse benefício novamente, você recebe os benefícios de ser treinado na perícia escolhida."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Tenebra)",
+      "description": "Se estiver em um templo de Tenebra à noite, você pode conduzir uma cerimônia especial: Súplica à Deusa das Trevas. Isso é uma Missa (veja Tormenta20, p. 57), mas seus efeitos duram uma semana. Os participantes recebem redução de luz e fogo 5 e seus efeitos de trevas causam um dado extra de dano. À noite, esses benefícios são dobrados."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Thwor)",
+      "description": "Você recebe +5 em qualquer teste de perícias baseadas em Carisma feito para convencer alguém a ajudar a causa duyshidakk (o mestre tem a palavra final sobre as situações em que esse bônus se aplica). Além disso, se visitar um templo de Thwor ou um local qualquer em que haja um diagrama do Akzath como parte da arquitetura, você e quaisquer aliados a sua escolha podem escolher se colocar mais próximos a um lado do Akzath. Escolha entre +10 PV e +1 em testes de perícias, exceto ataques (Vida, Início, Continuidade...) ou +1 em testes de ataque e rolagens de dano (Morte, Fim, Mudança...). Esse benefício dura até o fim da aventura, ou até ser trocado."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Thyatis)",
+      "description": "Você recebe um ícone da fênix, um item esotérico especial que reduz o custo de magias de adivinhação e de fogo em –1 PM (cumulativo com outras reduções) e que conta como um símbolo sagrado de Thyatis. Se perder esse ícone, você pode receber outro visitando um templo do Deus da Ressurreição e da Profecia e fazendo uma doação de T$ 100."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Valkaria)",
+      "description": "Você pode permanecer por uma aventura inteira em um mesmo local, desde que haja um templo de Valkaria a no máximo um dia de distância. Além disso, ao visitar um templo de Valkaria, pode decretar que está em uma “demanda”, uma missão envolvendo viagens com um objetivo definido, como recuperar um tesouro ou capturar um vilão. Em uma demanda, você recebe +1 PV por nível e dormir ao relento conta como uma condição de descanso confortável para você, mas dormir sob um teto conta como condição ruim. Esse efeito dura até que a demanda seja cumprida. Se você abandonar a demanda, fica alquebrado até fazer uma penitência."
+    },
+    {
+      "name": "Autoridade Eclesiástica (Wynna)",
+      "description": "Você paga metade do preço por pergaminhos, poções e serviços em templos de Wynna. Além disso, se passar um dia meditando em um templo da Deusa da Magia, recebe uma fração de seu conhecimento místico. Escolha uma magia que você não conheça, arcana ou divina, de até 2º círculo. Até o fim da aventura, ou até usar esse benefício novamente, você pode lançar essa magia pagando seu custo normal."
+    },
+    {
+      "name": "Bênção de Batalha",
+      "description": "Bênção passa a afetar também você (em vez de apenas seus aliados). Além disso, na primeira rodada de combate, você pode lançar essa magia como ação de movimento (em vez de padrão). Pré-requisito: Bênção."
+    },
+    {
+      "name": "Canalizar Energia Positiva/Negativa",
+      "description": "Você pode gastar uma ação padrão e PM para liberar uma onda de luz (se sua divindade canaliza energia positiva) ou trevas (se canaliza energia negativa) que afeta criaturas a sua escolha em alcance curto. Para cada PM que gastar, luz cura 1d6 PV em criaturas vivas e causa 1d6 pontos de dano de luz em mortos-vivos (Vontade CD Sab reduz o dano à metade). Trevas tem o efeito inverso — causa dano de trevas a criaturas vivas e cura mortos-vivos."
+    },
+    {
+      "name": "Canalizar Abençoado",
+      "description": "Quando você usa Canalizar Energia Positiva, pode gastar 1 PM. Se fizer isso, além do normal, as criaturas afetadas recebem 10 PV temporários. Pré-requisitos: Canalizar Energia Positiva, 11° nível de clérigo."
+    },
+    {
+      "name": "Canalizar Amplo",
+      "description": "Quando você usa a habilidade Canalizar Energia, pode gastar +2 PM para aumentar o alcance dela para médio. Pré-requisito: Canalizar Energia Positiva ou Negativa."
+    },
+    {
+      "name": "Canalizar Concentrado",
+      "description": "Quando usa Canalizar Energia, você pode afetar apenas uma criatura no alcance (em vez de todas). Se fizer isso, a cura ou o dano da habilidade aumenta em +1 por dado e a CD aumenta em +2. Pré-requisitos: Canalizar Energia, 11° nível de clérigo."
+    },
+    {
+      "name": "Canalizar Profanado",
+      "description": "Quando você usa Canalizar Energia Negativa, pode gastar 1 PM. Se fizer isso, além do normal, criaturas que falhem na resistência não podem recuperar PV por 1 rodada. Pré-requisitos: Canalizar Energia Negativa, 11° nível de clérigo."
+    },
+    {
+      "name": "Canalizar Poderoso",
+      "description": "Os dados de seu Canalizar Energia mudam para d10. Pré-requisitos: Canalizar Amplo, 9° nível de clérigo."
+    },
+    {
+      "name": "Comunhão Vital",
+      "description": "Quando lança uma magia que cure uma criatura, você pode pagar +2 PM para que outra criatura em alcance curto (incluindo você mesmo) recupere uma quantidade de pontos de vida igual à metade dos PV da cura original. e"
+    },
+    {
+      "name": "Conhecimento Mágico",
+      "description": "Você aprende duas magias de qualquer círculo que possa lançar. Você pode escolher este poder quantas vezes quiser."
+    },
+    {
+      "name": "Conversão de Fé",
+      "description": "Uma vez por cena, você pode gastar uma ação completa e 3 PM para pregar sua fé a uma criatura inteligente (Int –3 ou maior) do tipo lacaio em alcance curto. Faça um teste de Religião oposto ao teste de Vontade da criatura (você recebe +5 no teste com devotos de seu deus, mas sofre –5 com devotos de outros deuses). Se você vencer, até o fim da cena a atitude da criatura se torna prestativa com relação a você e ela passa a atuar como um parceiro iniciante de um tipo à escolha do mestre, que não conta no seu limite de parceiros. Pré-requisito: Autoridade Eclesiástica."
+    },
+    {
+      "name": "Dizimar Infiéis",
+      "description": "Se estiver usando uma arma afetada por Abençoar Arma, você pode gastar uma ação padrão e 2 PM para canalizar a punição divina! Faça um ataque corpo a corpo e compare o resultado com a Defesa de cada criatura em alcance curto. Então faça uma rolagem de dano e aplique-a em cada criatura atingida. Cada inimigo atingido fica ofuscado (se você canaliza energia positiva) ou vulnerável (se canaliza energia negativa) por 1 rodada. Pré-requisitos: Abençoar Arma, 5º nível de clérigo."
+    },
+    {
+      "name": "Égide da Fé",
+      "description": "Quando você lança Escudo da Fé, a magia também fornece 5 PV temporários para cada +1 na Defesa. Esses PV temporários duram até o fim da cena. Pré-requisito: Escudo da Fé."
+    },
+    {
+      "name": "Expulsar/Comandar Mortos-Vivos",
+      "description": "Você pode gastar uma ação padrão e 3 PM para expulsar (se sua divindade canaliza energia positiva) ou comandar (se canaliza energia negativa) todos os mortos-vivos em alcance curto. Mortos-vivos expulsos ficam apavorados por 1d6 rodadas. Mortos-vivos comandados não inteligentes (Int –4 ou menor) ficam sob suas ordens por um dia (até um limite de ND somados igual a seu nível +3; dar uma ordem a todos eles é uma ação de movimento) e mortos-vivos comandados inteligentes ficam fascinados por uma rodada. Mortos-vivos têm direito a um teste de Vontade (CD Sab) para evitar qualquer destes efeitos. Pré-requisito: Canalizar Energia Positiva ou Negativa. e"
+    },
+    {
+      "name": "Força da Devoção",
+      "description": "Quando você lança uma magia de clérigo, sua CD aumenta em +1 para cada dois poderes concedidos de sua divindade que você possui. Pré-requisito: 6º nível de clérigo."
+    },
+    {
+      "name": "Liturgia Mágica",
+      "description": "Você pode gastar uma ação de movimento para executar uma breve liturgia de sua fé. Se fizer isso, a CD para resistir à sua próxima habilidade de clérigo (desde que usada até o final de seu próximo turno) aumenta em +2."
+    },
+    {
+      "name": "Liturgia Marcial",
+      "description": "Você pode gastar uma ação de movimento para executar uma breve liturgia de sua fé. Se fizer isso, você recebe +2 no teste de ataque e na rolagem de dano de seu próximo ataque corpo a corpo nesse turno."
+    },
+    {
+      "name": "Magia Sagrada/Profana",
+      "description": "Quando lança uma magia divina que causa dano, você pode gastar +1 PM. Se fizer isso, muda o tipo de dano da magia para luz (se sua divindade canaliza energia positiva) ou trevas (se canaliza energia negativa)."
+    },
+    {
+      "name": "Mestre Celebrante",
+      "description": "O número de pessoas que você afeta com uma missa aumenta em dez vezes e os benefícios que elas recebem dobram. Abaixo detalhamos como isso se aplica.\n• Se a Missa fornece um bônus numérico que se aplica por toda sua duração, como o de Mente Abençoada, esse bônus é dobrado.\n• Se fornece uma quantidade de PV ou PM, como Elevação do Espírito, essa quantidade é dobrada.\n• Se permite usar uma habilidade ou receber um benefício uma vez, como Compartilhar Milagre, esse efeito pode ser usado uma vez adicional pela duração da Missa. Pré-requisitos: qualquer poder de Missa, 12º nível de clérigo."
+    },
+    {
+      "name": "Missas",
+      "description": "Alguns poderes do clérigo são Missas. Esses poderes compartilham as seguintes regras.\n• Rezar uma Missa exige uma hora e o gasto de materiais especiais (como velas, incensos, água benta...) no valor de T$ 25. Um mesmo celebrante pode aplicar mais de um poder de Missa na mesma celebração. Cada poder adicional aumenta o custo da Missa em T$ 25.\n• Uma Missa afeta um número máximo de pessoas igual a 1 + sua Sabedoria. Todas as pessoas precisam estar presentes durante toda a Missa.\n• Os efeitos de uma Missa duram um dia. Uma mesma criatura só pode receber os benefícios da mesma Missa uma vez por dia."
+    },
+    {
+      "name": "Missa: Bênção da Vida",
+      "description": "Os participantes recebem pontos de vida temporários em um valor igual ao seu nível + sua Sabedoria."
+    },
+    {
+      "name": "Missa: Chamado às Armas",
+      "description": "Os participantes recebem +1 em testes de ataque e rolagens de dano."
+    },
+    {
+      "name": "Missa: Compartilhar Milagre",
+      "description": "Escolha um dos seus poderes concedidos. Até o fim do dia, cada participante desta Missa pode usar esse poder durante 1 rodada, como se fosse devoto da sua divindade (os demais pré-requisitos do poder ainda devem ser cumpridos). Pré-requisito: 17° nível de clérigo."
+    },
+    {
+      "name": "Missa: Elevação do Espírito",
+      "description": "Os participantes recebem pontos de mana temporários em um valor igual a sua Sabedoria."
+    },
+    {
+      "name": "Missa: Escudo Divino",
+      "description": "Os participantes recebem +1 na Defesa e testes de resistência."
+    },
+    {
+      "name": "Missa: Imposição da Vontade",
+      "description": "A CD para resistir às habilidades dos participantes aumenta em +1."
+    },
+    {
+      "name": "Missa: Mente Abençoada",
+      "description": "Os participantes recebem +2 em testes de perícias baseadas em Sabedoria."
+    },
+    {
+      "name": "Missa: Superar as Limitações",
+      "description": "Cada participante recebe +1d6 num único teste a sua escolha e pode usá-lo mesmo após rolar o dado."
+    },
+    {
+      "name": "Prece de Combate",
+      "description": "Quando lança uma magia divina com tempo de conjuração de uma ação padrão em si mesmo, você pode gastar +2 PM para lançá-la como uma ação de movimento."
+    },
+    {
+      "name": "Presente dos Deuses",
+      "description": "Você recebe uma arma superior e mágica, com duas melhorias e um encanto a sua escolha. Normalmente, será a arma preferida de seu deus, mas pode ser outra, de acordo com o mestre. A cada quatro níveis, a arma ganha mais uma melhoria e um encanto a sua escolha. Nas mãos de uma pessoa que não seja devota de sua divindade, a arma se comporta como um item mundano. Se a arma for perdida ou destruída, você pode receber outra fazendo uma penitência (como se tivesse descumprido as Obrigações & Restrições de sua divindade). Pré-requisito: 9º nível de clérigo."
+    },
+    {
+      "name": "Punição Divina",
+      "description": "Uma vez por rodada, quando lança uma magia divina com tempo de execução de ação de movimento em si mesmo, você pode gastar +2 PM fazer um ataque como ação livre. Pré-requisito: Prece de Combate."
+    },
+    {
+      "name": "Representante Divino",
+      "description": "Você fala com a autoridade de seu deus. Escolha uma magia divina que possa lançar com tempo de execução de ação padrão ou completa. Você pode lançar essa magia como uma ação de movimento, sem precisar gesticular ou se concentrar (mas ainda precisa falar). Pré-requisito: 17º nível de clérigo."
+    },
+    {
+      "name": "Símbolo Sagrado Energizado",
+      "description": "Você pode gastar uma ação de movimento e 1 PM para fazer uma prece e energizar seu símbolo sagrado até o fim da cena. Um símbolo sagrado energizado emite uma luz dourada ou prateada (se sua divindade canaliza energia positiva) ou púrpura ou avermelhada (se canaliza energia negativa) que ilumina como uma tocha. Enquanto você estiver empunhando um símbolo sagrado energizado, o custo em PM para lançar suas magias divinas diminui em 1. e"
+    },
+    {
+      "name": "Solo Profanado",
+      "description": "Quando você lança uma magia de dano de trevas dentro de uma área de Profanar, criaturas que falhem no teste de resistência da magia não podem curar PV por um número de rodadas igual ao círculo da magia. Pré-requisito: Profanar."
+    },
+    {
+      "name": "Solo Sagrado",
+      "description": "Quando você lança uma magia de luz dentro de uma área de Consagrar, criaturas a sua escolha nessa área recebem RD igual ao dobro do círculo da magia contra o próximo dano que sofrerem até o início do seu próximo turno. Pré-requisito: Consagrar."
+    },
+    {
+      "name": "Mão da Divindade",
+      "description": "No 20º nível, você pode gastar uma ação completa e 15 PM para canalizar energia divina. Ao fazer isso, você lança três magias divinas quaisquer (de qualquer círculo, incluindo magias que você não conhece), como uma ação livre e sem gastar PM (mas ainda precisa pagar outros custos). Você pode aplicar aprimoramentos, mas precisa pagar por eles. Após usar esta habilidade, você fica atordoado por 1d4 rodadas (mesmo se for imune a esta condição). Corpos mortais não foram feitos para lidar com tanto poder."
+    },
+    {
+      "name": "Inimigo dos Deuses (Usurpador)",
+      "description": "Por roubar o poder de todos os deuses, o usurpador não é aceito por nenhum. Você não pode ter nenhuma devoção."
+    },
+    {
+      "name": "Magias (Usurpador)",
+      "description": "Você pode lançar magias divinas de 1º círculo. A cada quatro níveis, pode lançar magias de um círculo maior (2º círculo no 5º nível, 3º círculo no 9º nível e assim por diante). Você não começa com nenhuma magia e não aprende magias automaticamente como um clérigo faria (mas veja Usurpar, a seguir). Seu atributo-chave para lançar magias é Carisma e você soma seu Carisma no seu total de PM."
+    },
+    {
+      "name": "Usurpar (Usurpador)",
+      "description": "Você pode lançar qualquer magia divina de um círculo a que tenha acesso. Para lançar uma magia dessa forma, deve passar em um teste de Enganação (CD 15 + custo em PM da magia). Se falhar, a magia é perdida, mas os PM são gastos mesmo assim. Você não pode escolher 10 nesse teste, mesmo que possua uma habilidade que permita isso, e sofre penalidade de armadura nele. Além disso, sofre uma penalidade de –5 se estiver em um local contendo um símbolo sagrado visível."
+    },
+    {
+      "name": "Canalização Falsa (Usurpador)",
+      "description": "No 2º nível, você pode canalizar tanto energia positiva quanto negativa."
+    },
+    {
+      "name": "Discrição Divina (Usurpador)",
+      "description": "No 3º nível, você recebe +1 em Furtividade e testes de resistência. A cada seis níveis, esse bônus aumenta em +1."
+    },
+    {
+      "name": "Poder Capturado (Usurpador)",
+      "description": "No 4º nível, você rouba o poder que os deuses concedem a seus devotos. Escolha um deus maior por nível e um poder concedido desse deus (você deve cumprir seus pré-requisitos e não pode escolher poderes exclusivos de qualquer classe, inclusive clérigo). Você pode gastar uma hora e fazer um teste de Enganação (CD é 20 +5 para cada uso adicional no mesmo dia). Se passar, você é considerado um devoto desse deus para efeitos de habilidades e itens, e pode usar o poder concedido escolhido, mas não precisa seguir as Obrigações e Restrições. Se falhar, você perde 3 PM. Este efeito dura até o fim do dia ou até você usá-lo novamente."
+    },
+    {
+      "name": "Roubo Divino (Usurpador)",
+      "description": "No 20º nível, você é capaz de roubar a própria essência divina. Quando lança uma magia com Usurpar, para cada 10 pontos no resultado do teste de Enganação, o total de PM que você gasta nessa magia é reduzido em –1 (cumulativo com outras reduções) e a CD para resistir a ela aumenta em +1."
+    }
+  ]
+}

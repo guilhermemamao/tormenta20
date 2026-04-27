@@ -4,6 +4,7 @@ import SpellsPage from './pages/SpellsPage'
 import CreateSpellPage from './pages/CreateSpellPage'
 import CharacterPage from './pages/CharacterPage'
 import CharactersListPage from './pages/CharactersListPage'
+import CompendiumPage from './pages/CompendiumPage'
 import AuthPage from './pages/AuthPage'
 import { useAuth } from './hooks/useAuth'
 import { supabase } from './lib/supabase'
@@ -90,7 +91,7 @@ function AppLayout({ user, loading, onSignOut }: {
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <AuthPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/magias" element={<SpellsPage />} />
-        <Route path="/compendio" element={<Home />} />
+        <Route path="/compendio" element={<CompendiumPage />} />
         <Route
           path="/magias/criar"
           element={

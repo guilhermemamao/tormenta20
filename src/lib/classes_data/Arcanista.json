@@ -1,0 +1,279 @@
+{
+  "name": "Arcanista",
+  "hp": 8,
+  "addHP": 2,
+  "pm": 6,
+  "skills": [
+    "Misticismo",
+    "Vontade"
+  ],
+  "extraSkillsQty": 2,
+  "extraSkills": [
+    "Conhecimento",
+    "Diplomacia",
+    "Enganação",
+    "Guerra",
+    "Iniciativa",
+    "Intimidação",
+    "Intuição",
+    "Investigação",
+    "Nobreza",
+    "Ofício",
+    "Percepção"
+  ],
+  "proficiencies": [],
+  "abilities": [
+    {
+      "name": "Caminho do Arcanista",
+      "description": "A magia é um poder incrível, capaz de alterar a realidade. Esse poder tem fontes distintas e cada uma opera conforme suas próprias regras. Escolha uma das opções a seguir. Uma vez feita, essa escolha não pode ser mudada."
+    },
+    {
+      "name": "Bruxo",
+      "description": "Você lança magias através de um foco — uma varinha, cajado, chapéu... Para lançar uma magia, você precisa empunhar o foco com uma mão (e gesticular com a outra) ou fazer um teste de Misticismo (CD 20 + o custo em PM da magia; se falhar, a magia não funciona, mas você gasta os PM mesmo assim). O foco tem RD 10 e PV iguais à metade dos seus, independentemente de seu material ou forma. Se for danificado, é totalmente restaurado na próxima vez que você recuperar seus PM por descanso. Se for destruído (reduzido a 0 PV), você fica atordoado por uma rodada. Você pode recuperar um foco destruído ou perdido com uma semana de trabalho e T$ 100. Seu atributo-chave para magias é Inteligência."
+    },
+    {
+      "name": "Feiticeiro",
+      "description": "Você lança magias através de um poder inato que corre em seu sangue. Escolha uma linhagem como origem de seus poderes (veja a página 39). Você recebe a herança básica da linhagem escolhida. Você não depende de nenhum item ou estudo, mas sua capacidade de aprender magias é limitada — você aprende uma magia nova a cada nível ímpar (3º, 5º, 7º etc.), em vez de a cada nível. Seu atributo-chave para magias é Carisma."
+    },
+    {
+      "name": "Mago",
+      "description": "Você lança magias através de estudo e memorização de fórmulas arcanas. Você só pode lançar magias memorizadas; suas outras magias não podem ser lançadas, mesmo que você tenha pontos de mana para tal. Para memorizar magias, você precisa estudar seu grimório por uma hora. Quando faz isso, escolhe metade das magias que conhece (por exemplo, se conhece 7 magias, escolhe 3). Essas serão suas magias memorizadas. Você pode memorizar magias uma vez por dia. Caso não possa estudar (por não ter tempo, por ter perdido o grimório...), não poderá trocar suas magias memorizadas. Um grimório tem as mesmas estatísticas de um foco (veja acima) e pode ser recuperado da mesma forma. Você começa com uma magia adicional (para um total de 4) e, sempre que ganha acesso a um novo círculo de magias, aprende uma magia adicional daquele círculo. Seu atributo-chave para magias é Inteligência."
+    },
+    {
+      "name": "Magias",
+      "description": "Você pode lançar magias arcanas de 1º círculo. A cada quatro níveis, pode lançar magias de um círculo maior (2º círculo no 5º nível, 3º círculo no 9º nível e assim por diante). Você começa com três magias de 1º círculo. A cada nível, aprende uma magia de qualquer círculo que possa lançar. Seu atributo-chave para lançar magias é definido pelo seu Caminho (veja acima) e você soma o bônus do atributo-chave no seu total de PM. Veja o Capítulo 4 para as regras de magia."
+    },
+    {
+      "name": "Familiares Arcanos",
+      "description": "Um familiar é uma criatura mágica. Em termos de jogo, é um parceiro especial com o qual você pode se comunicar telepaticamente em alcance longo. Ele obedece a suas ordens, mas ainda está limitado ao que uma criatura de sua espécie pode fazer. Se ele morrer, você fica atordoado por uma rodada. Você pode invocar um novo familiar com um ritual que exige um dia e T$ 100 em ingredientes.\n• Borboleta. A CD dos testes de Vontade para resistir a suas magias aumenta em +1.\n• Cobra. A CD dos testes de Fortitude para resistir a suas magias aumenta em +1.\n• Coruja. Quando lança uma magia com alcance de toque, você pode pagar 1 PM para aumentar seu alcance para curto.\n• Corvo. Quando faz um teste de Misticismo ou Vontade, você pode pagar 1 PM para rolar dois dados e usar o melhor resultado.\n• Falcão. Você não pode ser surpreendido e nunca fica desprevenido.\n• Gato. Você recebe visão no escuro e +2 em Furtividade.\n• Lagarto. A CD dos testes de Reflexos para resistir a suas magias aumenta em +1.\n• Morcego. Você adquire percepção às cegas em alcance curto.\n• Rato. Você pode usar seu atributo-chave em Fortitude, no lugar de Constituição.\n• Sapo. Você soma seu atributo-chave ao seu total de pontos de vida (cumulativo)."
+    },
+    {
+      "name": "Arcano de Batalha",
+      "description": "Quando lança uma magia, você soma seu atributo-chave na rolagem de dano."
+    },
+    {
+      "name": "Agrilhoar os Caídos",
+      "description": "Quando uma de suas magias de necromancia reduz os PV de um inimigo vivo a 0 ou menos, você pode aprisionar uma parte de seu espírito, que então fica flutuando ao seu redor. Para cada espírito, você recebe +2 na Defesa e em testes de resistência. Quando lança uma magia de dano, você pode libertar um espírito para causar +2d6 pontos de dano de trevas. Você pode acumular um máximo de espíritos simultâneos igual ao seu atributo-chave e eles permanecem ao seu redor até serem libertados ou até o fim do dia. Pré-requisito: 3º nível de arcanista."
+    },
+    {
+      "name": "Alquimia Arcana",
+      "description": "A CD para resistir aos preparados alquímicos e poções que você usa aumenta em +1 para cada círculo de magia a que você tiver acesso. Pré-requisito: treinado em Ofício (alquimista)."
+    },
+    {
+      "name": "Apoteose Celestial",
+      "description": "Sua conexão com o divino se torna ainda mais profunda, às custas de uma fração de sua mortalidade. Você recebe +1 em Sabedoria e aprende uma magia divina de cada círculo a que tenha acesso. Entretanto, sua Constituição diminui em –1. Pré-requisitos: Herança Superior (linhagem celestial), 17° nível de arcanista."
+    },
+    {
+      "name": "Apoteose Dracônica",
+      "description": "A influência de sua magia dracônica se torna cada vez mais evidente, tornando-o mais e mais próximo dos dragões. As magias do seu elemento escolhido causam +1 ponto de dano por dado e, contra criaturas imunes a esse elemento, ainda causam metade do dano. Contudo, você não pode mais lançar magias do tipo oposto ao seu elemento escolhido (fogo para frio e ácido para eletricidade). Pré-requisitos: Herança Superior (linhagem dracônica), 17° nível de arcanista."
+    },
+    {
+      "name": "Apoteose Feérica",
+      "description": "Sua natureza feérica se acentua, mas isso o afasta do mundo dos mortais. Sempre que um ou mais inimigos falharem em um teste de Vontade contra uma de suas magias, você recebe 1 PM temporário cumulativo que dura até o fim da cena. Se a magia é de encantamento ou ilusão, em vez disso você recebe 2 PM temporários. Em ambos os casos, o ganho é limitado pelo total de PM gasto na magia. Contudo, você não pode mais lançar magias de convocação e necromancia. Pré-requisitos: Herança Superior (linhagem feérica), 17° nível de arcanista."
+    },
+    {
+      "name": "Apoteose Rubra",
+      "description": "Você acolheu a corrupção rubra em seu ser — uma escolha que pode ser percebida por todos ao redor. Escolha uma magia que cause dano de cada círculo a que tem acesso. O tipo de dano dessas magias muda para psíquico. Além disso, quando lança uma magia de dano psíquico, você soma seu total de poderes da Tormenta na rolagem de dano. Este poder conta como um poder da Tormenta (exceto para perda de Carisma). Pré-requisitos: Herança Superior (linhagem rubra), 17° nível de arcanista."
+    },
+    {
+      "name": "Arcanista de Linha de Frente",
+      "description": "Quando você lança uma magia, criaturas adjacentes sofrem –2 em seus testes de resistência contra ela e, se ela causar dano, causa um dado extra do mesmo tipo."
+    },
+    {
+      "name": "Asas de Sapo",
+      "description": "Você pode empunhar dois catalisadores diferentes em uma mão ao mesmo tempo e, quando lança uma magia, pode gastar ambos para aplicar seus efeitos. Pré-requisito: treinado em Ofício (alquimista)."
+    },
+    {
+      "name": "Aumento de Atributo",
+      "description": "Você recebe +1 em um atributo. Você pode escolher este poder várias vezes, mas apenas uma vez por patamar para um mesmo atributo."
+    },
+    {
+      "name": "Caldeirão do Bruxo",
+      "description": "Você pode criar poções, como se tivesse o poder geral Preparar Poção. Se tiver ambos, pode criar poções de até 5º círculo. Pré-requisitos: Bruxo, treinado em Ofício (alquimista)."
+    },
+    {
+      "name": "Conhecimento Mágico",
+      "description": "Você aprende duas magias de qualquer círculo que possa lançar. Você pode escolher este poder quantas vezes quiser."
+    },
+    {
+      "name": "Contingência Arcana",
+      "description": "Quando lança Runa de Proteção com o aprimoramento que muda o alvo para “você”, você pode substituir o componente material da magia por uma penalidade em PM igual ao círculo da magia inscrita na runa. Pré-requisito: Runa de Proteção."
+    },
+    {
+      "name": "Contramágica Aprimorada",
+      "description": "Uma vez por rodada, você pode fazer uma contramágica como uma reação (veja a página 173). Pré-requisito: Dissipar Magia."
+    },
+    {
+      "name": "Contramágica Superior",
+      "description": "Quando anula uma magia com uma contramágica, você recebe uma quantidade de PM temporários igual ao círculo da magia anulada (limitada pelos PM que gastou para anular). Pré-requisitos: Contramágica Aprimorada, 9º nível de arcanista."
+    },
+    {
+      "name": "Envolto em Mistério",
+      "description": "Sua aparência e postura assombrosas o permitem manipular e assustar pessoas ignorantes ou supersticiosas. O mestre define o que exatamente você pode fazer e quem se encaixa nessa descrição. Como regra geral, você recebe +5 em Enganação e Intimidação contra pessoas não treinadas em Conhecimento ou Misticismo."
+    },
+    {
+      "name": "Escriba Arcano",
+      "description": "Você pode aprender magias copiando os textos de pergaminhos e grimórios de outros magos. Aprender uma magia dessa forma exige um dia de trabalho e T$ 250 em matérias-primas por PM necessário para lançar a magia. Assim, aprender uma magia de 3º círculo (6 PM) exige 6 dias de trabalho e o gasto de T$ 1.500. Pré-requisitos: Mago, treinado em Ofício (escriba)."
+    },
+    {
+      "name": "Especialista em Escola",
+      "description": "Escolha uma escola de magia. A CD para resistir a suas magias dessa escola aumenta em +2. Pré-requisito: Bruxo ou Mago."
+    },
+    {
+      "name": "Especialista em Invocações",
+      "description": "Você soma seu atributo-chave na Defesa de suas criaturas conjuradas por habilidades mágicas (incluindo capangas) e a ação necessária para comandá-las diminui em um passo (de padrão para movimento e de movimento para livre). Contudo, cada comando só pode ser executado uma vez por rodada."
+    },
+    {
+      "name": "Familiar",
+      "description": "Você possui um animal de estimação mágico. Veja o quadro para detalhes."
+    },
+    {
+      "name": "Familiar Aprimorado",
+      "description": "Seu familiar pode falar e passa a fornecer um segundo benefício, escolhido entre os tipos comuns de familiares (Tormenta20, p. 38). Pré-requisitos: Familiar, 5º nível de arcanista."
+    },
+    {
+      "name": "Fluxo de Mana",
+      "description": "Você pode manter dois efeitos sustentados ativos simultaneamente com apenas uma ação livre, pagando o custo de cada efeito separadamente. Pré-requisito: 10º nível de arcanista."
+    },
+    {
+      "name": "Foco Vital",
+      "description": "Se você estiver segurando seu foco e sofrer dano que o levaria a 0 PV ou menos, você fica com 1 PV e o foco perde PV igual ao valor excedente ou até ser destruído (se o foco for destruído, você sofre o dano excedente). Pré-requisito: Bruxo. e"
+    },
+    {
+      "name": "Fortalecimento Arcano",
+      "description": "A CD para resistir a suas magias aumenta em +1. Se você puder lançar magias de 4º círculo, em vez disso ela aumenta em +2. Pré-requisito: 5º nível de arcanista."
+    },
+    {
+      "name": "Herança Aprimorada",
+      "description": "Você recebe a herança aprimorada de sua linhagem sobrenatural. Pré-requisitos: Feiticeiro, 6º nível de arcanista."
+    },
+    {
+      "name": "Herança Superior",
+      "description": "Você recebe a herança superior de sua linhagem sobrenatural. Pré-requisitos: Herança Aprimorada, 11º nível de arcanista."
+    },
+    {
+      "name": "Ingrediente Especial",
+      "description": "Quando usa uma poção, você pode usar um catalisador e aplicar seus efeitos a ela. Pré-requisitos: Caldeirão do Bruxo, 5º nível de arcanista."
+    },
+    {
+      "name": "Magia Performática",
+      "description": "Quando lança uma magia diante de uma ou mais criaturas inteligentes (Int –3 ou mais), você pode fazer um teste de Atuação (CD 20 + custo em PM da magia) para lançá-la de forma impressionante. Se você passar, a CD da magia aumenta em +1. Esse bônus aumenta em +1 para cada 10 pontos pelos quais o teste passar da CD. Se falhar, a magia não funciona. Pré-requisitos: Car 1, treinado em Atuação."
+    },
+    {
+      "name": "Magia Pungente",
+      "description": "Quando lança uma magia, você pode pagar 1 PM para aumentar em +2 a CD para resistir a ela."
+    },
+    {
+      "name": "Memória Súbita",
+      "description": "Escolha uma de suas magias que não esteja memorizada. Você pode gastar uma ação de movimento para memorizar essa magia até o fim da cena. Se fizer isso, uma de suas outras magias memorizadas, a sua escolha, deixa de estar memorizada. Pré-requisito: Mago."
+    },
+    {
+      "name": "Mestre em Escola",
+      "description": "Escolha uma escola de magia. O custo para lançar magias dessa escola diminui em –1 PM. Pré-requisitos: Especialista em Escola com a escola escolhida, 8º nível de arcanista."
+    },
+    {
+      "name": "O Próprio Sangue",
+      "description": "Se você aprender novamente como feiticeiro uma magia que já possa lançar por uma habilidade qualquer (como uma habilidade de raça ou um poder concedido), a CD para resistir a ela aumenta em +2. Pré-requisito: Feiticeiro."
+    },
+    {
+      "name": "Poder Mágico",
+      "description": "Você recebe +1 ponto de mana por nível de arcanista. Quando sobe de nível, os PM que recebe por este poder aumentam de acordo. Por exemplo, se escolher este poder no 4º nível, recebe 4 PM. Quando subir para o 5º nível, recebe +1 PM e assim por diante."
+    },
+    {
+      "name": "Raio Arcano",
+      "description": "Você pode gastar uma ação padrão para causar 1d8 pontos de dano de essência num alvo em alcance curto. Esse dano aumenta em +1d8 para cada círculo de magia acima do 1º que você puder lançar. O alvo pode fazer um teste de Reflexos (CD atributo-chave) para reduzir o dano à metade. O raio arcano conta como uma magia para efeitos de habilidades e itens que beneficiem suas magias. e"
+    },
+    {
+      "name": "Raio Dividido",
+      "description": "Você pode usar Raio Arcano como uma ação completa, em vez de padrão. Se fizer isso, ele afeta um número de alvos igual ao seu atributo-chave. Pré-requisitos: Raio Arcano, 5º nível de arcanista."
+    },
+    {
+      "name": "Raio Elemental",
+      "description": "Quando usa Raio Arcano, você pode pagar 1 PM para que ele cause dano de ácido, eletricidade, fogo, frio ou trevas, a sua escolha. Se o alvo falhar no teste de Reflexos, sofre uma condição, de acordo com o tipo de dano (veja a descrição das condições na página 394). Ácido: vulnerável por 1 rodada. Eletricidade: ofuscado por 1 rodada. Fogo: fica em chamas. Frio: lento por 1 rodada. Trevas: não pode curar PV por 1 rodada. Pré-requisito: Raio Arcano. e"
+    },
+    {
+      "name": "Raio Poderoso",
+      "description": "Os dados de dano do seu Raio Arcano aumentam para d12 e o alcance dele aumenta para médio. Pré-requisito: Raio Arcano. e"
+    },
+    {
+      "name": "Ritual do Lich (Necromante)",
+      "description": "Você aprendeu o Ritual do Lich e pode executar seus passos (veja o quadro acima). Pré-requisitos: Celebrar Ritual, Escrever Pergaminho, Preparar Poção, 17º nível de necromante."
+    },
+    {
+      "name": "Sifão de Mana",
+      "description": "Quando você lança uma magia e pelo menos um inimigo falha no teste de resistência contra ela, você recupera uma quantidade de pontos de mana igual ao círculo da magia (limitada pelo total de PM gastos nela). Pré-requisito: 17° nível de arcanista."
+    },
+    {
+      "name": "Tinta do Mago",
+      "description": "Você pode criar pergaminhos, como se tivesse o poder Escrever Pergaminho. Se tiver ambos, seu custo para criar pergaminhos é reduzido à metade. Pré-requisitos: Mago, treinado em Ofício (escriba)."
+    },
+    {
+      "name": "Trama Célere",
+      "description": "Uma vez por rodada, quando usa uma ação padrão para lançar uma magia, você pode gastar 2 PM para fazer uma conjuração dupla. Isso permite que você lance uma segunda magia de 1º círculo como ação livre, pagando seu custo em PM como normal. Pré-requisito: 9º nível de arcanista."
+    },
+    {
+      "name": "Transliteração Impossível",
+      "description": "Quando usa um pergaminho de uma magia que conheça, você recebe +2 PM para gastar em aprimoramentos e a magia não pode ser anulada por contramágica. Pré-requisito: Escriba Arcano."
+    },
+    {
+      "name": "Alta Arcana",
+      "description": "No 20º nível, seu domínio das artes arcanas é total. O custo em PM de suas magias arcanas é reduzido à metade (após aplicar aprimoramentos e quaisquer outros efeitos que reduzam custo)."
+    },
+    {
+      "name": "Serpentes Dracônicas (Guia de NPCs)",
+      "description": "Quando lança uma magia que causa dano do tipo de sua linhagem dracônica, você pode gastar +1 PM para aumentar o dano dessa magia em +1d12. Pré-requisitos: medusa, feiticeiro (linhagem dracônica)."
+    },
+    {
+      "name": "Caminho do Necromante (Necromante)",
+      "description": "Você lança magias por meio de uma conexão com a morte. Você pode aprender magias de necromancia divinas como se fossem arcanas, mas não pode aprender magias de encantamento e pelo menos metade das magias que aprender devem ser de necromancia. Além disso, para lançar suas magias você precisa primeiro acessar sua conexão com a morte. Para isso, você deve gastar uma quantidade de PV igual ao círculo máximo de magias que deseja usar (limitado pelo círculo máximo a que tem acesso). Uma vez ativada, a conexão se mantém até o fim da cena. Seu atributo-chave para magias é Inteligência."
+    },
+    {
+      "name": "Falar com Mortos (Necromante)",
+      "description": "Você pode se comunicar com mortos-vivos por meio de seus poderes arcanos. Você pode usar Misticismo com mortos-vivos para mudar atitude e persuasão (Tormenta20, p. 118).\nA partir do 3º nível, você pode gastar uma ação padrão e 1 PM para conversar com um cadáver em alcance curto. Esta habilidade funciona como a magia Voz Divina, com o aprimoramento de conceder um pouco de vida a um cadáver."
+    },
+    {
+      "name": "Animar Cadáver (Necromante)",
+      "description": "No 2º nível, você pode gastar uma ação completa e 3 PM para animar o cadáver de uma criatura Pequena, Média ou Grande em alcance curto. O cadáver se torna um parceiro iniciante de um tipo a sua escolha, adequado ao seu tamanho e anatomia, que não conta em seu limite de parceiros (mas você só pode ter um parceiro cadáver por vez). Quando sofre dano, você pode sacrificar o parceiro cadáver para reduzir esse dano à metade. Cadáveres sacrificados não podem ser reanimados.\nA partir do 7º nível, quando você usa esta habilidade, pode gastar 6 PM para criar um parceiro veterano e, a partir do 11º nível, pode gastar 9 PM para criar um parceiro mestre."
+    },
+    {
+      "name": "Necrologia (Necromante)",
+      "description": "No 3º nível, você recebe +2 em Cura, Fortitude e na CD para resistir às suas magias de necromancia. A cada cinco níveis, esse bônus aumenta em +1."
+    },
+    {
+      "name": "Distorção Necrótica (Necromante)",
+      "description": "No 4º nível, escolha uma de suas magias conhecidas de 1º círculo que não seja de necromancia. A escola dessa magia muda para necromancia. Essa mudança não tem efeitos mecânicos (além da troca de escola), mas altera a aparência e natureza de seu efeito (por exemplo, uma Armadura Arcana de necromancia cria uma armadura de ossos ou de sombras, enquanto uma magia Concentração de Combate manifesta espíritos dos mortos que o aconselham durante a luta)."
+    },
+    {
+      "name": "Necropotência (Necromante)",
+      "description": "No 5º nível, quando estabelece sua conexão com a morte, você pode gastar o dobro de PV. Se fizer isso, sempre que reduzir um ou mais inimigos vivos a 0 PV ou menos com uma magia de necromancia, você recebe 2 PM temporários. Você pode ganhar um máximo de PM temporários por cena igual ao seu nível. Esses pontos temporários desaparecem no fim da cena."
+    },
+    {
+      "name": "Domínio Sobre a Morte (Necromante)",
+      "description": "No 20° nível, você domina as fronteiras da vida e da morte. O custo em PM de suas magias de necromancia é reduzido à metade (após aplicar aprimoramentos e quaisquer outros efeitos que reduzam custo). Além disso, quando você mata uma criatura viva com uma magia de necromancia, pode gastar 2 PM para erguer seu cadáver como um morto-vivo sob seu controle. Isso funciona como a magia Servo Morto-Vivo, mas você escolhe o tipo de parceiro entre quaisquer aprimoramentos da magia e não precisa pagar seu componente material. Mortos-vivos erguidos dessa forma não contam em seu limite de parceiros durante a cena em que são criados (ao fim da cena, mortos-vivos excedentes, a sua escolha, voltar a ser apenas cadáveres)."
+    },
+    {
+      "name": "O Ritual do Lich (Necromante)",
+      "description": "O Ritual do Lich representa o auge do conhecimento mágico de um necromante. É o resultado de anos de estudos, pesquisas e experimentos, sendo conhecido por poucos. Os passos deste ritual são descritos a seguir.\n\nPasso 1: O Filactério\n“Para viver para sempre, a alma não pode ser destruída”. Baseado nesse princípio, o candidato a lich deve possuir um filactério, um local seguro no qual poderá guardar sua alma. O filactério típico é uma caixa de metal selada, repleta de tiras de pergaminhos com escritos mágicos, mas pode ser quase qualquer objeto. Independente de sua forma, o filactério custa T$ 20.000. Com este item em mãos, você deve lançar as seguintes magias, nessa ordem: Profanar (com o aprimoramento que torna permanente), Ligação Sombria (como parte do ritual, pode ser lançada tendo como alvo o filactério), Roubar a Alma (em si mesmo) e Tranca Arcana (no filactério). As magias não surtem efeito imediatamente, apenas no fim do ritual.\n\nPasso 2: A Poção do Sono Eterno\nCom um receptáculo em mãos, você deve se concentrar no próximo passo: morrer. Mas não de qualquer maneira — apenas através da poção do sono eterno. Esta poção especial contém vários tipos de venenos: beladona, cicuta, essência de sombra e pó de lich (uma dose de cada), que são usados como matéria-prima, e fabricá-la exige um teste de Ofício (alquimista) contra CD 35. Com a poção em mãos, você deve lançar as seguintes magias, nessa ordem: Erupção Glacial, Rogar Maldição e Servo Morto-Vivo. Você deve esperar uma noite de lua minguante para beber a poção, pois esta é uma etapa que não pode ser testemunhada por Lena.\n\nPasso 3: O Mago Imortal\nPara você, a poção do sono eterno é letal. Após sua morte, seu corpo fica inerte e sua alma é sugada para o filactério (assim, um candidato que não tenha realizado o primeiro passo do ritual simplesmente morre). Sem um corpo físico, sua consciência vaga pelos reinos dos deuses. Depois de uma semana, sua mente retorna para seu corpo — mas o tempo já cobrou seu preço. Seu corpo está seco, enrugado, com olhos vazios e ossos salientes. Você não respira mais e não tem sangue, tendo se tornado um morto-vivo. Este é um ritual complexo e a preparação e execução dele provavelmente terá tomado boa parte de seu tempo de vida. Mas isso não é um problema: agora você é um lich e não precisa mais se preocupar nem com tempo, nem com vida.\nEm termos de regras, você adquire as características a seguir:\n\nAtributos. Inteligência +1, Sabedoria +1, Carisma +1, Constituição –1.\n\nMorto-Vivo. Seu tipo muda para morto-vivo. Você recebe visão no escuro e imunidade a efeitos de cansaço e metabólicos, eletricidade, frio, metamorfose, trevas e veneno. Além disso, não precisa respirar, alimentar-se ou dormir. Por fim, efeitos mágicos de cura de luz causam dano a você e você não se beneficia de itens da categoria alimentação, mas dano de trevas recupera seus PV.\n\nCadáver Resiliente. Você recebe +5 na Defesa e redução de dano 10/mágico.\n\nAura de Medo. Você recebe este poder (Tormenta20, p. 132, mas ele não é um poder concedido). Se já o possui, a CD para resistir a ele aumenta em +2.\n\nToque Gélido. Quando faz um ataque desarmado, você pode gastar 3 PM para envolver sua mão em frio sobrenatural. Se fizer isso e acertar o ataque, em vez do dano normal você causa 6d6+6 pontos de dano de frio e a vítima fica paralisada por 1 rodada (apenas uma vez por cena, Fort CD Int evita).\n\nFilactério. Se for morto, você retorna completamente recuperado em 1d10 dias. A única forma de derrotá-lo permanentemente é destruir seu filactério. Você pode deixar o filactério em qualquer lugar, mas você e ele precisam estar no mesmo Plano. O filactério possui RD 30 e PV iguais aos seus. Se for danificado, é totalmente restaurado na próxima vez que você recuperar seus PM por descanso.\n\nPreço da Não Vida. Você precisa passar 8 horas sob a luz de estrelas ou no subterrâneo. Se fizer isso, recupera PV e PM por descanso em condições normais (você não é afetado por condições boas ou ruins de descanso). Caso contrário, sofre os efeitos de fome."
+    },
+    {
+      "name": "Linhagens Sobrenaturais",
+      "description": "O poder de um feiticeiro vem de seu sangue — mais precisamente, do sangue de um antepassado sobrenatural, como um dragão ou uma fada. Além da capacidade de lançar magias, o feiticeiro herda desse antepassado uma fração de seu poder natural, que ele pode desenvolver ao longo de sua vida. Ao escolher o caminho do feiticeiro, escolha uma linhagem da lista a seguir. Você recebe a herança básica de sua linhagem e pode desenvolver as demais através de poderes de arcanista."
+    },
+    {
+      "name": "Linhagem Abençoada",
+      "description": "• Básica. Escolha um deus maior. Uma vez feita, essa escolha não pode ser mudada. Você aprende uma magia divina de 1º círculo e pode aprender magias divinas de 1º círculo como magias de feiticeiro. No 2º nível, você recebe um poder concedido do deus escolhido, aprovado pelo mestre, sem precisar ser devoto dele (mas você ainda pode ser devoto desse ou de outro deus). • Aprimorada. Suas magias divinas de círculo igual ou menor que sua Sabedoria custam –1 PM e você pode aprender magias divinas de 2º e 3º círculos como magias de feiticeiro. • Superior. Você recebe +1 em Sabedoria e aprende uma magia divina de cada círculo a que tenha acesso, limitado por sua Sabedoria. A cada dia, após descansar, pode trocar essas magias por outras dos mesmos círculos. Por fim, pode aprender magias divinas de 4º e 5º círculos como magias de feiticeiro."
+    },
+    {
+      "name": "Linhagem Dracônica",
+      "description": "Um de seus antepassados foi um majestoso dragão. Escolha um tipo de dano entre ácido, eletricidade, fogo ou frio. • Básica. Você soma seu Carisma em seus pontos de vida iniciais e recebe redução de dano 5 ao tipo escolhido. • Aprimorada. Suas magias do tipo escolhido custam –1 PM e causam +1 ponto de dano por dado. • Superior. Você passa a somar o dobro do seu Carisma em seus pontos de vida iniciais e se torna imune a dano do tipo escolhido. Além disso, sempre que reduz um ou mais inimigos a 0 PV ou menos com uma magia do tipo escolhido, você recebe uma quantidade de PM temporários igual ao círculo da magia."
+    },
+    {
+      "name": "Linhagem Feérica",
+      "description": "Seu sangue foi tocado pelas fadas. • Básica. Você se torna treinado em Enganação e aprende uma magia de 1º círculo de encantamento ou ilusão, arcana ou divina, a sua escolha. • Aprimorada. A CD para resistir a suas magias de encantamento e ilusão aumenta em +2 e suas magias dessas escolas custam –1 PM. • Superior. Você recebe +2 em Carisma. Se uma criatura passar no teste de resistência contra uma magia de encantamento ou ilusão lançada por você, você fica alquebrado até o final da cena."
+    },
+    {
+      "name": "Linhagem Rubra",
+      "description": "Seu sangue foi corrompido pela Tormenta. • Básica. Você recebe um poder da Tormenta. Além disso, pode perder outro atributo em vez de Carisma por poderes da Tormenta. • Aprimorada. Escolha uma magia para cada poder da Tormenta que você possui. Essas magias custam –1 PM. Sempre que recebe um novo poder da Tormenta, você pode escolher uma nova magia. Esta herança conta como um poder da Tormenta (exceto para perda de Carisma). • Superior. Você recebe +4 PM para cada poder da Tormenta que tiver. Esta herança conta como um poder da Tormenta (exceto para perda de Carisma)."
+    }
+  ]
+}
