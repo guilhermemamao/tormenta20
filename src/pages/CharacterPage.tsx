@@ -355,21 +355,28 @@ export default function CharacterPage() {
 
   // ── Save ──
   async function handleSave() {
+    console.log('[handleSave] user:', user?.id, '| char id from useParams:', id)
     if (!user || !id) return
     setSaveState('saving')
-    const { error } = await supabase
+    const characterData = {
+      name: char.name, player: char.player, race: char.race, origin: char.origin,
+      classes: char.classes, deity: char.deity, size: char.size,
+      movement: char.movement, xp: char.xp,
+      attributes: char.attributes, hp: char.hp, mp: char.mp,
+      attacks: char.attacks, defense: char.defense, skills: char.skills,
+      spells: char.spells, powers: char.powers, equipment: char.equipment,
+      money: char.money, carry_limit: char.carryLimit, notes: char.notes,
+      spell_key_attr: char.spellKeyAttr ?? '',
+    }
+    console.log('Dados sendo salvos:', JSON.stringify(characterData, null, 2))
+    const { data, error } = await supabase
       .from('characters')
-      .update({
-        name: char.name, player: char.player, race: char.race, origin: char.origin,
-        classes: char.classes, deity: char.deity, size: char.size,
-        movement: char.movement, xp: char.xp,
-        attributes: char.attributes, hp: char.hp, mp: char.mp,
-        attacks: char.attacks, defense: char.defense, skills: char.skills,
-        spells: char.spells, powers: char.powers, equipment: char.equipment,
-        money: char.money, carry_limit: char.carryLimit, notes: char.notes,
-        spell_key_attr: char.spellKeyAttr ?? '',
-      })
+      .update(characterData)
       .eq('id', id)
+    console.log('Erro detalhado:', error)
+    console.log('Message:', error?.message)
+    console.log('Details:', error?.details)
+    if (!error) console.log('[handleSave] saved successfully, data:', data)
     setSaveState(error ? 'error' : 'saved')
     setTimeout(() => setSaveState('idle'), 2000)
   }
