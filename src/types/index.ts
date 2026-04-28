@@ -160,6 +160,7 @@ export interface Character {
   money: number
   carryLimit: number
   notes: string
+  originNotes?: string
   spellKeyAttr?: string
   userId?: string
 }

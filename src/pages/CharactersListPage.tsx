@@ -154,11 +154,11 @@ export default function CharactersListPage() {
                 {/* PM bar */}
                 <div>
                   <div className="flex justify-between text-[10px] mb-0.5">
-                    <span className="font-bold text-blue-500">PM</span>
+                    <span className="font-bold" style={{ color: '#1E3A5F' }}>PM</span>
                     <span className="text-stone-400">{ch.mp?.current ?? 0}/{ch.mp?.max ?? 0}</span>
                   </div>
                   <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-500 rounded-full transition-all" style={{ width: `${mpPct}%` }} />
+                    <div className="h-full rounded-full transition-all" style={{ width: `${mpPct}%`, backgroundColor: '#1E3A5F' }} />
                   </div>
                 </div>
               </div>

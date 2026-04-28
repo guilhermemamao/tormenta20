@@ -9,6 +9,7 @@ interface ClassRow {
   name: string
   publication: string
   hit_points: string
+  hp_per_level?: number
   mana_points: string
   skills: string[]
   proficiencies: string[]
@@ -31,6 +32,11 @@ type DetailTab = 'habilidades' | 'poderes'
 
 function normalizeStr(s: string) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+}
+
+function parseHP(hitPoints: string): number {
+  const match = hitPoints.match(/^(\d+)/)
+  return match ? parseInt(match[1]) : 0
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -147,9 +153,9 @@ function ClassListItem({
         {cls.name}
       </p>
       <div className="flex items-center gap-2 mt-0.5 text-[10px] text-stone-400">
-        <span>{cls.hit_points} PV</span>
+        <span className="text-tormenta-red">PV Inicial: {parseHP(cls.hit_points)} + CON</span>
         <span>·</span>
-        <span className="text-blue-500">{cls.mana_points} PM</span>
+        <span style={{ color: '#1E3A5F' }}>{cls.mana_points} PM</span>
         {skillCount > 0 && (
           <>
             <span>·</span>
@@ -203,14 +209,20 @@ function ClassDetail({
         <h2 className="font-display text-2xl font-semibold text-tormenta-red">{cls.name}</h2>
         <p className="text-xs text-stone-400 mb-4">{cls.publication}</p>
 
-        <div className="grid grid-cols-2 gap-2 mb-4">
+        <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="bg-stone-50 rounded-xl p-2.5 text-center">
-            <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 mb-0.5">PV por nível</p>
-            <p className="text-xl font-bold text-stone-800">{cls.hit_points}</p>
+            <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 mb-0.5">PV Inicial</p>
+            <p className="text-base font-bold text-tormenta-red">{parseHP(cls.hit_points)} + CON</p>
+            <p className="text-[9px] text-stone-400 mt-0.5">Nível 1</p>
+          </div>
+          <div className="bg-stone-50 rounded-xl p-2.5 text-center">
+            <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 mb-0.5">PV por Nível</p>
+            <p className="text-base font-bold text-tormenta-red">{cls.hp_per_level ?? 0} + CON</p>
+            <p className="text-[9px] text-stone-400 mt-0.5">Níveis 2 ao 20</p>
           </div>
           <div className="bg-stone-50 rounded-xl p-2.5 text-center">
             <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 mb-0.5">PM por nível</p>
-            <p className="text-xl font-bold text-blue-600">{cls.mana_points}</p>
+            <p className="text-base font-bold" style={{ color: '#1E3A5F' }}>{cls.mana_points}</p>
           </div>
         </div>
 
@@ -309,7 +321,9 @@ function ClassesSection() {
       if (error) {
         setFetchError(error.message)
       } else {
-        setClasses((data ?? []) as ClassRow[])
+        const rows = (data ?? []) as ClassRow[]
+        rows.forEach(cls => console.log('hit_points valor:', cls.name, '->', cls.hit_points))
+        setClasses(rows)
       }
       setLoading(false)
     })
