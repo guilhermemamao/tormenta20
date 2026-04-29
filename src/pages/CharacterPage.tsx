@@ -103,7 +103,7 @@ const ATTR_CONFIG: { key: keyof Character['attributes']; abbr: string; label: st
 const DEITY_OPTIONS = [
   'Nenhuma', 'Aharadak', 'Allihanna', 'Arsenal', 'Azgher', 'Hyninn',
   'Kallyadranoch', 'Khalmyr', 'Lena', 'Lin-Wu', 'Marah', 'Megalokk',
-  'Nimb', 'Oceano', 'Sszzaas', 'Tanna-Toh', 'Tenebra', 'Thiatys',
+  'Nimb', 'Oceano', 'Sszzaas','Tauron', 'Tanna-Toh', 'Tenebra', 'Thiatys',
   'Thwor', 'Valkaria', 'Wynna',
 ]
 
