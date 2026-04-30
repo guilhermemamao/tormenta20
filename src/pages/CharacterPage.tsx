@@ -33,6 +33,15 @@ interface ClassDef {
   manaPoints: string
 }
 
+interface RaceData {
+  id: string
+  name: string
+  size: string
+  displacement: number
+  race_attributes: { attr: string; mod: number }[]
+  race_abilities: { name: string; description: string; sort_order: number }[]
+}
+
 const SCHOOL_ICONS: Record<string, React.ElementType> = {
   Abjuração: Shield, Adivinhação: Eye, Convocação: Sparkles,
   Encantamento: Heart, Evocação: Zap, Ilusão: EyeOff,
@@ -346,6 +355,31 @@ function SpellPicker({ onAdd, onClose, alreadyAdded }: {
   )
 }
 
+// ─── RaceAbilityCard ─────────────────────────────────────────────────────────
+
+function RaceAbilityCard({ name, description }: { name: string; description: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="border border-stone-100 rounded-lg overflow-hidden">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-stone-50 transition-colors"
+      >
+        <span className="flex-1 text-sm font-medium text-stone-800">{name}</span>
+        <ChevronDown
+          size={13}
+          className={`text-stone-300 shrink-0 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {open && (
+        <div className="px-3 pb-3 pt-1.5 border-t border-stone-50 bg-stone-50/50">
+          <p className="text-xs text-stone-600 leading-relaxed">{description}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── CharacterPage ────────────────────────────────────────────────────────────
 
 export default function CharacterPage() {
@@ -365,6 +399,11 @@ export default function CharacterPage() {
   const [classDefsMap, setClassDefsMap] = useState<Record<string, ClassDef>>({})
   const [grimSort, setGrimSort] = useState<'circle' | 'alpha' | 'school'>('circle')
   const fetchedClassNames = useRef<Set<string>>(new Set())
+  const [raceData, setRaceData] = useState<RaceData | null>(null)
+  const [raceSuggestions, setRaceSuggestions] = useState<RaceData[]>([])
+  const [raceSearch, setRaceSearch] = useState('')
+  const [showRaceDropdown, setShowRaceDropdown] = useState(false)
+  const raceInputRef = useRef<HTMLInputElement>(null)
 
   // ── Load character from Supabase ──
   useEffect(() => {
@@ -397,6 +436,39 @@ export default function CharacterPage() {
         setClassDefsMap(prev => ({ ...prev, ...updates }))
       })
   }, [char.classes])
+
+  // ── Race autocomplete ──
+  useEffect(() => {
+    setRaceSearch(char.race ?? '')
+  }, [char.race])
+
+  useEffect(() => {
+    const q = raceSearch.trim()
+    if (!q || q.length < 1) { setRaceSuggestions([]); return }
+    const timer = setTimeout(async () => {
+      const { data } = await supabase
+        .from('races')
+        .select('id, name, size, displacement, race_attributes(attr, mod), race_abilities(name, description, sort_order)')
+        .ilike('name', `%${q}%`)
+        .order('name')
+        .limit(8)
+      setRaceSuggestions((data as RaceData[]) ?? [])
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [raceSearch])
+
+  // Carrega dados da raça salva no personagem ao abrir a ficha
+  useEffect(() => {
+    if (!char.race) return
+    supabase
+      .from('races')
+      .select('id, name, size, displacement, race_attributes(attr, mod), race_abilities(name, description, sort_order)')
+      .ilike('name', char.race)
+      .limit(1)
+      .single()
+      .then(({ data }) => { if (data) setRaceData(data as RaceData) })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // só na montagem
 
   // ── Patch helpers ──
   const patch = (p: Partial<Character>) => setChar(c => ({ ...c, ...p }))
@@ -576,9 +648,45 @@ export default function CharacterPage() {
 
           {/* Linha 2: Raça | Origem | Divindade */}
           <div className="grid grid-cols-3 gap-x-6 mb-3">
-            <div>
+            <div className="relative">
               <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Raça</label>
-              <input type="text" value={char.race} onChange={e => patch({ race: e.target.value })} className={INP} />
+              <input
+                ref={raceInputRef}
+                type="text"
+                value={raceSearch}
+                onChange={e => {
+                  setRaceSearch(e.target.value)
+                  patch({ race: e.target.value })
+                  setShowRaceDropdown(true)
+                  if (!e.target.value) setRaceData(null)
+                }}
+                onFocus={() => setShowRaceDropdown(true)}
+                onBlur={() => setTimeout(() => setShowRaceDropdown(false), 150)}
+                placeholder="Buscar raça..."
+                className={INP}
+                autoComplete="off"
+              />
+              {showRaceDropdown && raceSuggestions.length > 0 && (
+                <div className="absolute z-30 top-full left-0 mt-1 w-56 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden">
+                  {raceSuggestions.map(r => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onMouseDown={() => {
+                        patch({ race: r.name, size: r.size, movement: r.displacement })
+                        setRaceSearch(r.name)
+                        setRaceData(r)
+                        setShowRaceDropdown(false)
+                        setRaceSuggestions([])
+                      }}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-stone-50 border-b border-stone-50 last:border-0 cursor-pointer"
+                    >
+                      <span className="font-medium text-stone-800">{r.name}</span>
+                      <span className="text-xs text-stone-400 ml-2">{r.size}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Origem</label>
@@ -744,6 +852,24 @@ export default function CharacterPage() {
             </div>
           </div>
         </div>
+
+        {/* Habilidades Raciais */}
+        {raceData && raceData.race_abilities.length > 0 && (
+          <div className="card">
+            <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400 mb-3">
+              Habilidades Raciais
+              <span className="ml-2 text-tormenta-red font-normal normal-case text-xs">{raceData.name}</span>
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {raceData.race_abilities
+                .slice()
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map(ab => (
+                  <RaceAbilityCard key={ab.name} name={ab.name} description={ab.description} />
+                ))}
+            </div>
+          </div>
+        )}
       </div>
     )
   }
