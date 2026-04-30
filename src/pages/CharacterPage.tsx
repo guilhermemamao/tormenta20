@@ -103,24 +103,24 @@ const ATTR_CONFIG: { key: keyof Character['attributes']; abbr: string; label: st
 const DEITY_OPTIONS = [
   'Nenhuma', 'Aharadak', 'Allihanna', 'Arsenal', 'Azgher', 'Hyninn',
   'Kallyadranoch', 'Khalmyr', 'Lena', 'Lin-Wu', 'Marah', 'Megalokk',
-  'Nimb', 'Oceano', 'Sszzaas', 'Tanna-Toh', 'Tenebra', 'Thiatys',
+  'Nimb', 'Oceano', 'Sszzaas','Tauron', 'Tanna-Toh', 'Tenebra', 'Thiatys',
   'Thwor', 'Valkaria', 'Wynna',
 ]
 
 const ALL_SKILLS: SkillDef[] = [
   { name: 'Acrobacia',     attr: 'dex', armorPenalty: true,  trainedOnly: false },
   { name: 'Adestramento',  attr: 'cha', armorPenalty: false, trainedOnly: true  },
-  { name: 'Atletismo',     attr: 'str', armorPenalty: true,  trainedOnly: false },
+  { name: 'Atletismo',     attr: 'str', armorPenalty: false,  trainedOnly: false },
   { name: 'Atuação',       attr: 'cha', armorPenalty: false, trainedOnly: false },
   { name: 'Cavalgar',      attr: 'dex', armorPenalty: false, trainedOnly: false },
   { name: 'Conhecimento',  attr: 'int', armorPenalty: false, trainedOnly: true  },
   { name: 'Cura',          attr: 'wis', armorPenalty: false, trainedOnly: false },
   { name: 'Diplomacia',    attr: 'cha', armorPenalty: false, trainedOnly: false },
   { name: 'Enganação',     attr: 'cha', armorPenalty: false, trainedOnly: false },
-  { name: 'Fortitude',     attr: 'con', armorPenalty: false, trainedOnly: true  },
+  { name: 'Fortitude',     attr: 'con', armorPenalty: false, trainedOnly: false  },
   { name: 'Furtividade',   attr: 'dex', armorPenalty: true,  trainedOnly: false },
   { name: 'Guerra',        attr: 'int', armorPenalty: false, trainedOnly: true  },
-  { name: 'Iniciativa',    attr: 'dex', armorPenalty: false, trainedOnly: true  },
+  { name: 'Iniciativa',    attr: 'dex', armorPenalty: false, trainedOnly: false  },
   { name: 'Intimidação',   attr: 'cha', armorPenalty: false, trainedOnly: false },
   { name: 'Intuição',      attr: 'wis', armorPenalty: false, trainedOnly: false },
   { name: 'Investigação',  attr: 'int', armorPenalty: false, trainedOnly: false },
