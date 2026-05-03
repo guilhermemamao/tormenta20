@@ -105,7 +105,7 @@ interface TabGeralProps {
   raceSearch: string
   raceSuggestions: RaceData[]
   showRaceDropdown: boolean
-  raceInputRef: RefObject<HTMLInputElement>
+  raceInputRef: RefObject<HTMLInputElement | null>
   setRaceSearch: (v: string) => void
   setRaceData: (v: RaceData | null) => void
   setShowRaceDropdown: (v: boolean) => void

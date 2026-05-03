@@ -40,7 +40,7 @@ export default function CharacterPage() {
   const [raceSuggestions, setRaceSuggestions] = useState<RaceData[]>([])
   const [raceSearch, setRaceSearch] = useState('')
   const [showRaceDropdown, setShowRaceDropdown] = useState(false)
-  const raceInputRef = useRef<HTMLInputElement>(null)
+  const raceInputRef = useRef<HTMLInputElement | null>(null)
 
   // ── Load character from Supabase ──
   useEffect(() => {

@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react'
 import type { Character } from '../../types'
 import {
   ALL_SKILLS, ATTR_CONFIG, DEFAULT_SKILL,
-  attrMod, fmtMod, fmtBonus, calcSkillTotal,
+  fmtMod, fmtBonus, calcSkillTotal,
 } from './characterHelpers'
 
 interface TabPericiasProps {
