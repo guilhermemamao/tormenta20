@@ -18,6 +18,102 @@ interface TabEquipamentoProps {
   carryLimit: number
 }
 
+type EquipItem = Character['equipment'][number] & { idx: number }
+
+interface ItemRowsProps {
+  items: EquipItem[]
+  patchEquip: (i: number, field: string, value: string | number) => void
+  removeEquip: (i: number) => void
+  toggleEquipExpand: (i: number) => void
+  expandedEquip: Set<number>
+}
+
+function ItemRows({ items, patchEquip, removeEquip, toggleEquipExpand, expandedEquip }: ItemRowsProps) {
+  return (
+    <div className="divide-y divide-stone-50">
+      {items.map(item => (
+        <div key={item.idx}>
+          <div className="flex items-center gap-2 py-1.5">
+            <button type="button" onClick={() => toggleEquipExpand(item.idx)}
+              className="text-stone-300 hover:text-stone-500 shrink-0 transition-transform duration-150"
+              style={{ transform: expandedEquip.has(item.idx) ? 'rotate(90deg)' : 'none' }}>
+              <ChevronRight size={13} />
+            </button>
+            <input value={item.name} placeholder="Nome do item"
+              onChange={e => patchEquip(item.idx, 'name', e.target.value)}
+              className={`${INP_CARD} flex-1 min-w-0`}
+            />
+            <input type="number" min={1} value={item.quantity}
+              onChange={e => patchEquip(item.idx, 'quantity', parseInt(e.target.value) || 1)}
+              className="w-14 text-center bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-tormenta-red shrink-0"
+            />
+            <div className="flex items-center gap-1 shrink-0">
+              <input type="number" min={0} value={item.slots}
+                onChange={e => patchEquip(item.idx, 'slots', parseInt(e.target.value) || 0)}
+                className="w-10 text-center bg-stone-50 border border-stone-200 rounded-lg px-1 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-tormenta-red"
+              />
+              <span className="text-[10px] text-stone-400">esp.</span>
+            </div>
+            <button onClick={() => removeEquip(item.idx)} className="text-stone-300 hover:text-red-500 shrink-0">
+              <Trash2 size={13} />
+            </button>
+          </div>
+          <div className={`grid transition-all duration-200 ${expandedEquip.has(item.idx) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+            <div className="overflow-hidden">
+              <div className="pl-7 pr-2 pb-2">
+                <textarea rows={2}
+                  value={item.description ?? ''}
+                  onChange={e => patchEquip(item.idx, 'description', e.target.value)}
+                  placeholder="Descrição do item…"
+                  className="w-full bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-xs text-stone-600 focus:outline-none focus:ring-1 focus:ring-tormenta-red resize-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+interface SectionProps extends ItemRowsProps {
+  title: string
+  open: boolean
+  onToggle: () => void
+  location: 'body' | 'bag'
+  addEquip: (location: 'body' | 'bag') => void
+}
+
+function Section({ title, items, open, onToggle, location, addEquip, patchEquip, removeEquip, toggleEquipExpand, expandedEquip }: SectionProps) {
+  return (
+    <div className="border border-stone-200 rounded-xl overflow-hidden">
+      <button type="button" onClick={onToggle}
+        className="w-full flex items-center justify-between px-4 py-2.5 bg-stone-50/80 hover:bg-stone-100 transition-colors">
+        <div className="flex items-center gap-2">
+          {open ? <ChevronDown size={13} className="text-stone-400" /> : <ChevronRight size={13} className="text-stone-400" />}
+          <span className="text-xs font-semibold text-stone-600">{title}</span>
+          <span className="text-[10px] text-stone-400 bg-stone-200 rounded-full px-1.5 py-0.5 leading-none">{items.length}</span>
+        </div>
+        <button type="button" onClick={e => { e.stopPropagation(); addEquip(location) }}
+          className="flex items-center gap-0.5 text-[11px] text-tormenta-red hover:text-tormenta-red-dark font-medium">
+          <Plus size={11} /> Adicionar
+        </button>
+      </button>
+      <div className={`grid transition-all duration-300 ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+        <div className="overflow-hidden">
+          <div className="px-4 py-2">
+            {items.length === 0
+              ? <p className="text-xs text-stone-400 text-center py-3">Nenhum item nesta seção</p>
+              : <ItemRows items={items} patchEquip={patchEquip} removeEquip={removeEquip}
+                  toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip} />
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function TabEquipamento({
   char, patch,
   addEquip, removeEquip, patchEquip,
@@ -27,89 +123,6 @@ export default function TabEquipamento({
 }: TabEquipamentoProps) {
   const bodyItems = char.equipment.map((e, i) => ({ ...e, idx: i })).filter(e => e.location === 'body')
   const bagItems  = char.equipment.map((e, i) => ({ ...e, idx: i })).filter(e => e.location !== 'body')
-
-  function ItemRows({ items }: { items: typeof bodyItems }) {
-    return (
-      <div className="divide-y divide-stone-50">
-        {items.map(item => (
-          <div key={item.idx}>
-            <div className="flex items-center gap-2 py-1.5">
-              <button type="button" onClick={() => toggleEquipExpand(item.idx)}
-                className="text-stone-300 hover:text-stone-500 shrink-0 transition-transform duration-150"
-                style={{ transform: expandedEquip.has(item.idx) ? 'rotate(90deg)' : 'none' }}>
-                <ChevronRight size={13} />
-              </button>
-              <input value={item.name} placeholder="Nome do item"
-                onChange={e => patchEquip(item.idx, 'name', e.target.value)}
-                className={`${INP_CARD} flex-1 min-w-0`}
-              />
-              <input type="number" min={1} value={item.quantity}
-                onChange={e => patchEquip(item.idx, 'quantity', parseInt(e.target.value) || 1)}
-                className="w-14 text-center bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-tormenta-red shrink-0"
-              />
-              <div className="flex items-center gap-1 shrink-0">
-                <input type="number" min={0} value={item.slots}
-                  onChange={e => patchEquip(item.idx, 'slots', parseInt(e.target.value) || 0)}
-                  className="w-10 text-center bg-stone-50 border border-stone-200 rounded-lg px-1 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-tormenta-red"
-                />
-                <span className="text-[10px] text-stone-400">esp.</span>
-              </div>
-              <button onClick={() => removeEquip(item.idx)} className="text-stone-300 hover:text-red-500 shrink-0">
-                <Trash2 size={13} />
-              </button>
-            </div>
-            <div className={`grid transition-all duration-200 ${expandedEquip.has(item.idx) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-              <div className="overflow-hidden">
-                <div className="pl-7 pr-2 pb-2">
-                  <textarea rows={2}
-                    value={item.description ?? ''}
-                    onChange={e => patchEquip(item.idx, 'description', e.target.value)}
-                    placeholder="Descrição do item…"
-                    className="w-full bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-xs text-stone-600 focus:outline-none focus:ring-1 focus:ring-tormenta-red resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  function Section({ title, items, open, onToggle, location }: {
-    title: string
-    items: typeof bodyItems
-    open: boolean
-    onToggle: () => void
-    location: 'body' | 'bag'
-  }) {
-    return (
-      <div className="border border-stone-200 rounded-xl overflow-hidden">
-        <button type="button" onClick={onToggle}
-          className="w-full flex items-center justify-between px-4 py-2.5 bg-stone-50/80 hover:bg-stone-100 transition-colors">
-          <div className="flex items-center gap-2">
-            {open ? <ChevronDown size={13} className="text-stone-400" /> : <ChevronRight size={13} className="text-stone-400" />}
-            <span className="text-xs font-semibold text-stone-600">{title}</span>
-            <span className="text-[10px] text-stone-400 bg-stone-200 rounded-full px-1.5 py-0.5 leading-none">{items.length}</span>
-          </div>
-          <button type="button" onClick={e => { e.stopPropagation(); addEquip(location) }}
-            className="flex items-center gap-0.5 text-[11px] text-tormenta-red hover:text-tormenta-red-dark font-medium">
-            <Plus size={11} /> Adicionar
-          </button>
-        </button>
-        <div className={`grid transition-all duration-300 ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-          <div className="overflow-hidden">
-            <div className="px-4 py-2">
-              {items.length === 0
-                ? <p className="text-xs text-stone-400 text-center py-3">Nenhum item nesta seção</p>
-                : <ItemRows items={items} />
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="space-y-5">
@@ -134,9 +147,13 @@ export default function TabEquipamento({
 
         <div className="space-y-2">
           <Section title="Equipado no corpo" items={bodyItems} open={bodyOpen}
-            onToggle={() => setBodyOpen(o => !o)} location="body" />
+            onToggle={() => setBodyOpen(o => !o)} location="body" addEquip={addEquip}
+            patchEquip={patchEquip} removeEquip={removeEquip}
+            toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip} />
           <Section title="Na mochila" items={bagItems} open={bagOpen}
-            onToggle={() => setBagOpen(o => !o)} location="bag" />
+            onToggle={() => setBagOpen(o => !o)} location="bag" addEquip={addEquip}
+            patchEquip={patchEquip} removeEquip={removeEquip}
+            toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip} />
         </div>
       </div>
 

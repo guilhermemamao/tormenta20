@@ -399,8 +399,8 @@ function ClassesSection() {
   }
 
   return (
-    <div className="flex gap-5 items-start">
-      <div className="w-64 shrink-0">
+    <div className="flex flex-col gap-5 md:flex-row md:items-start">
+      <div className="w-full md:w-64 shrink-0">
         <div className="mb-3">
           <div className="relative">
             <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
@@ -783,8 +783,8 @@ export default function CompendiumPage() {
         <p className="text-stone-400 text-sm mt-0.5">Referência completa de Tormenta20</p>
       </div>
 
-      <div className="flex gap-6 items-start">
-        <aside className="w-44 shrink-0">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start">
+        <aside className="w-full md:w-44 shrink-0">
           <div className="card py-3 px-2 sticky top-6">
             <p className="text-[9px] font-bold uppercase tracking-widest text-stone-300 px-2 mb-2">Seções</p>
             <SectionNav active={section} onChange={s => setSection(s)} />

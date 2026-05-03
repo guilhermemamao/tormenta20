@@ -293,7 +293,7 @@ export default function CharacterPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 border-b border-stone-200">
+      <div className="flex gap-1 mb-5 border-b border-stone-200 overflow-x-auto pb-px">
         {TABS.map(({ id: tabId, label, icon: Icon }) => (
           <button key={tabId} onClick={() => setTab(tabId)}
             className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${

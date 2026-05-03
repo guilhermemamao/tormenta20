@@ -144,7 +144,7 @@ export default function TabGeral({
         </h3>
 
         {/* Linha 1: Nome | Jogador */}
-        <div className="grid grid-cols-[1fr_160px] gap-x-6 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_160px] gap-x-6 mb-3">
           <div>
             <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Nome</label>
             <input type="text" value={char.name} onChange={e => patch({ name: e.target.value })}
@@ -159,7 +159,7 @@ export default function TabGeral({
         </div>
 
         {/* Linha 2: Raça | Origem | Divindade */}
-        <div className="grid grid-cols-3 gap-x-6 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 mb-3">
           <div className="relative">
             <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Raça</label>
             <input
@@ -272,7 +272,7 @@ export default function TabGeral({
         </div>
 
         {/* Linha 4: Tamanho | Deslocamento | XP | (vazio) */}
-        <div className="grid grid-cols-[2fr_3fr_2fr_11fr] gap-x-6">
+        <div className="grid grid-cols-2 sm:grid-cols-[2fr_3fr_2fr_11fr] gap-x-6">
           <div>
             <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Tamanho</label>
             <input type="text" value={char.size} onChange={e => patch({ size: e.target.value })} className={INP} />
@@ -292,20 +292,20 @@ export default function TabGeral({
             <input type="number" min={0} value={char.xp}
               onChange={e => patch({ xp: parseInt(e.target.value) || 0 })} className={INP} />
           </div>
-          <div />{/* espaço vazio */}
+          <div className="hidden sm:block" />{/* espaço vazio */}
         </div>
       </div>
 
       {/* Atributos + Recursos */}
-      <div className="grid grid-cols-3 gap-5">
-        <div className="card col-span-2">
+      <div className="flex flex-col gap-5 sm:grid sm:grid-cols-3">
+        <div className="card sm:col-span-2">
           <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400 mb-4">Atributos</h3>
           <div className="grid grid-cols-6 gap-2 mb-4">
             {ATTR_CONFIG.map(({ key, abbr }) => (
               <StatInput key={key} abbr={abbr} value={char.attributes[key]} onChange={v => patchAttr(key, v)} />
             ))}
           </div>
-          <div className="flex items-center gap-3 pt-3 border-t border-stone-100">
+          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-stone-100">
             {saves.map(({ label, attr }) => {
               const total = calcSkillTotal(char.attributes[attr], char.skills[label] ?? DEFAULT_SKILL, level, false, 0)
               return (

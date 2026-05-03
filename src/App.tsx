@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom'
 import type { User } from '@supabase/supabase-js'
 import SpellsPage from './pages/SpellsPage'
@@ -12,27 +13,65 @@ import { supabase } from './lib/supabase'
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
 function Navbar({ user, onSignOut }: { user: User | null; onSignOut: () => void }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const close = () => setMenuOpen(false)
+
   return (
-    <nav className="bg-tormenta-red text-white px-6 py-3 flex items-center gap-8 shadow-md">
-      <span className="font-display text-lg font-semibold tracking-wide">Tormenta 20</span>
-      <Link to="/" className="text-sm hover:text-amber-200 transition-colors">Início</Link>
-      <Link to="/magias" className="text-sm hover:text-amber-200 transition-colors">Magias</Link>
-      {user && (
-        <Link to="/fichas" className="text-sm hover:text-amber-200 transition-colors">Minhas Fichas</Link>
-      )}
-      <Link to="/compendio" className="text-sm hover:text-amber-200 transition-colors">Compêndio</Link>
-      <div className="ml-auto flex items-center gap-4">
-        {user ? (
-          <>
-            <span className="text-xs text-white/70 max-w-[160px] truncate">{user.email}</span>
-            <button onClick={onSignOut} className="text-sm hover:text-amber-200 transition-colors">
-              Sair
-            </button>
-          </>
-        ) : (
-          <Link to="/login" className="text-sm hover:text-amber-200 transition-colors">Entrar</Link>
+    <nav className="bg-tormenta-red text-white shadow-md">
+      <div className="px-6 py-3 flex items-center gap-8">
+        <span className="font-display text-lg font-semibold tracking-wide">Tormenta 20</span>
+
+        {/* Desktop links */}
+        <Link to="/" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Início</Link>
+        <Link to="/magias" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Magias</Link>
+        {user && (
+          <Link to="/fichas" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Minhas Fichas</Link>
         )}
+        <Link to="/compendio" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Compêndio</Link>
+        <div className="ml-auto hidden md:flex items-center gap-4">
+          {user ? (
+            <>
+              <span className="text-xs text-white/70 max-w-[160px] truncate">{user.email}</span>
+              <button onClick={onSignOut} className="text-sm hover:text-amber-200 transition-colors">
+                Sair
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="text-sm hover:text-amber-200 transition-colors">Entrar</Link>
+          )}
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="ml-auto md:hidden text-lg leading-none focus:outline-none"
+          onClick={() => setMenuOpen(o => !o)}
+          aria-label="Menu"
+        >
+          ☰
+        </button>
       </div>
+
+      {/* Mobile dropdown */}
+      {menuOpen && (
+        <div className="md:hidden flex flex-col gap-3 px-6 py-4 border-t border-white/20">
+          <Link to="/" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Início</Link>
+          <Link to="/magias" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Magias</Link>
+          {user && (
+            <Link to="/fichas" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Minhas Fichas</Link>
+          )}
+          <Link to="/compendio" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Compêndio</Link>
+          {user ? (
+            <>
+              <span className="text-xs text-white/70 truncate">{user.email}</span>
+              <button onClick={() => { onSignOut(); close() }} className="text-sm text-left hover:text-amber-200 transition-colors">
+                Sair
+              </button>
+            </>
+          ) : (
+            <Link to="/login" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Entrar</Link>
+          )}
+        </div>
+      )}
     </nav>
   )
 }
@@ -56,7 +95,7 @@ function Home() {
     <div className="max-w-4xl mx-auto px-6 py-16 text-center">
       <h1 className="font-display text-4xl font-semibold text-tormenta-red mb-4">Tormenta 20</h1>
       <p className="text-stone-600 text-lg mb-12">Seu companheiro digital para aventuras em Arton</p>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <Link to="/magias" className="card hover:shadow-md transition-shadow cursor-pointer group">
           <div className="text-3xl mb-3">🔮</div>
           <h2 className="font-display text-tormenta-red font-medium mb-1">Magias</h2>
