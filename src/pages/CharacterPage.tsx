@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import type { Character, CharacterSpell, CharacterPower, Spell } from '../types'
 import { supabase } from '../lib/supabase'
@@ -18,6 +18,7 @@ import TabCombate from '../components/character/TabCombate'
 import TabGrimorio, { SpellPicker } from '../components/character/TabGrimorio'
 import TabOrigem from '../components/character/TabOrigem'
 import TabEquipamento from '../components/character/TabEquipamento'
+import { useDirty } from '../contexts/DirtyContext'
 
 export default function CharacterPage() {
   const { id } = useParams<{ id: string }>()
@@ -41,12 +42,29 @@ export default function CharacterPage() {
   const [raceSearch, setRaceSearch] = useState('')
   const [showRaceDropdown, setShowRaceDropdown] = useState(false)
   const raceInputRef = useRef<HTMLInputElement | null>(null)
+  const { isDirtyRef } = useDirty()
+  const [showUnsavedModal, setShowUnsavedModal] = useState(false)
+  const [pendingNav, setPendingNav] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  function markDirty() { isDirtyRef.current = true }
+  function markClean() { isDirtyRef.current = false }
+
+  function safeNavigate(to: string) {
+    if (isDirtyRef.current) {
+      setPendingNav(to)
+      setShowUnsavedModal(true)
+    } else {
+      navigate(to)
+    }
+  }
 
   // ── Load character from Supabase ──
   useEffect(() => {
     if (!id) { setCharError('ID inválido'); setCharLoading(false); return }
     supabase.from('characters').select('*').eq('id', id).single()
       .then(({ data, error }) => {
+        markClean()
         if (error || !data) setCharError('Personagem não encontrado.')
         else setChar(rowToCharacter(data))
         setCharLoading(false)
@@ -107,16 +125,34 @@ export default function CharacterPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // só na montagem
 
+  // ── Dirty tracking ──
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (!isDirtyRef.current) return
+      e.preventDefault()
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [])
+
   // ── Patch helpers ──
-  const patch = (p: Partial<Character>) => setChar(c => ({ ...c, ...p }))
-  const patchAttr = (k: keyof Character['attributes'], v: number) =>
+  const patch = (p: Partial<Character>) => { markDirty(); setChar(c => ({ ...c, ...p })) }
+  const patchAttr = (k: keyof Character['attributes'], v: number) => {
+    markDirty()
     setChar(c => ({ ...c, attributes: { ...c.attributes, [k]: v } }))
-  const patchHP = (k: 'current' | 'max', v: number) =>
+  }
+  const patchHP = (k: 'current' | 'max', v: number) => {
+    markDirty()
     setChar(c => ({ ...c, hp: { ...c.hp, [k]: v } }))
-  const patchMP = (k: 'current' | 'max', v: number) =>
+  }
+  const patchMP = (k: 'current' | 'max', v: number) => {
+    markDirty()
     setChar(c => ({ ...c, mp: { ...c.mp, [k]: v } }))
-  const patchDef = (k: keyof Character['defense'], v: number) =>
+  }
+  const patchDef = (k: keyof Character['defense'], v: number) => {
+    markDirty()
     setChar(c => ({ ...c, defense: { ...c.defense, [k]: v } }))
+  }
 
   // ── Auto-calc HP / MP ──
   function calcAutoHP() {
@@ -175,6 +211,7 @@ export default function CharacterPage() {
     console.log('Message:', error?.message)
     console.log('Details:', error?.details)
     if (!error) console.log('[handleSave] saved successfully, data:', data)
+    if (!error) markClean()
     setSaveState(error ? 'error' : 'saved')
     setTimeout(() => setSaveState('idle'), 2000)
   }
@@ -187,6 +224,7 @@ export default function CharacterPage() {
     })
   }
   function patchSkill(name: string, field: 'training' | 'outros', value: number) {
+    markDirty()
     setChar(c => {
       const cur = c.skills[name] ?? DEFAULT_SKILL
       return { ...c, skills: { ...c.skills, [name]: { ...cur, [field]: value } } }
@@ -195,24 +233,30 @@ export default function CharacterPage() {
 
   // ── Attack helpers ──
   function addAttack() {
+    markDirty()
     patch({ attacks: [...char.attacks, { name: '', bonus: 0, damage: '1d6', critical: '×2', type: '', range: '' }] })
   }
   function removeAttack(i: number) {
+    markDirty()
     patch({ attacks: char.attacks.filter((_, idx) => idx !== i) })
   }
   function patchAttack(i: number, field: string, value: string | number) {
+    markDirty()
     patch({ attacks: char.attacks.map((a, idx) => idx === i ? { ...a, [field]: value } : a) })
   }
 
   // ── Equipment helpers ──
   function addEquip(location: 'body' | 'bag') {
+    markDirty()
     patch({ equipment: [...char.equipment, { name: '', quantity: 1, slots: 1, location, description: '' }] })
   }
   function removeEquip(i: number) {
+    markDirty()
     setExpandedEquip(s => { const n = new Set(s); n.delete(i); return n })
     patch({ equipment: char.equipment.filter((_, idx) => idx !== i) })
   }
   function patchEquip(i: number, field: string, value: string | number) {
+    markDirty()
     patch({ equipment: char.equipment.map((e, idx) => idx === i ? { ...e, [field]: value } : e) })
   }
   function toggleEquipExpand(i: number) {
@@ -221,12 +265,15 @@ export default function CharacterPage() {
 
   // ── Power helpers ──
   function addPower() {
+    markDirty()
     patch({ powers: [...char.powers, { powerId: Date.now().toString(), powerName: '', level, description: '' }] })
   }
   function removePower(powerId: string) {
+    markDirty()
     patch({ powers: char.powers.filter(p => p.powerId !== powerId) })
   }
   function patchPower(powerId: string, field: keyof CharacterPower, value: string | number) {
+    markDirty()
     patch({ powers: char.powers.map(p => p.powerId === powerId ? { ...p, [field]: value } : p) })
   }
   function togglePowerExpand(powerId: string) {
@@ -236,6 +283,7 @@ export default function CharacterPage() {
   // ── Grimório helpers ──
   function addSpell(spell: Spell) {
     if (!spell.id) return
+    markDirty()
     const entry: CharacterSpell = {
       spellId: spell.id, spellName: spell.name,
       circle: spell.circle, school: spell.school, type: spell.type,
@@ -243,6 +291,7 @@ export default function CharacterPage() {
     patch({ spells: [...char.spells, entry] })
   }
   function removeSpell(spellId: string) {
+    markDirty()
     patch({ spells: char.spells.filter(s => s.spellId !== spellId) })
   }
   async function openSpellModal(cs: CharacterSpell) {
@@ -274,10 +323,9 @@ export default function CharacterPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>
-          <Link to="/fichas"
-            className="inline-flex items-center gap-1 text-xs text-stone-400 hover:text-stone-600 transition-colors mb-2">
+          <button onClick={() => safeNavigate('/fichas')} className="inline-flex items-center gap-1 text-xs text-stone-400 hover:text-stone-600 transition-colors mb-2">
             <ArrowLeft size={12} /> Minhas Fichas
-          </Link>
+          </button>
           {profile.username && (
             <p className="text-[10px] text-stone-400 mb-0.5">Ficha de {profile.username}</p>
           )}
@@ -365,6 +413,41 @@ export default function CharacterPage() {
       )}
 
       {/* Modals */}
+      {showUnsavedModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 space-y-4">
+            <h2 className="font-display text-lg font-semibold text-tormenta-red">Alterações não salvas</h2>
+            <p className="text-sm text-stone-600">Você tem alterações que não foram salvas. O que deseja fazer?</p>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={async () => {
+                  await handleSave()
+                  setShowUnsavedModal(false)
+                  if (pendingNav) navigate(pendingNav)
+                }}
+                className="w-full px-4 py-2 text-sm bg-tormenta-red text-white rounded-lg hover:bg-tormenta-red-dark transition-colors font-medium"
+              >
+                Salvar e sair
+              </button>
+              <button
+                onClick={() => {
+                  setShowUnsavedModal(false)
+                  if (pendingNav) navigate(pendingNav)
+                }}
+                className="w-full px-4 py-2 text-sm border border-stone-200 rounded-lg hover:bg-stone-50 transition-colors text-stone-600"
+              >
+                Sair sem salvar
+              </button>
+              <button
+                onClick={() => { setShowUnsavedModal(false); setPendingNav(null) }}
+                className="w-full px-4 py-2 text-sm text-stone-400 hover:text-stone-600 transition-colors"
+              >
+                Continuar editando
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {showPicker && (
         <SpellPicker onAdd={addSpell} onClose={() => setShowPicker(false)} alreadyAdded={addedSpellIds} />
       )}

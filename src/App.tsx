@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'
 import type { User } from '@supabase/supabase-js'
 import SpellsPage from './pages/SpellsPage'
 import CreateSpellPage from './pages/CreateSpellPage'
@@ -9,6 +9,59 @@ import CompendiumPage from './pages/CompendiumPage'
 import AuthPage from './pages/AuthPage'
 import { useAuth } from './hooks/useAuth'
 import { supabase } from './lib/supabase'
+import { DirtyProvider, useDirty } from './contexts/DirtyContext'
+
+// ─── NavButton ────────────────────────────────────────────────────────────────
+
+function NavButton({ to, children, className = 'text-sm hover:text-amber-200 transition-colors', afterNavigate }: {
+  to: string
+  children: React.ReactNode
+  className?: string
+  afterNavigate?: () => void
+}) {
+  const navigate = useNavigate()
+  const { isDirtyRef } = useDirty()
+  const [showModal, setShowModal] = useState(false)
+
+  function handleClick() {
+    if (isDirtyRef.current) {
+      setShowModal(true)
+    } else {
+      afterNavigate?.()
+      navigate(to)
+    }
+  }
+
+  return (
+    <>
+      <button onClick={handleClick} className={className}>
+        {children}
+      </button>
+      {showModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 space-y-4">
+            <h2 className="font-display text-lg font-semibold text-tormenta-red">Alterações não salvas</h2>
+            <p className="text-sm text-stone-600">Você tem alterações não salvas. O que deseja fazer?</p>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => { setShowModal(false); isDirtyRef.current = false; afterNavigate?.(); navigate(to) }}
+                className="w-full px-4 py-2 text-sm border border-stone-200 rounded-lg hover:bg-stone-50 transition-colors text-stone-600"
+              >
+                Sair sem salvar
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="w-full px-4 py-2 text-sm text-stone-400 hover:text-stone-600 transition-colors"
+              >
+                Continuar editando
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
@@ -22,12 +75,12 @@ function Navbar({ user, onSignOut }: { user: User | null; onSignOut: () => void 
         <span className="font-display text-lg font-semibold tracking-wide">Tormenta 20</span>
 
         {/* Desktop links */}
-        <Link to="/" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Início</Link>
-        <Link to="/magias" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Magias</Link>
+        <NavButton to="/" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Início</NavButton>
+        <NavButton to="/magias" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Magias</NavButton>
         {user && (
-          <Link to="/fichas" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Minhas Fichas</Link>
+          <NavButton to="/fichas" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Minhas Fichas</NavButton>
         )}
-        <Link to="/compendio" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Compêndio</Link>
+        <NavButton to="/compendio" className="hidden md:block text-sm hover:text-amber-200 transition-colors">Compêndio</NavButton>
         <div className="ml-auto hidden md:flex items-center gap-4">
           {user ? (
             <>
@@ -37,7 +90,7 @@ function Navbar({ user, onSignOut }: { user: User | null; onSignOut: () => void 
               </button>
             </>
           ) : (
-            <Link to="/login" className="text-sm hover:text-amber-200 transition-colors">Entrar</Link>
+            <NavButton to="/login" className="text-sm hover:text-amber-200 transition-colors">Entrar</NavButton>
           )}
         </div>
 
@@ -54,12 +107,12 @@ function Navbar({ user, onSignOut }: { user: User | null; onSignOut: () => void 
       {/* Mobile dropdown */}
       {menuOpen && (
         <div className="md:hidden flex flex-col gap-3 px-6 py-4 border-t border-white/20">
-          <Link to="/" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Início</Link>
-          <Link to="/magias" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Magias</Link>
+          <NavButton to="/" afterNavigate={close} className="text-sm hover:text-amber-200 transition-colors">Início</NavButton>
+          <NavButton to="/magias" afterNavigate={close} className="text-sm hover:text-amber-200 transition-colors">Magias</NavButton>
           {user && (
-            <Link to="/fichas" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Minhas Fichas</Link>
+            <NavButton to="/fichas" afterNavigate={close} className="text-sm hover:text-amber-200 transition-colors">Minhas Fichas</NavButton>
           )}
-          <Link to="/compendio" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Compêndio</Link>
+          <NavButton to="/compendio" afterNavigate={close} className="text-sm hover:text-amber-200 transition-colors">Compêndio</NavButton>
           {user ? (
             <>
               <span className="text-xs text-white/70 truncate">{user.email}</span>
@@ -68,7 +121,7 @@ function Navbar({ user, onSignOut }: { user: User | null; onSignOut: () => void 
               </button>
             </>
           ) : (
-            <Link to="/login" onClick={close} className="text-sm hover:text-amber-200 transition-colors">Entrar</Link>
+            <NavButton to="/login" afterNavigate={close} className="text-sm hover:text-amber-200 transition-colors">Entrar</NavButton>
           )}
         </div>
       )}
@@ -179,7 +232,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AppLayout user={user} loading={loading} onSignOut={handleSignOut} />
+      <DirtyProvider>
+        <AppLayout user={user} loading={loading} onSignOut={handleSignOut} />
+      </DirtyProvider>
     </BrowserRouter>
   )
 }

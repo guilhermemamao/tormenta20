@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { CheckCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
-type Mode = 'login' | 'signup'
+type Mode = 'login' | 'signup' | 'forgot'
 
 const INPUT = 'w-full px-3 py-2 text-sm border border-stone-200 rounded-lg bg-stone-50 focus:outline-none focus:ring-1 focus:ring-tormenta-red focus:border-tormenta-red'
 
@@ -18,6 +18,7 @@ export default function AuthPage() {
   const [error, setError]                 = useState<string | null>(null)
   const [loading, setLoading]             = useState(false)
   const [signedUp, setSignedUp]           = useState(false)
+  const [forgotSent, setForgotSent]       = useState(false)
 
   function switchMode(next: Mode) {
     setMode(next)
@@ -25,6 +26,7 @@ export default function AuthPage() {
     setConfirm('')
     setUsername('')
     setCity('')
+    setForgotSent(false)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -42,6 +44,12 @@ export default function AuthPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
       else navigate('/')
+    } else if (mode === 'forgot') {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/login',
+      })
+      if (error) setError(error.message)
+      else setForgotSent(true)
     } else {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -74,10 +82,10 @@ export default function AuthPage() {
       }`}>
 
         <h1 className="font-display text-2xl font-semibold text-tormenta-red mb-1 text-center">
-          {isSignup ? 'Criar Conta' : 'Bem-vindo de volta'}
+          {isSignup ? 'Criar Conta' : mode === 'forgot' ? 'Redefinir senha' : 'Bem-vindo de volta'}
         </h1>
         <p className="text-sm text-stone-500 text-center mb-8">
-          {isSignup ? 'Junte-se à aventura em Arton' : 'Entre na sua conta para continuar'}
+          {isSignup ? 'Junte-se à aventura em Arton' : mode === 'forgot' ? 'Enviaremos um link para seu email' : 'Entre na sua conta para continuar'}
         </p>
 
         {signedUp ? (
@@ -96,6 +104,62 @@ export default function AuthPage() {
               Ir para o login
             </button>
           </div>
+        ) : forgotSent ? (
+          <div className="text-center space-y-4 py-2">
+            <CheckCircle size={52} className="text-emerald-500 mx-auto" />
+            <div>
+              <h2 className="font-display text-lg font-semibold text-emerald-700 mb-1">Email enviado!</h2>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Verifique seu email para redefinir sua senha.
+              </p>
+            </div>
+            <button
+              onClick={() => switchMode('login')}
+              className="btn-primary w-full justify-center mt-2"
+            >
+              Voltar ao login
+            </button>
+          </div>
+        ) : mode === 'forgot' ? (
+          <>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="seu@email.com"
+                  className={INPUT}
+                />
+              </div>
+
+              {error && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-2 rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-60 bg-tormenta-red hover:bg-tormenta-red-dark"
+              >
+                {loading ? 'Aguarde…' : 'Enviar link'}
+              </button>
+            </form>
+
+            <p className="text-xs text-stone-400 text-center mt-6">
+              Lembrou a senha?{' '}
+              <button
+                onClick={() => switchMode('login')}
+                className="text-tormenta-red hover:underline"
+              >
+                Voltar ao login
+              </button>
+            </p>
+          </>
         ) : (
           <>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -140,6 +204,13 @@ export default function AuthPage() {
                   className={INPUT}
                 />
               </div>
+
+              {!isSignup && mode !== 'forgot' && (
+                <button type="button" onClick={() => switchMode('forgot')}
+                  className="text-xs text-stone-400 hover:text-tormenta-red text-right w-full transition-colors">
+                  Esqueceu a senha?
+                </button>
+              )}
 
               {isSignup && (
                 <>
