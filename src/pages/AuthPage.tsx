@@ -205,7 +205,7 @@ export default function AuthPage() {
                 />
               </div>
 
-              {!isSignup && mode !== 'forgot' && (
+              {mode === 'login' && (
                 <button type="button" onClick={() => switchMode('forgot')}
                   className="text-xs text-stone-400 hover:text-tormenta-red text-right w-full transition-colors">
                   Esqueceu a senha?
