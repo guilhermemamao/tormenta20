@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Search, BookOpen, Shield, Users, Star, ChevronDown, Zap } from 'lucide-react'
+import { Search, BookOpen, Shield, Users, Star, ChevronDown, Zap, Settings } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import MechanicsSection from '../components/compendium/MechanicsSection'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ interface Race {
   race_abilities: RaceAbility[]
 }
 
-type Section = 'classes' | 'racas' | 'origens' | 'poderes'
+type Section = 'classes' | 'racas' | 'origens' | 'poderes' | 'mecanicas'
 type DetailTab = 'habilidades' | 'poderes'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -74,10 +75,11 @@ function formatMod(mod: number): string {
 
 function SectionNav({ active, onChange }: { active: Section; onChange: (s: Section) => void }) {
   const items: { id: Section; label: string; icon: React.ElementType }[] = [
-    { id: 'classes', label: 'Classes', icon: Shield   },
-    { id: 'racas',   label: 'Raças',   icon: Users    },
-    { id: 'origens', label: 'Origens', icon: BookOpen },
-    { id: 'poderes', label: 'Poderes', icon: Star     },
+    { id: 'classes',   label: 'Classes',   icon: Shield   },
+    { id: 'racas',     label: 'Raças',     icon: Users    },
+    { id: 'origens',   label: 'Origens',   icon: BookOpen },
+    { id: 'poderes',   label: 'Poderes',   icon: Star     },
+    { id: 'mecanicas', label: 'Mecânicas', icon: Settings },
   ]
   return (
     <nav className="space-y-0.5">
@@ -792,10 +794,11 @@ export default function CompendiumPage() {
         </aside>
 
         <main className="flex-1 min-w-0">
-          {section === 'classes' && <ClassesSection />}
-          {section === 'racas'   && <RacesSection />}
-          {section === 'origens' && <ComingSoon section={section} />}
-          {section === 'poderes' && <ComingSoon section={section} />}
+          {section === 'classes'   && <ClassesSection />}
+          {section === 'racas'     && <RacesSection />}
+          {section === 'origens'   && <ComingSoon section={section} />}
+          {section === 'poderes'   && <ComingSoon section={section} />}
+          {section === 'mecanicas' && <MechanicsSection />}
         </main>
       </div>
     </div>

@@ -1,5 +1,6 @@
 export type { SpellType, SpellSchool, Amplifier, Spell } from '../types'
 import type { Spell } from '../types'
+import { MECHANICS_DEFS } from './mechanicsTerms'
 
 
 export const CONDITION_DEFS: Record<string, { title: string; definition: string }> = {
@@ -24,6 +25,10 @@ export const CONDITION_DEFS: Record<string, { title: string; definition: string 
       'Uma criatura desprevenida não está ciente dos atacantes ao seu redor. Ela perde o bônus de Destreza na Defesa e não pode realizar ataques de oportunidade. Uma criatura está desprevenida no início do combate até realizar sua primeira ação.',
   },
 }
+
+// Mescla termos dos JSONs de mecânicas (Condições + Combate); manuais prevalecem
+Object.assign(MECHANICS_DEFS, CONDITION_DEFS)
+Object.assign(CONDITION_DEFS, MECHANICS_DEFS)
 
 export const SPELLS: Spell[] = [
   {

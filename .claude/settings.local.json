@@ -8,7 +8,8 @@
       "Bash(node -e \"import\\('./src/lib/classes_data/druida.json', {assert:{type:'json'}}\\).then\\(m=>console.log\\(JSON.stringify\\(Object.keys\\(m.default\\)\\)\\)\\)\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(open\\('src/lib/classes_data/druida.json'\\)\\); print\\(list\\(d.keys\\(\\)\\)\\); print\\('abilities count:', len\\(d.get\\('abilities',[]\\)\\)\\);  print\\('powers count:', len\\(d.get\\('powers',[]\\)\\)\\)\")",
       "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\('src/lib/classes_data/druida.json','utf-8'\\)\\);console.log\\(Object.keys\\(d\\)\\);console.log\\('abilities:',d.abilities?.length\\);console.log\\('powers:',d.powers?.length\\)\")",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(not exist *)"
     ]
   }
 }

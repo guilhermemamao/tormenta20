@@ -110,7 +110,7 @@ function renderDescription(text: string, onTerm: (key: string) => void): React.R
 
 // ─── Condition modal ─────────────────────────────────────────────────────────
 
-function ConditionModal({ termKey, onClose }: { termKey: string; onClose: () => void }) {
+function ConditionModal({ termKey, onClose, onNavigate }: { termKey: string; onClose: () => void; onNavigate: (key: string) => void }) {
   const cond = CONDITION_DEFS[termKey]
 
   useEffect(() => {
@@ -118,6 +118,27 @@ function ConditionModal({ termKey, onClose }: { termKey: string; onClose: () => 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
+
+  function renderInlineLinks(text: string): React.ReactNode {
+    const keys = Object.keys(CONDITION_DEFS).sort((a, b) => b.length - a.length)
+    const escaped = keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    const pattern = new RegExp(`(${escaped.join('|')})`, 'gi')
+    return text.split(pattern).map((part, i) => {
+      const key = keys.find(k => k.toLowerCase() === part.toLowerCase())
+      if (key && key !== termKey.toLowerCase()) {
+        return (
+          <button
+            key={i}
+            onClick={e => { e.stopPropagation(); onNavigate(key) }}
+            className="text-tormenta-red font-medium underline decoration-dotted hover:decoration-solid transition-all"
+          >
+            {part}
+          </button>
+        )
+      }
+      return <span key={i}>{part}</span>
+    })
+  }
 
   if (!cond) return null
   return (
@@ -137,7 +158,9 @@ function ConditionModal({ termKey, onClose }: { termKey: string; onClose: () => 
               <X size={16} />
             </button>
           </div>
-          <p className="text-sm text-stone-600 leading-relaxed px-5 pb-5">{cond.definition}</p>
+          <p className="text-sm text-stone-600 leading-relaxed px-5 pb-5">
+            {renderInlineLinks(cond.definition)}
+          </p>
         </div>
       </div>
     </>
@@ -385,7 +408,9 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
                             +{amp.cost} PM
                           </span>
                         )}
-                        <p className="text-sm text-stone-600 leading-relaxed pt-0.5">{amp.effect}</p>
+                        <p className="text-sm text-stone-600 leading-relaxed pt-0.5">
+                          {renderDescription(amp.effect, setConditionKey)}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -398,7 +423,11 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
 
       {/* Condition modal (stacked on top) */}
       {conditionKey && (
-        <ConditionModal termKey={conditionKey} onClose={() => setConditionKey(null)} />
+        <ConditionModal
+          termKey={conditionKey}
+          onClose={() => setConditionKey(null)}
+          onNavigate={(key) => setConditionKey(key)}
+        />
       )}
     </>
   )
