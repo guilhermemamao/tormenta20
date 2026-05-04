@@ -29,16 +29,29 @@ export default function TabPoderes({
   const [suggestions, setSuggestions] = useState<Record<string, AbilitySuggestion[]>>({})
   const [activeSuggestion, setActiveSuggestion] = useState<string | null>(null)
 
-  const [manualSort, setManualSort] = useState<boolean>(() => {
+  const [sortedIds, setSortedIds] = useState<string[] | null>(() => {
     try {
-      return localStorage.getItem('powers-sort') === 'true'
-    } catch {
-      return false
-    }
+      const saved = localStorage.getItem('powers-sort-ids')
+      return saved ? JSON.parse(saved) : null
+    } catch { return null }
   })
-  const sorted = manualSort
-    ? [...char.powers].sort((a, b) => a.level - b.level)
-    : [...char.powers]
+
+  function applySortedIds(ids: string[] | null) {
+    setSortedIds(ids)
+    try {
+      if (ids) localStorage.setItem('powers-sort-ids', JSON.stringify(ids))
+      else localStorage.removeItem('powers-sort-ids')
+    } catch {}
+  }
+
+  const sorted = sortedIds
+    ? [
+        ...sortedIds
+          .filter(id => char.powers.some(p => p.powerId === id))
+          .map(id => char.powers.find(p => p.powerId === id)!),
+        ...char.powers.filter(p => !sortedIds.includes(p.powerId))
+      ]
+    : char.powers
 
   async function fetchSuggestions(powerId: string, query: string, tipo: 'classe' | 'universal') {
     if (!query || query.length < 2) {
@@ -64,16 +77,18 @@ export default function TabPoderes({
         <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">Poderes</h3>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setManualSort(s => {
-              const next = !s
-              try { localStorage.setItem('powers-sort', String(next)) } catch {}
-              return next
-            })}
+            onClick={() => {
+              if (sortedIds) {
+                applySortedIds(null)
+              } else {
+                applySortedIds(
+                  [...char.powers].sort((a, b) => a.level - b.level).map(p => p.powerId)
+                )
+              }
+            }}
             title="Ordenar por nível"
             className={`flex items-center gap-1 text-xs font-medium transition-colors ${
-              manualSort
-                ? 'text-tormenta-red'
-                : 'text-stone-400 hover:text-stone-600'
+              sortedIds ? 'text-stone-400 hover:text-stone-600' : 'text-tormenta-red hover:text-red-800'
             }`}
           >
             <ArrowUpDown size={13} />

@@ -1,7 +1,7 @@
 import type { ElementType } from 'react'
 import {
   Shield, Eye, Sparkles, Heart, Zap, EyeOff, Skull, RefreshCw,
-  User, Star, FileText, Sword, BookOpen, Package,
+  User, Star, FileText, Sword, BookOpen, Package, PawPrint,
 } from 'lucide-react'
 import type { Character, Spell, SkillEntry } from '../../types'
 
@@ -37,7 +37,7 @@ export interface RaceData {
   race_abilities: { name: string; description: string; sort_order: number }[]
 }
 
-export type Tab = 'geral' | 'pericias' | 'poderes' | 'origem' | 'combate' | 'grimorio' | 'equipamento'
+export type Tab = 'geral' | 'pericias' | 'poderes' | 'origem' | 'combate' | 'grimorio' | 'equipamento' | 'companheiros'
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -58,6 +58,7 @@ export const BLANK: Character = {
   defense: { base: 10, armor: 0, shield: 0, other: 0, penalty: 0 },
   skills: {}, spells: [], powers: [], equipment: [],
   money: 0, carryLimit: 0, notes: '', originNotes: '',
+  companions: [], companionLimit: 1,
 }
 
 export const ATTR_CONFIG: { key: keyof Character['attributes']; abbr: string; label: string }[] = [
@@ -115,7 +116,8 @@ export const TABS: { id: Tab; label: string; icon: ElementType }[] = [
   { id: 'origem',      label: 'Origem & Anotações',  icon: FileText  },
   { id: 'combate',     label: 'Combate',             icon: Sword     },
   { id: 'grimorio',    label: 'Grimório',            icon: BookOpen  },
-  { id: 'equipamento', label: 'Equipamento',         icon: Package   },
+  { id: 'equipamento',   label: 'Equipamento',         icon: Package   },
+  { id: 'companheiros',  label: 'Companheiros',        icon: PawPrint  },
 ]
 
 export const INP = 'bg-transparent border-b border-stone-200 focus:border-tormenta-red focus:outline-none text-sm py-0.5 w-full'
@@ -211,5 +213,7 @@ export function rowToCharacter(row: any): Character {
     originNotes:   row.origin_notes    ?? '',
     spellKeyAttr:  row.spell_key_attr  ?? '',
     userId:        row.user_id,
+    companions:      row.companions       ?? [],
+    companionLimit:  row.companion_limit  ?? 1,
   }
 }

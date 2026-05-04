@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Character, CharacterSpell, CharacterPower, Spell } from '../types'
 import OrigensJson from '../lib/mechanics_data/Origens.json'
 import { supabase } from '../lib/supabase'
@@ -19,6 +19,7 @@ import TabCombate from '../components/character/TabCombate'
 import TabGrimorio, { SpellPicker } from '../components/character/TabGrimorio'
 import TabOrigem from '../components/character/TabOrigem'
 import TabEquipamento from '../components/character/TabEquipamento'
+import TabCompanheiros from '../components/character/TabCompanheiros'
 import { useDirty } from '../contexts/DirtyContext'
 
 interface MechanicsNode { type: string; name: string; description?: string; items?: MechanicsNode[] }
@@ -34,10 +35,68 @@ function extractOrigens(nodes: MechanicsNode[]): { name: string; description: st
 
 const ALL_ORIGENS = extractOrigens((OrigensJson as unknown as MechanicsNode).items?.slice(3) ?? [])
 
+function TabsBar({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!scrollRef.current) return
+    const activeBtn = scrollRef.current.querySelector('[data-active="true"]') as HTMLElement
+    if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  }, [tab])
+
+  function scroll(dir: 'left' | 'right') {
+    if (!scrollRef.current) return
+    scrollRef.current.scrollBy({ left: dir === 'left' ? -120 : 120, behavior: 'smooth' })
+  }
+
+  return (
+    <div className="relative mb-5">
+      <button
+        onClick={() => scroll('left')}
+        className="absolute left-0 top-0 bottom-0 z-10 flex items-center px-1 bg-gradient-to-r from-stone-50 to-transparent text-stone-400 hover:text-stone-600 md:hidden"
+        aria-label="Rolar abas para esquerda"
+      >
+        <ChevronLeft size={16} />
+      </button>
+
+      <div
+        ref={scrollRef}
+        className="flex gap-0.5 border-b border-stone-200 overflow-x-auto pb-px mx-6 md:mx-0"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+      >
+        {TABS.map(({ id: tabId, label, icon: Icon }) => (
+          <button
+            key={tabId}
+            data-active={tab === tabId}
+            onClick={() => setTab(tabId)}
+            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs md:text-[13px] md:px-4 md:py-2.5 font-semibold transition-colors border-b-2 -mb-px whitespace-nowrap shrink-0 ${
+              tab === tabId
+                ? 'border-tormenta-red text-tormenta-red'
+                : 'border-transparent text-stone-400 hover:text-stone-600'
+            }`}
+          >
+            <Icon size={13} className="md:w-4 md:h-4" />
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <button
+        onClick={() => scroll('right')}
+        className="absolute right-0 top-0 bottom-0 z-10 flex items-center px-1 bg-gradient-to-l from-stone-50 to-transparent text-stone-400 hover:text-stone-600 md:hidden"
+        aria-label="Rolar abas para direita"
+      >
+        <ChevronRight size={16} />
+      </button>
+    </div>
+  )
+}
+
 export default function CharacterPage() {
   const { id } = useParams<{ id: string }>()
   const { user, profile } = useAuth()
   const [char, setChar] = useState<Character>(BLANK)
+  const charRef = useRef<Character>(BLANK)
   const [charLoading, setCharLoading] = useState(true)
   const [charError, setCharError] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>('geral')
@@ -67,6 +126,10 @@ export default function CharacterPage() {
   function markDirty() { isDirtyRef.current = true }
   function markClean() { isDirtyRef.current = false }
 
+  function setTabWithSave(newTab: Tab) {
+    setTab(newTab)
+  }
+
   function safeNavigate(to: string) {
     if (isDirtyRef.current) {
       setPendingNav(to)
@@ -75,6 +138,8 @@ export default function CharacterPage() {
       navigate(to)
     }
   }
+
+  useEffect(() => { charRef.current = char }, [char])
 
   // ── Load character from Supabase ──
   useEffect(() => {
@@ -228,16 +293,22 @@ export default function CharacterPage() {
     console.log('[handleSave] user:', user?.id, '| char id from useParams:', id)
     if (!user || !id) return
     setSaveState('saving')
+    const c = charRef.current
     const characterData = {
-      name: char.name, player: char.player, race: char.race, origin: char.origin,
-      classes: char.classes, deity: char.deity, size: char.size,
-      movement: char.movement, xp: char.xp,
-      attributes: char.attributes, hp: char.hp, mp: char.mp,
-      attacks: char.attacks, defense: char.defense, skills: char.skills,
-      spells: char.spells, powers: char.powers, equipment: char.equipment,
-      money: char.money, carry_limit: char.carryLimit, notes: char.notes,
-      origin_notes: char.originNotes ?? '',
-      spell_key_attr: char.spellKeyAttr ?? '',
+      name: c.name, player: c.player, race: c.race, origin: c.origin,
+      classes: c.classes, deity: c.deity, size: c.size,
+      movement: c.movement, xp: c.xp,
+      attributes: c.attributes, hp: c.hp, mp: c.mp,
+      attacks: c.attacks, defense: c.defense, skills: c.skills,
+      spells: c.spells, powers: c.powers, equipment: c.equipment,
+      money: c.money, carry_limit: c.carryLimit, notes: c.notes,
+      origin_notes: c.originNotes ?? '',
+      spell_key_attr: c.spellKeyAttr ?? '',
+      // IMPORTANTE: Execute no Supabase SQL Editor antes de usar:
+      // ALTER TABLE characters ADD COLUMN IF NOT EXISTS companions JSONB DEFAULT '[]';
+      // ALTER TABLE characters ADD COLUMN IF NOT EXISTS companion_limit INTEGER DEFAULT 1;
+      companions: c.companions ?? [],
+      companion_limit: c.companionLimit ?? 1,
     }
     console.log('Dados sendo salvos:', JSON.stringify(characterData, null, 2))
     const { data, error } = await supabase
@@ -381,18 +452,7 @@ export default function CharacterPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 border-b border-stone-200 overflow-x-auto pb-px">
-        {TABS.map(({ id: tabId, label, icon: Icon }) => (
-          <button key={tabId} onClick={() => setTab(tabId)}
-            className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
-              tab === tabId
-                ? 'border-tormenta-red text-tormenta-red'
-                : 'border-transparent text-stone-400 hover:text-stone-600'
-            }`}>
-            <Icon size={14} />{label}
-          </button>
-        ))}
-      </div>
+      <TabsBar tab={tab} setTab={setTabWithSave} />
 
       {/* Tab content */}
       {tab === 'geral' && (
@@ -427,7 +487,7 @@ export default function CharacterPage() {
         />
       )}
       {tab === 'origem' && (
-        <TabOrigem char={char} patch={patch} setTab={setTab} />
+        <TabOrigem char={char} patch={patch} setTab={setTabWithSave} />
       )}
       {tab === 'combate' && (
         <TabCombate
@@ -455,6 +515,9 @@ export default function CharacterPage() {
           bagOpen={bagOpen} setBagOpen={setBagOpen}
           slotsUsed={slotsUsed} carryLimit={carryLimit}
         />
+      )}
+      {tab === 'companheiros' && (
+        <TabCompanheiros char={char} patch={patch} />
       )}
 
       {/* Modals */}

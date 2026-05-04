@@ -108,6 +108,16 @@ export interface CharacterSpell {
   type: string
 }
 
+export interface Companion {
+  id: string
+  type: 'animal' | 'npc'
+  name: string
+  description: string
+  permanent: boolean
+  hasCondition: boolean
+  condition: string
+}
+
 export interface CharacterPower {
   powerId: string
   powerName: string
@@ -164,4 +174,6 @@ export interface Character {
   originNotes?: string
   spellKeyAttr?: string
   userId?: string
+  companions?: Companion[]
+  companionLimit?: number
 }

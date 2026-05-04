@@ -357,6 +357,31 @@ export default function TabGeral({
             })}
             <span className="text-[10px] text-stone-400 ml-auto">Resistências (calculadas)</span>
           </div>
+          {(char.companions ?? []).length > 0 && (
+            <div className="mt-3 pt-3 border-t border-stone-100">
+              <p className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-2">Companheiros</p>
+              <div className="flex flex-wrap gap-2">
+                {(char.companions ?? []).map(c => (
+                  <div
+                    key={c.id}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
+                      c.hasCondition && c.condition
+                        ? 'bg-red-50 border-red-200 text-red-700'
+                        : c.permanent
+                        ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                        : 'bg-amber-50 border-amber-200 text-amber-700'
+                    }`}
+                  >
+                    <span>{c.type === 'animal' ? '🐾' : '👤'}</span>
+                    <span>{c.name || 'Sem nome'}</span>
+                    {c.hasCondition && c.condition && (
+                      <span title={c.condition}>⚠</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="card space-y-5">
