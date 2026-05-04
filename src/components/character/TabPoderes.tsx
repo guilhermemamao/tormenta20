@@ -29,7 +29,13 @@ export default function TabPoderes({
   const [suggestions, setSuggestions] = useState<Record<string, AbilitySuggestion[]>>({})
   const [activeSuggestion, setActiveSuggestion] = useState<string | null>(null)
 
-  const [manualSort, setManualSort] = useState(false)
+  const [manualSort, setManualSort] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('powers-sort') === 'true'
+    } catch {
+      return false
+    }
+  })
   const sorted = manualSort
     ? [...char.powers].sort((a, b) => a.level - b.level)
     : [...char.powers]
@@ -58,7 +64,11 @@ export default function TabPoderes({
         <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">Poderes</h3>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setManualSort(s => !s)}
+            onClick={() => setManualSort(s => {
+              const next = !s
+              try { localStorage.setItem('powers-sort', String(next)) } catch {}
+              return next
+            })}
             title="Ordenar por nível"
             className={`flex items-center gap-1 text-xs font-medium transition-colors ${
               manualSort
