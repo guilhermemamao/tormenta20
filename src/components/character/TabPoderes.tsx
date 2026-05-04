@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { Plus, ChevronRight, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { Plus, ChevronRight, Trash2, ArrowUpDown } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import type { Character, CharacterPower } from '../../types'
 
@@ -29,7 +29,10 @@ export default function TabPoderes({
   const [suggestions, setSuggestions] = useState<Record<string, AbilitySuggestion[]>>({})
   const [activeSuggestion, setActiveSuggestion] = useState<string | null>(null)
 
-  const sorted = [...char.powers].sort((a, b) => a.level - b.level)
+  const [manualSort, setManualSort] = useState(false)
+  const sorted = manualSort
+    ? [...char.powers].sort((a, b) => a.level - b.level)
+    : [...char.powers]
 
   async function fetchSuggestions(powerId: string, query: string, tipo: 'classe' | 'universal') {
     if (!query || query.length < 2) {
@@ -53,21 +56,40 @@ export default function TabPoderes({
     <div className="card">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">Poderes</h3>
-        <button onClick={addPower}
-          className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark font-medium">
-          <Plus size={13} /> Adicionar poder
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setManualSort(s => !s)}
+            title="Ordenar por nível"
+            className={`flex items-center gap-1 text-xs font-medium transition-colors ${
+              manualSort
+                ? 'text-tormenta-red'
+                : 'text-stone-400 hover:text-stone-600'
+            }`}
+          >
+            <ArrowUpDown size={13} />
+            Ordenar
+          </button>
+          <button onClick={addPower}
+            className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark font-medium">
+            <Plus size={13} /> Adicionar poder
+          </button>
+        </div>
       </div>
 
       {sorted.length === 0 ? (
         <p className="text-sm text-stone-400 text-center py-8">Nenhum poder cadastrado</p>
       ) : (
-        <div className="space-y-1">
+        <>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-1 px-3">
+          <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400">Nv. adquirido · Tipo · Nome do poder</p>
+          <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 hidden sm:block">Nv. adquirido · Tipo · Nome do poder</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {sorted.map(p => {
             const source = p.source ?? 'classe'
             return (
               <div key={p.powerId} className="border border-stone-100 rounded-lg">
-                <div className="flex items-center gap-2 px-3 py-2">
+                <div className="flex items-center gap-1.5 px-3 py-1.5">
                   <input
                     type="number" min={1} max={20} value={p.level}
                     onChange={e => patchPower(p.powerId, { level: parseInt(e.target.value) || 1 })}
@@ -79,7 +101,7 @@ export default function TabPoderes({
                     <button
                       type="button"
                       onClick={() => patchPower(p.powerId, { source: 'classe' })}
-                      className={`text-[10px] px-1.5 py-0.5 rounded border font-medium transition-colors ${
+                      className={`text-[9px] px-1 py-0.5 rounded border font-medium transition-colors ${
                         source === 'classe'
                           ? 'bg-tormenta-red text-white border-tormenta-red'
                           : 'text-stone-400 border-stone-200 hover:border-stone-300'
@@ -88,7 +110,7 @@ export default function TabPoderes({
                     <button
                       type="button"
                       onClick={() => patchPower(p.powerId, { source: 'universal' })}
-                      className={`text-[10px] px-1.5 py-0.5 rounded border font-medium transition-colors ${
+                      className={`text-[9px] px-1 py-0.5 rounded border font-medium transition-colors ${
                         source === 'universal'
                           ? 'bg-tormenta-red text-white border-tormenta-red'
                           : 'text-stone-400 border-stone-200 hover:border-stone-300'
@@ -107,7 +129,7 @@ export default function TabPoderes({
                       }}
                       onFocus={() => setActiveSuggestion(p.powerId)}
                       onBlur={() => setTimeout(() => setActiveSuggestion(null), 300)}
-                      className="w-full text-sm font-medium text-stone-800 bg-transparent focus:outline-none"
+                      className="w-full max-w-[120px] sm:max-w-[160px] text-sm font-medium text-stone-800 bg-transparent focus:outline-none"
                     />
                     {activeSuggestion === p.powerId && (suggestions[p.powerId] ?? []).length > 0 && (
                       <div className="absolute z-20 top-full left-0 mt-1 w-72 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden">
@@ -134,9 +156,9 @@ export default function TabPoderes({
                   </div>
 
                   <button type="button" onClick={() => togglePowerExpand(p.powerId)}
-                    className="text-stone-300 hover:text-stone-500 shrink-0 transition-transform duration-200"
+                    className="ml-auto text-stone-400 hover:text-stone-600 shrink-0 transition-transform duration-200"
                     style={{ transform: expandedPowers.has(p.powerId) ? 'rotate(90deg)' : 'none' }}>
-                    <ChevronRight size={14} />
+                    <ChevronRight size={18} strokeWidth={2.5} />
                   </button>
                   <button onClick={() => removePower(p.powerId)} className="text-stone-300 hover:text-red-500 shrink-0">
                     <Trash2 size={13} />
@@ -159,6 +181,7 @@ export default function TabPoderes({
             )
           })}
         </div>
+        </>
       )}
     </div>
   )
