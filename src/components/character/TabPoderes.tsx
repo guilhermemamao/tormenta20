@@ -154,7 +154,7 @@ export default function TabPoderes({
                       }}
                       onFocus={() => setActiveSuggestion(p.powerId)}
                       onBlur={() => setTimeout(() => setActiveSuggestion(null), 300)}
-                      className="w-full max-w-[120px] sm:max-w-[160px] text-sm font-medium text-stone-800 bg-transparent focus:outline-none"
+                      className="w-full min-w-0 text-sm font-medium text-stone-800 bg-transparent focus:outline-none"
                     />
                     {activeSuggestion === p.powerId && (suggestions[p.powerId] ?? []).length > 0 && (
                       <div className="absolute z-20 top-full left-0 mt-1 w-72 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden">
