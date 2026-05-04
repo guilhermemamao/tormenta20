@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Search, BookOpen, Shield, Users, Star, ChevronDown, Zap, Settings } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import MechanicsSection from '../components/compendium/MechanicsSection'
+import OriginsSection from '../components/compendium/OriginsSection'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -769,7 +770,7 @@ export default function CompendiumPage() {
         <main className="flex-1 min-w-0">
           {section === 'classes'   && <ClassesSection />}
           {section === 'racas'     && <RacesSection />}
-          {section === 'origens'   && <ComingSoon section={section} />}
+          {section === 'origens'   && <OriginsSection />}
           {section === 'poderes'   && <ComingSoon section={section} />}
           {section === 'mecanicas' && <MechanicsSection />}
         </main>

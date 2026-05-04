@@ -13,15 +13,19 @@ export default function TabOrigem({ char, patch, setTab }: TabOrigemProps) {
     <div className="space-y-5">
       <div className="card">
         <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400 mb-4">Origem</h3>
-        <div className="flex items-center gap-3 mb-4 p-3 bg-stone-50 rounded-lg border border-stone-100">
-          <div className="flex-1">
-            <p className="text-[10px] text-stone-400 mb-0.5">Origem do personagem</p>
-            <p className="text-sm font-semibold text-stone-700">{char.origin || <span className="text-stone-300 font-normal">não definida</span>}</p>
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] font-medium text-stone-400">Origem do personagem</p>
+            <button onClick={() => setTab('geral')}
+              className="text-xs text-tormenta-red hover:text-tormenta-red-dark flex items-center gap-1 shrink-0">
+              <ArrowLeft size={11} /> Editar na aba Geral
+            </button>
           </div>
-          <button onClick={() => setTab('geral')}
-            className="text-xs text-tormenta-red hover:text-tormenta-red-dark flex items-center gap-1 shrink-0">
-            <ArrowLeft size={11} /> Editar na aba Geral
-          </button>
+          {char.origin ? (
+            <p className="font-display text-lg font-semibold text-tormenta-red mb-3">{char.origin}</p>
+          ) : (
+            <p className="text-stone-300 text-sm mb-3">Nenhuma origem definida</p>
+          )}
         </div>
         <label className="block text-[10px] font-medium text-stone-400 mb-1.5">
           Descrição da origem e bônus escolhidos

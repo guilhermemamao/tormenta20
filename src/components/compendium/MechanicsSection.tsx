@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import {
   Search, ChevronDown,
   Home, Sword, AlertTriangle, Star, Package, Zap, Sparkles,
-  Store, MapPin, BookOpen, Dices,
+  Store, BookOpen, Dices,
 } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -32,7 +32,6 @@ const FILES = [
   { file: 'Habilidades',      label: 'Habilidades' },
   { file: 'Itens-Magicos',    label: 'Itens Mágicos' },
   { file: 'Negócios',         label: 'Negócios' },
-  { file: 'Origens',          label: 'Origens' },
   { file: 'Perícias',         label: 'Perícias' },
   { file: 'Testes',           label: 'Testes' },
 ]
@@ -46,7 +45,6 @@ const TOPIC_ICONS: Record<string, React.ElementType> = {
   'Habilidades':     Zap,
   'Itens Mágicos':   Sparkles,
   'Negócios':        Store,
-  'Origens':         MapPin,
   'Perícias':        BookOpen,
   'Testes':          Dices,
 }

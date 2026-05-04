@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import type { Character, CharacterSpell, CharacterPower, Spell } from '../types'
+import OrigensJson from '../lib/mechanics_data/Origens.json'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import SpellModal from '../components/SpellModal'
@@ -19,6 +20,19 @@ import TabGrimorio, { SpellPicker } from '../components/character/TabGrimorio'
 import TabOrigem from '../components/character/TabOrigem'
 import TabEquipamento from '../components/character/TabEquipamento'
 import { useDirty } from '../contexts/DirtyContext'
+
+interface MechanicsNode { type: string; name: string; description?: string; items?: MechanicsNode[] }
+
+function extractOrigens(nodes: MechanicsNode[]): { name: string; description: string }[] {
+  const results: { name: string; description: string }[] = []
+  for (const node of nodes) {
+    if (node.type === 'item' && node.description) results.push({ name: node.name, description: node.description })
+    else if (node.type === 'folder' && node.items) results.push(...extractOrigens(node.items))
+  }
+  return results
+}
+
+const ALL_ORIGENS = extractOrigens((OrigensJson as unknown as MechanicsNode).items?.slice(3) ?? [])
 
 export default function CharacterPage() {
   const { id } = useParams<{ id: string }>()
@@ -41,6 +55,9 @@ export default function CharacterPage() {
   const [raceSuggestions, setRaceSuggestions] = useState<RaceData[]>([])
   const [raceSearch, setRaceSearch] = useState('')
   const [showRaceDropdown, setShowRaceDropdown] = useState(false)
+  const [originSearch, setOriginSearch] = useState('')
+  const [originSuggestions, setOriginSuggestions] = useState<{ name: string; description: string }[]>([])
+  const [showOriginDropdown, setShowOriginDropdown] = useState(false)
   const raceInputRef = useRef<HTMLInputElement | null>(null)
   const { isDirtyRef } = useDirty()
   const [showUnsavedModal, setShowUnsavedModal] = useState(false)
@@ -123,6 +140,27 @@ export default function CharacterPage() {
       .single()
       .then(({ data }) => { if (data) setRaceData(data as RaceData) })
   }, [char.race]) // roda sempre que char.race mudar, mas só busca se raceData ainda não está carregado
+
+  // ── Origin autocomplete ──
+  useEffect(() => {
+    setOriginSearch(char.origin ?? '')
+  }, [char.origin])
+
+  useEffect(() => {
+    const q = originSearch.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    if (!q || q.length < 2) { setOriginSuggestions([]); return }
+    setOriginSuggestions(
+      ALL_ORIGENS.filter(o =>
+        o.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').includes(q)
+      ).slice(0, 8)
+    )
+  }, [originSearch])
+
+  function onOriginSelect(name: string, description: string) {
+    setOriginSearch(name)
+    patch({ origin: name, originNotes: char.originNotes ? char.originNotes : description })
+    setOriginSuggestions([])
+  }
 
   // ── Dirty tracking ──
   useEffect(() => {
@@ -365,6 +403,10 @@ export default function CharacterPage() {
           showRaceDropdown={showRaceDropdown} raceInputRef={raceInputRef}
           setRaceSearch={setRaceSearch} setRaceData={setRaceData}
           setShowRaceDropdown={setShowRaceDropdown} setRaceSuggestions={setRaceSuggestions}
+          originSearch={originSearch} originSuggestions={originSuggestions}
+          showOriginDropdown={showOriginDropdown}
+          setOriginSearch={setOriginSearch} setShowOriginDropdown={setShowOriginDropdown}
+          onOriginSelect={onOriginSelect}
           patchAttr={patchAttr} patchHP={patchHP} patchMP={patchMP} patchDef={patchDef}
           calcAutoHP={calcAutoHP} calcAutoMP={calcAutoMP}
           level={level} defTotal={defTotal}

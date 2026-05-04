@@ -110,6 +110,12 @@ interface TabGeralProps {
   setRaceData: (v: RaceData | null) => void
   setShowRaceDropdown: (v: boolean) => void
   setRaceSuggestions: (v: RaceData[]) => void
+  originSearch: string
+  originSuggestions: { name: string; description: string }[]
+  showOriginDropdown: boolean
+  setOriginSearch: (v: string) => void
+  setShowOriginDropdown: (v: boolean) => void
+  onOriginSelect: (name: string, description: string) => void
   patchAttr: (k: keyof Character['attributes'], v: number) => void
   patchHP: (k: 'current' | 'max', v: number) => void
   patchMP: (k: 'current' | 'max', v: number) => void
@@ -125,6 +131,8 @@ export default function TabGeral({
   classDefsMap, raceData,
   raceSearch, raceSuggestions, showRaceDropdown, raceInputRef,
   setRaceSearch, setRaceData, setShowRaceDropdown, setRaceSuggestions,
+  originSearch, originSuggestions, showOriginDropdown,
+  setOriginSearch, setShowOriginDropdown, onOriginSelect,
   patchAttr, patchHP, patchMP, patchDef,
   calcAutoHP, calcAutoMP,
   level, defTotal,
@@ -200,9 +208,39 @@ export default function TabGeral({
               </div>
             )}
           </div>
-          <div>
+          <div className="relative">
             <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Origem</label>
-            <input type="text" value={char.origin} onChange={e => patch({ origin: e.target.value })} className={INP} />
+            <input
+              type="text"
+              value={originSearch}
+              onChange={e => {
+                setOriginSearch(e.target.value)
+                patch({ origin: e.target.value })
+                setShowOriginDropdown(true)
+              }}
+              onFocus={() => setShowOriginDropdown(true)}
+              onBlur={() => setTimeout(() => setShowOriginDropdown(false), 150)}
+              placeholder="Buscar origem..."
+              className={INP}
+              autoComplete="off"
+            />
+            {showOriginDropdown && originSuggestions.length > 0 && (
+              <div className="absolute z-30 top-full left-0 mt-1 w-64 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden">
+                {originSuggestions.map(o => (
+                  <button
+                    key={o.name}
+                    type="button"
+                    onMouseDown={() => {
+                      onOriginSelect(o.name, o.description)
+                      setShowOriginDropdown(false)
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-stone-50 border-b border-stone-50 last:border-0 cursor-pointer"
+                  >
+                    <span className="font-medium text-stone-800">{o.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-[10px] font-medium text-stone-400 mb-0.5">Divindade</label>
