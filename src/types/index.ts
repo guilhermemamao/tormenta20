@@ -113,6 +113,7 @@ export interface CharacterPower {
   powerName: string
   level: number
   description?: string
+  source?: 'classe' | 'universal'
 }
 
 export interface Character {

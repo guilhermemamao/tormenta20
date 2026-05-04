@@ -48,7 +48,6 @@ interface Race {
 }
 
 type Section = 'classes' | 'racas' | 'origens' | 'poderes' | 'mecanicas'
-type DetailTab = 'habilidades' | 'poderes'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -200,21 +199,24 @@ function ClassDetail({
 }: {
   cls: ClassRow; abilities: AbilityRow[]; powers: AbilityRow[]; loading: boolean
 }) {
-  const [activeTab, setActiveTab] = useState<DetailTab>('habilidades')
-  const [powerSearch, setPowerSearch] = useState('')
+  const [abilitySearch, setAbilitySearch] = useState('')
 
   useEffect(() => {
-    setActiveTab('habilidades')
-    setPowerSearch('')
+    setAbilitySearch('')
   }, [cls.id])
 
-  const filteredPowers = useMemo(() => {
-    if (!powerSearch) return powers
-    const q = normalizeStr(powerSearch)
-    return powers.filter(
-      p => normalizeStr(p.name).includes(q) || normalizeStr(p.description).includes(q)
+  const allAbilities = useMemo(
+    () => [...abilities, ...powers].sort((a, b) => a.level - b.level),
+    [abilities, powers]
+  )
+
+  const filtered = useMemo(() => {
+    if (!abilitySearch) return allAbilities
+    const q = normalizeStr(abilitySearch)
+    return allAbilities.filter(
+      a => normalizeStr(a.name).includes(q) || normalizeStr(a.description).includes(q)
     )
-  }, [powers, powerSearch])
+  }, [allAbilities, abilitySearch])
 
   if (loading) {
     return (
@@ -272,54 +274,24 @@ function ClassDetail({
         )}
       </div>
 
-      <div className="flex gap-1 mb-4 border-b border-stone-100 pb-0">
-        {(['habilidades', 'poderes'] as DetailTab[]).map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-xs font-semibold capitalize transition-colors border-b-2 -mb-px ${
-              activeTab === tab
-                ? 'border-tormenta-red text-tormenta-red'
-                : 'border-transparent text-stone-400 hover:text-stone-600'
-            }`}
-          >
-            {tab} {tab === 'habilidades' ? `(${abilities.length})` : `(${powers.length})`}
-          </button>
-        ))}
+      <div className="relative mb-3">
+        <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
+        <input
+          value={abilitySearch}
+          onChange={e => setAbilitySearch(e.target.value)}
+          placeholder="Buscar habilidade ou poder..."
+          className="w-full pl-7 pr-3 py-1.5 text-sm border border-stone-200 rounded-lg bg-stone-50 focus:outline-none focus:ring-1 focus:ring-tormenta-red"
+        />
       </div>
-
-      {activeTab === 'habilidades' ? (
-        <div className="space-y-1.5">
-          {abilities.length === 0 ? (
-            <p className="text-sm text-stone-400 text-center py-8">Nenhuma habilidade cadastrada</p>
-          ) : (
-            abilities.map(a => <AbilityCard key={a.id} ability={a} />)
-          )}
-        </div>
-      ) : (
-        <div>
-          {powers.length > 0 && (
-            <div className="relative mb-3">
-              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
-              <input
-                value={powerSearch}
-                onChange={e => setPowerSearch(e.target.value)}
-                placeholder="Buscar poder..."
-                className="w-full pl-7 pr-3 py-1.5 text-sm border border-stone-200 rounded-lg bg-stone-50 focus:outline-none focus:ring-1 focus:ring-tormenta-red"
-              />
-            </div>
-          )}
-          <div className="space-y-1.5">
-            {filteredPowers.length === 0 ? (
-              <p className="text-sm text-stone-400 text-center py-8">
-                {powerSearch ? 'Nenhum poder encontrado' : 'Nenhum poder cadastrado'}
-              </p>
-            ) : (
-              filteredPowers.map(p => <PowerCard key={p.id} power={p} />)
-            )}
-          </div>
-        </div>
-      )}
+      <div className="space-y-1.5">
+        {filtered.length === 0
+          ? <p className="text-sm text-stone-400 text-center py-8">Nenhum resultado encontrado</p>
+          : filtered.map(a => a.is_power
+              ? <PowerCard key={a.id} power={a} />
+              : <AbilityCard key={a.id} ability={a} />
+            )
+        }
+      </div>
     </div>
   )
 }

@@ -271,9 +271,12 @@ export default function CharacterPage() {
     markDirty()
     patch({ powers: char.powers.filter(p => p.powerId !== powerId) })
   }
-  function patchPower(powerId: string, field: keyof CharacterPower, value: string | number) {
+  function patchPower(powerId: string, fields: Partial<CharacterPower>) {
     markDirty()
-    patch({ powers: char.powers.map(p => p.powerId === powerId ? { ...p, [field]: value } : p) })
+    setChar(c => ({
+      ...c,
+      powers: c.powers.map(p => p.powerId === powerId ? { ...p, ...fields } : p)
+    }))
   }
   function togglePowerExpand(powerId: string) {
     setExpandedPowers(s => { const n = new Set(s); n.has(powerId) ? n.delete(powerId) : n.add(powerId); return n })
@@ -376,6 +379,7 @@ export default function CharacterPage() {
       {tab === 'poderes' && (
         <TabPoderes
           char={char} level={level}
+          charClasses={char.classes}
           addPower={addPower} removePower={removePower} patchPower={patchPower}
           expandedPowers={expandedPowers} togglePowerExpand={togglePowerExpand}
         />
