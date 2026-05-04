@@ -112,9 +112,9 @@ export default function CharacterPage() {
     return () => clearTimeout(timer)
   }, [raceSearch])
 
-  // Carrega dados da raça salva no personagem ao abrir a ficha
+  // Carrega dados da raça quando o personagem termina de carregar
   useEffect(() => {
-    if (!char.race) return
+    if (!char.race || raceData) return
     supabase
       .from('races')
       .select('id, name, size, displacement, race_attributes(attr, mod), race_abilities(name, description, sort_order)')
@@ -122,8 +122,7 @@ export default function CharacterPage() {
       .limit(1)
       .single()
       .then(({ data }) => { if (data) setRaceData(data as RaceData) })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // só na montagem
+  }, [char.race]) // roda sempre que char.race mudar, mas só busca se raceData ainda não está carregado
 
   // ── Dirty tracking ──
   useEffect(() => {
