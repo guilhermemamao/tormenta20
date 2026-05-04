@@ -757,10 +757,11 @@ function RacesSection() {
 
 function ComingSoon({ section }: { section: Section }) {
   const labels: Record<Section, string> = {
-    classes: 'Classes',
-    racas:   'Raças',
-    origens: 'Origens',
-    poderes: 'Poderes',
+    classes:   'Classes',
+    racas:     'Raças',
+    origens:   'Origens',
+    poderes:   'Poderes',
+    mecanicas: 'Mecânicas',
   }
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
