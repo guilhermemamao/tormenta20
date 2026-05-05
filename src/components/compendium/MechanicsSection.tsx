@@ -73,17 +73,24 @@ function searchNodes(nodes: MechanicsNode[], q: string): { item: MechanicsItem; 
   return results
 }
 
-function searchAllTopics(topics: MechanicsFolder[], q: string): { topicName: string; items: MechanicsItem[] }[] {
+function searchAllTopics(topics: MechanicsFolder[], q: string): { topicName: string; items: MechanicsItem[]; hasNameMatch: boolean }[] {
   return topics
     .map(topic => {
       const results = searchNodes(topic.items, q)
-      const sorted = [
-        ...results.filter(r => r.nameMatch).map(r => r.item),
-        ...results.filter(r => !r.nameMatch).map(r => r.item),
-      ]
-      return { topicName: topic.name, items: sorted }
+      const nameMatches = results.filter(r => r.nameMatch).map(r => r.item)
+      const descMatches = results.filter(r => !r.nameMatch).map(r => r.item)
+      return {
+        topicName: topic.name,
+        items: [...nameMatches, ...descMatches],
+        hasNameMatch: nameMatches.length > 0,
+      }
     })
     .filter(group => group.items.length > 0)
+    .sort((a, b) => {
+      if (a.hasNameMatch && !b.hasNameMatch) return -1
+      if (!a.hasNameMatch && b.hasNameMatch) return 1
+      return 0
+    })
 }
 
 // ─── NodeRenderer ─────────────────────────────────────────────────────────────
@@ -164,7 +171,20 @@ export default function MechanicsSection() {
   const globalResults = useMemo(() => {
     const q = search.trim()
     if (!q || q.length < 2) return null
-    return searchAllTopics(topics, normalizeStr(q))
+    const norm = normalizeStr(q)
+    const all: { item: MechanicsItem; topicName: string; nameMatch: boolean }[] = []
+    for (const topic of topics) {
+      const results = searchNodes(topic.items, norm)
+      for (const r of results) {
+        all.push({ item: r.item, topicName: topic.name, nameMatch: r.nameMatch })
+      }
+    }
+    all.sort((a, b) => {
+      if (a.nameMatch && !b.nameMatch) return -1
+      if (!a.nameMatch && b.nameMatch) return 1
+      return a.item.name.localeCompare(b.item.name, 'pt')
+    })
+    return all
   }, [topics, search])
 
   if (loading) {
@@ -219,30 +239,26 @@ export default function MechanicsSection() {
         {globalResults ? (
           <div className="card">
             <p className="text-xs text-stone-400 mb-4">
-              {globalResults.reduce((n, g) => n + g.items.length, 0)} resultado(s) em todos os tópicos
+              {globalResults.length} resultado(s) em todos os tópicos
             </p>
             {globalResults.length === 0 ? (
               <p className="text-sm text-stone-400 text-center py-8">Nenhum resultado encontrado.</p>
             ) : (
-              globalResults.map(group => (
-                <div key={group.topicName} className="mb-6">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2">
-                    {group.topicName}
-                  </p>
-                  {group.items.map((item, i) => (
-                    <div key={i} className="border border-stone-200 rounded-xl overflow-hidden mb-2">
-                      <div className="px-4 py-3 bg-stone-50">
-                        <span className="font-sans font-semibold text-sm text-stone-800">{item.name}</span>
-                      </div>
-                      <div className="px-4 pb-4 pt-2">
-                        <p className="font-sans text-sm text-stone-600 leading-relaxed whitespace-pre-line">
-                          {item.description}
-                        </p>
-                      </div>
+              <div className="space-y-2">
+                {globalResults.map((r, i) => (
+                  <div key={i} className="border border-stone-200 rounded-xl overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-3 bg-stone-50">
+                      <span className="font-sans font-semibold text-sm text-stone-800">{r.item.name}</span>
+                      <span className="text-[10px] text-stone-400 font-medium shrink-0 ml-3">{r.topicName}</span>
                     </div>
-                  ))}
-                </div>
-              ))
+                    <div className="px-4 pb-3 pt-2">
+                      <p className="font-sans text-sm text-stone-600 leading-relaxed whitespace-pre-line line-clamp-3">
+                        {r.item.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         ) : selected ? (
