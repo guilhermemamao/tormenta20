@@ -1,8 +1,15 @@
 import { useState } from 'react'
-import { Plus, Trash2, ChevronRight, ChevronDown, ArrowUpDown } from 'lucide-react'
+import { Plus, Trash2, ChevronRight, ChevronDown, ArrowUpDown, GripVertical } from 'lucide-react'
 import type { Character } from '../../types'
 import { INP_CARD } from './characterHelpers'
 import { ALL_EQUIPMENT, CATEGORY_ICONS, CATEGORY_LABELS, type EquipCategory } from '../../lib/equipment_data'
+import {
+  DndContext, DragOverlay,
+  PointerSensor, TouchSensor, useSensor, useSensors, closestCenter,
+} from '@dnd-kit/core'
+import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 interface TabEquipamentoProps {
   char: Character
@@ -192,21 +199,57 @@ function TableHeader() {
   )
 }
 
+function DraggableEquipRow(props: Parameters<typeof EquipRow>[0]) {
+  const {
+    attributes, listeners, setNodeRef, transform, transition, isDragging,
+  } = useSortable({ id: props.item.idx.toString() })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  }
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <div className="flex items-center">
+        <button
+          {...attributes}
+          {...listeners}
+          className="px-1 py-2 text-stone-200 hover:text-stone-400 cursor-grab active:cursor-grabbing shrink-0 touch-none"
+          type="button"
+          tabIndex={-1}
+        >
+          <GripVertical size={13} />
+        </button>
+        <div className="flex-1 min-w-0">
+          <EquipRow {...props} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ItemRows({ items, patchEquip, removeEquip, toggleEquipExpand, expandedEquip, onSelect }: ItemRowsProps) {
   return (
-    <div className="divide-y divide-stone-50">
-      {items.map(item => (
-        <EquipRow
-          key={item.idx}
-          item={item}
-          patchEquip={patchEquip}
-          removeEquip={removeEquip}
-          toggleEquipExpand={toggleEquipExpand}
-          expandedEquip={expandedEquip}
-          onSelect={onSelect}
-        />
-      ))}
-    </div>
+    <SortableContext
+      items={items.map(i => i.idx.toString())}
+      strategy={verticalListSortingStrategy}
+    >
+      <div className="divide-y divide-stone-50">
+        {items.map(item => (
+          <DraggableEquipRow
+            key={item.idx}
+            item={item}
+            patchEquip={patchEquip}
+            removeEquip={removeEquip}
+            toggleEquipExpand={toggleEquipExpand}
+            expandedEquip={expandedEquip}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
+    </SortableContext>
   )
 }
 
@@ -279,6 +322,58 @@ export default function TabEquipamento({
   slotsUsed, carryLimit,
   carrierSlotsUsed, carrierLimit, setCarrierLimit,
 }: TabEquipamentoProps) {
+  const [activeId, setActiveId] = useState<string | null>(null)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
+  )
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(event.active.id.toString())
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    setActiveId(null)
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const activeIdx = parseInt(active.id.toString())
+    const overIdx = parseInt(over.id.toString())
+    const activeItem = char.equipment[activeIdx]
+    const overItem = char.equipment[overIdx]
+
+    if (!activeItem || !overItem) return
+
+    if (activeItem.location !== overItem.location) {
+      const newEquip = char.equipment.map((e, i) =>
+        i === activeIdx ? { ...e, location: overItem.location } : e
+      )
+      patch({ equipment: newEquip })
+    } else {
+      const newEquip = [...char.equipment]
+      newEquip.splice(activeIdx, 1)
+      newEquip.splice(overIdx, 0, activeItem)
+      patch({ equipment: newEquip })
+    }
+  }
+
+  function handleDragOver(event: DragOverEvent) {
+    const { active, over } = event
+    if (!over) return
+    const activeIdx = parseInt(active.id.toString())
+    const overIdx = parseInt(over.id.toString())
+    const activeItem = char.equipment[activeIdx]
+    const overItem = char.equipment[overIdx]
+    if (!activeItem || !overItem) return
+    if (activeItem.location !== overItem.location) {
+      const newEquip = char.equipment.map((e, i) =>
+        i === activeIdx ? { ...e, location: overItem.location } : e
+      )
+      patch({ equipment: newEquip })
+    }
+  }
+
   const [sortedEquipIds, setSortedEquipIds] = useState<number[] | null>(() => {
     try {
       const saved = localStorage.getItem('equip-sort-ids')
@@ -360,24 +455,39 @@ export default function TabEquipamento({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Section title="Equipado no corpo" items={bodyItems} open={bodyOpen}
-            onToggle={() => setBodyOpen(o => !o)} location="body" addEquip={addEquip}
-            patchEquip={patchEquip} removeEquip={removeEquip}
-            toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
-            onSelect={applyEquipSuggestion} />
-          <Section title="Na mochila" items={bagItems} open={bagOpen}
-            onToggle={() => setBagOpen(o => !o)} location="bag" addEquip={addEquip}
-            patchEquip={patchEquip} removeEquip={removeEquip}
-            toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
-            onSelect={applyEquipSuggestion} />
-          <Section title="Companheiro de carga" items={carrierItems} open={carrierOpen}
-            onToggle={() => setCarrierOpen(o => !o)} location="carrier" addEquip={addEquip}
-            patchEquip={patchEquip} removeEquip={removeEquip}
-            toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
-            onSelect={applyEquipSuggestion}
-            carrierSlotsUsed={carrierSlotsUsed} carrierLimit={carrierLimit} setCarrierLimit={setCarrierLimit} />
-        </div>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragOver={handleDragOver}
+        >
+          <div className="space-y-2">
+            <Section title="Equipado no corpo" items={bodyItems} open={bodyOpen}
+              onToggle={() => setBodyOpen(o => !o)} location="body" addEquip={addEquip}
+              patchEquip={patchEquip} removeEquip={removeEquip}
+              toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
+              onSelect={applyEquipSuggestion} />
+            <Section title="Na mochila" items={bagItems} open={bagOpen}
+              onToggle={() => setBagOpen(o => !o)} location="bag" addEquip={addEquip}
+              patchEquip={patchEquip} removeEquip={removeEquip}
+              toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
+              onSelect={applyEquipSuggestion} />
+            <Section title="Companheiro de carga" items={carrierItems} open={carrierOpen}
+              onToggle={() => setCarrierOpen(o => !o)} location="carrier" addEquip={addEquip}
+              patchEquip={patchEquip} removeEquip={removeEquip}
+              toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
+              onSelect={applyEquipSuggestion}
+              carrierSlotsUsed={carrierSlotsUsed} carrierLimit={carrierLimit} setCarrierLimit={setCarrierLimit} />
+          </div>
+          <DragOverlay>
+            {activeId ? (
+              <div className="bg-white border border-tormenta-red rounded-lg shadow-xl px-3 py-2 text-sm font-medium text-stone-800 opacity-90">
+                {char.equipment[parseInt(activeId)]?.name || 'Item'}
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       </div>
 
       <div className="card">

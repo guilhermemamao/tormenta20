@@ -106,8 +106,8 @@ export default function TabPoderes({
       ) : (
         <>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-1 px-3">
-          <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400">Nv. adquirido · Tipo · Nome do poder</p>
-          <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 hidden sm:block">Nv. adquirido · Tipo · Nome do poder</p>
+          <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400">Nv · <span className="text-tormenta-red">C</span>/<span className="text-tormenta-red">U</span> · Nome do poder</p>
+          <p className="text-[9px] font-semibold uppercase tracking-wider text-stone-400 hidden sm:block">Nv · <span className="text-tormenta-red">C</span>/<span className="text-tormenta-red">U</span> · Nome do poder</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {sorted.map(p => {
@@ -122,26 +122,14 @@ export default function TabPoderes({
                     title="Nível em que o poder foi adquirido"
                   />
 
-                  <div className="flex gap-1 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => patchPower(p.powerId, { source: 'classe' })}
-                      className={`text-[9px] px-1 py-0.5 rounded border font-medium transition-colors ${
-                        source === 'classe'
-                          ? 'bg-tormenta-red text-white border-tormenta-red'
-                          : 'text-stone-400 border-stone-200 hover:border-stone-300'
-                      }`}
-                    >Classe</button>
-                    <button
-                      type="button"
-                      onClick={() => patchPower(p.powerId, { source: 'universal' })}
-                      className={`text-[9px] px-1 py-0.5 rounded border font-medium transition-colors ${
-                        source === 'universal'
-                          ? 'bg-tormenta-red text-white border-tormenta-red'
-                          : 'text-stone-400 border-stone-200 hover:border-stone-300'
-                      }`}
-                    >Universal</button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => patchPower(p.powerId, { source: source === 'classe' ? 'universal' : 'classe' })}
+                    className="text-[10px] w-5 h-5 flex items-center justify-center rounded border font-bold transition-colors shrink-0 bg-tormenta-red text-white border-tormenta-red"
+                    title={source === 'classe' ? 'Classe (clique para Universal)' : 'Universal (clique para Classe)'}
+                  >
+                    {source === 'classe' ? 'C' : 'U'}
+                  </button>
 
                   <div className="relative flex-1">
                     <input
@@ -191,6 +179,30 @@ export default function TabPoderes({
                 </div>
                 <div className={`grid transition-all duration-200 ${expandedPowers.has(p.powerId) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                   <div className="overflow-hidden rounded-b-lg">
+                    <div className="flex gap-1.5 mb-2 px-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => patchPower(p.powerId, { source: 'classe' })}
+                        className={`flex-1 py-1 text-[10px] font-semibold rounded-lg border transition-colors ${
+                          source === 'classe'
+                            ? 'bg-tormenta-red text-white border-tormenta-red'
+                            : 'text-stone-400 border-stone-200 hover:bg-stone-50'
+                        }`}
+                      >
+                        Classe
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => patchPower(p.powerId, { source: 'universal' })}
+                        className={`flex-1 py-1 text-[10px] font-semibold rounded-lg border transition-colors ${
+                          source === 'universal'
+                            ? 'bg-tormenta-red text-white border-tormenta-red'
+                            : 'text-stone-400 border-stone-200 hover:bg-stone-50'
+                        }`}
+                      >
+                        Universal
+                      </button>
+                    </div>
                     <div className="px-3 pb-3">
                       <textarea
                         rows={3}
