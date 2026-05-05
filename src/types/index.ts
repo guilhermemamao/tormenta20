@@ -167,6 +167,7 @@ export interface Character {
     slots: number
     location?: 'body' | 'bag'
     description?: string
+    category?: string
   }[]
   money: number
   carryLimit: number

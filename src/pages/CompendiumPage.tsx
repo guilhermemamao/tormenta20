@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Search, BookOpen, Shield, Users, Star, ChevronDown, Zap, Settings } from 'lucide-react'
+import { Search, BookOpen, Shield, Users, Star, ChevronDown, Zap, Settings, Package } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import MechanicsSection from '../components/compendium/MechanicsSection'
 import OriginsSection from '../components/compendium/OriginsSection'
+import EquipmentSection from '../components/compendium/EquipmentSection'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -48,7 +49,7 @@ interface Race {
   race_abilities: RaceAbility[]
 }
 
-type Section = 'classes' | 'racas' | 'origens' | 'poderes' | 'mecanicas'
+type Section = 'classes' | 'racas' | 'origens' | 'poderes' | 'equipamentos' | 'mecanicas'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -78,8 +79,9 @@ function SectionNav({ active, onChange }: { active: Section; onChange: (s: Secti
     { id: 'classes',   label: 'Classes',   icon: Shield   },
     { id: 'racas',     label: 'Raças',     icon: Users    },
     { id: 'origens',   label: 'Origens',   icon: BookOpen },
-    { id: 'poderes',   label: 'Poderes',   icon: Star     },
-    { id: 'mecanicas', label: 'Mecânicas', icon: Settings },
+    { id: 'poderes',      label: 'Poderes',      icon: Star     },
+    { id: 'equipamentos', label: 'Equipamentos', icon: Package  },
+    { id: 'mecanicas',    label: 'Mecânicas',    icon: Settings },
   ]
   return (
     <nav className="space-y-0.5">
@@ -730,11 +732,12 @@ function RacesSection() {
 
 function ComingSoon({ section }: { section: Section }) {
   const labels: Record<Section, string> = {
-    classes:   'Classes',
-    racas:     'Raças',
-    origens:   'Origens',
-    poderes:   'Poderes',
-    mecanicas: 'Mecânicas',
+    classes:      'Classes',
+    racas:        'Raças',
+    origens:      'Origens',
+    poderes:      'Poderes',
+    equipamentos: 'Equipamentos',
+    mecanicas:    'Mecânicas',
   }
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -771,8 +774,9 @@ export default function CompendiumPage() {
           {section === 'classes'   && <ClassesSection />}
           {section === 'racas'     && <RacesSection />}
           {section === 'origens'   && <OriginsSection />}
-          {section === 'poderes'   && <ComingSoon section={section} />}
-          {section === 'mecanicas' && <MechanicsSection />}
+          {section === 'poderes'      && <ComingSoon section={section} />}
+          {section === 'equipamentos' && <EquipmentSection />}
+          {section === 'mecanicas'    && <MechanicsSection />}
         </main>
       </div>
     </div>
