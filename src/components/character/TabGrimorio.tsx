@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Plus, Trash2, Search, X, Link } from 'lucide-react'
 import type { Character, CharacterSpell, Spell } from '../../types'
-import { ALL_EQUIPMENT, CATEGORY_ICONS, type EquipCategory } from '../../lib/equipment_data'
+import { CATEGORY_ICONS, type EquipCategory } from '../../lib/equipment_data'
 import { supabase } from '../../lib/supabase'
 import {
   SCHOOL_ICONS, ATTR_CONFIG,
@@ -153,7 +153,7 @@ function ItemLinkField({ value, onChange, onSelectEffect, charEquipment }: {
         className="w-32 text-xs bg-stone-50 border border-stone-200 rounded px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-tormenta-red"
       />
       {value && (
-        <button type="button" onClick={() => { onChange(''); setSearch(''); setSelectedIcon(''); setOpen(false) }}
+        <button type="button" onClick={() => { onChange(''); setSearch(''); setOpen(false) }}
           className="text-stone-300 hover:text-red-400 text-xs">✕</button>
       )}
       {suggestions.length > 0 && (
