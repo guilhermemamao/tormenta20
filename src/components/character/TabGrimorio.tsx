@@ -150,7 +150,7 @@ function ItemLinkField({ value, onChange, onSelectEffect, charEquipment }: {
         onBlur={() => setTimeout(() => { setSuggestions([]); if (!value) setOpen(false) }, 200)}
         placeholder="Efeito de item..."
         autoFocus={open}
-        className="w-32 text-xs bg-stone-50 border border-stone-200 rounded px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-tormenta-red"
+        className="w-24 sm:w-32 text-xs bg-stone-50 border border-stone-200 rounded px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-tormenta-red"
       />
       {value && (
         <button type="button" onClick={() => { onChange(''); setSearch(''); setOpen(false) }}
@@ -189,19 +189,21 @@ function SpellRow({ cs, openSpellModal, removeSpell, patchSpell, charEquipment }
 }) {
   const Icon = SCHOOL_ICONS[cs.school]
   return (
-    <div className="flex items-center justify-between py-1.5 group border-b border-stone-50 last:border-0">
+    <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 py-1.5 group border-b border-stone-50 last:border-0">
       <button onClick={() => openSpellModal(cs)}
         className="flex items-center gap-2 text-left min-w-0 flex-1">
         {Icon && <Icon size={12} className="text-stone-300 group-hover:text-tormenta-red shrink-0 transition-colors" />}
         <span className="text-sm font-medium text-stone-800 group-hover:text-tormenta-red transition-colors truncate">{cs.spellName}</span>
         <span className="text-[10px] text-stone-400 shrink-0">{cs.circle}°</span>
-        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0 ${
+        <span className={`text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shrink-0 ${
           cs.type === 'Arcana'  ? 'bg-purple-100 text-purple-700' :
           cs.type === 'Divina' ? 'bg-amber-100 text-amber-700' :
           'bg-teal-100 text-teal-700'
-        }`}>{cs.type}</span>
+        }`} title={cs.type}>
+          {cs.type === 'Arcana' ? 'A' : cs.type === 'Divina' ? 'D' : 'U'}
+        </span>
       </button>
-      <div className="flex items-center gap-2 ml-2 shrink-0">
+      <div className="flex items-center gap-1 ml-auto shrink-0">
         <ItemLinkField
           value={cs.itemLink ?? ''}
           onChange={val => patchSpell(cs.spellId, 'itemLink', val)}
@@ -300,25 +302,11 @@ export default function TabGrimorio({
   ]
 
   return (
-    <div className="grid grid-cols-[1fr_168px] gap-4 items-start">
-      {/* Main spell list */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">
-            Grimório <span className="text-stone-300 font-normal ml-1">({char.spells.length})</span>
-          </h3>
-          <button onClick={() => setShowPicker(true)}
-            className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark font-medium">
-            <Plus size={13} /> Adicionar
-          </button>
-        </div>
-        {renderSpellList()}
-      </div>
-
-      {/* Sidebar */}
-      <div className="space-y-3">
+    <div className="flex flex-col gap-4 sm:grid sm:grid-cols-[1fr_168px] sm:items-start">
+      {/* Sidebar — topo em mobile, direita em desktop */}
+      <div className="order-1 sm:order-2 flex flex-row gap-3 sm:flex-col sm:space-y-0">
         {/* Sort */}
-        <div className="bg-white border border-stone-200 rounded-xl p-3 shadow-sm">
+        <div className="flex-1 sm:flex-none bg-white border border-stone-200 rounded-xl p-3 shadow-sm">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-2">Organizar</p>
           <div className="space-y-0.5">
             {SORT_OPTIONS.map(({ value, label }) => (
@@ -335,7 +323,7 @@ export default function TabGrimorio({
         </div>
 
         {/* Spell stats */}
-        <div className="bg-white border border-stone-200 rounded-xl p-3 shadow-sm">
+        <div className="flex-1 sm:flex-none bg-white border border-stone-200 rounded-xl p-3 shadow-sm">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-2">Magia</p>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -355,6 +343,20 @@ export default function TabGrimorio({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Main spell list — abaixo em mobile, esquerda em desktop */}
+      <div className="order-2 sm:order-1 card">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">
+            Grimório <span className="text-stone-300 font-normal ml-1">({char.spells.length})</span>
+          </h3>
+          <button onClick={() => setShowPicker(true)}
+            className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark font-medium">
+            <Plus size={13} /> Adicionar
+          </button>
+        </div>
+        {renderSpellList()}
       </div>
     </div>
   )

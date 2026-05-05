@@ -216,11 +216,11 @@ function DraggableEquipRow(props: Parameters<typeof EquipRow>[0]) {
         <button
           {...attributes}
           {...listeners}
-          className="px-1 py-2 text-stone-200 hover:text-stone-400 cursor-grab active:cursor-grabbing shrink-0 touch-none"
+          className="px-0.5 py-1 text-stone-200 hover:text-stone-400 cursor-grab active:cursor-grabbing shrink-0 touch-none"
           type="button"
           tabIndex={-1}
         >
-          <GripVertical size={13} />
+          <GripVertical size={10} className="sm:w-3 sm:h-3" />
         </button>
         <div className="flex-1 min-w-0">
           <EquipRow {...props} />
@@ -429,17 +429,28 @@ export default function TabEquipamento({
   return (
     <div className="space-y-5">
       <div className="card">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">Equipamentos</h3>
-            <button
-              onClick={applySortByCategory}
-              className={`flex items-center gap-1 text-xs font-medium transition-colors ${!sortedEquipIds ? 'text-tormenta-red' : 'text-stone-400'}`}
-            >
-              <ArrowUpDown size={12} /> Ordenar
-            </button>
+        <div className="mb-3">
+          {/* Linha 1: título + ordenar + T$ */}
+          <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center gap-3">
+              <h3 className="font-display text-[11px] font-semibold uppercase tracking-widest text-stone-400">Equipamentos</h3>
+              <button
+                onClick={applySortByCategory}
+                className={`flex items-center gap-1 text-xs font-medium transition-colors ${!sortedEquipIds ? 'text-tormenta-red' : 'text-stone-400'}`}
+              >
+                <ArrowUpDown size={12} /> Ordenar
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-stone-500">
+              <span className="text-stone-400">T$</span>
+              <input type="number" min={0} value={char.money}
+                onChange={e => patch({ money: parseInt(e.target.value) || 0 })}
+                className="w-16 text-right bg-stone-50 border border-stone-200 rounded px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-tormenta-red"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-3 text-xs text-stone-500">
+          {/* Linha 2: carga */}
+          <div className="flex items-center gap-2 text-xs text-stone-500">
             <span>Carga:
               <span className={`font-semibold ml-1 ${slotsUsed > carryLimit ? 'text-red-600' : 'text-stone-700'}`}>
                 {slotsUsed}
@@ -447,11 +458,6 @@ export default function TabEquipamento({
               <span className="text-stone-400"> / {carryLimit}</span>
             </span>
             <span className="text-stone-300 text-[10px]">(10 + 2×FOR)</span>
-            <span className="text-stone-400">T$</span>
-            <input type="number" min={0} value={char.money}
-              onChange={e => patch({ money: parseInt(e.target.value) || 0 })}
-              className="w-16 text-right bg-stone-50 border border-stone-200 rounded px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-tormenta-red"
-            />
           </div>
         </div>
 

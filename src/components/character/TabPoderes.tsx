@@ -125,7 +125,7 @@ export default function TabPoderes({
                   <button
                     type="button"
                     onClick={() => patchPower(p.powerId, { source: source === 'classe' ? 'universal' : 'classe' })}
-                    className="text-[10px] w-5 h-5 flex items-center justify-center rounded border font-bold transition-colors shrink-0 bg-tormenta-red text-white border-tormenta-red"
+                    className="text-[10px] w-5 h-5 flex items-center justify-center rounded border font-bold transition-colors shrink-0 bg-white text-tormenta-red border-tormenta-red"
                     title={source === 'classe' ? 'Classe (clique para Universal)' : 'Universal (clique para Classe)'}
                   >
                     {source === 'classe' ? 'C' : 'U'}

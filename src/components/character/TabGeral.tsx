@@ -268,7 +268,7 @@ export default function TabGeral({
                     className="bg-transparent text-sm font-bold text-tormenta-red focus:outline-none w-7 text-center"
                   />
                   {def && (
-                    <>
+                    <div className="hidden sm:flex items-center gap-1.5">
                       <span className="text-stone-300 text-[10px] mx-0.5">|</span>
                       <div className="flex flex-col items-start">
                         <span className="text-[9px] text-stone-400 whitespace-nowrap">
@@ -290,7 +290,7 @@ export default function TabGeral({
                         </span>
                         <span className="text-[8px] text-stone-300 leading-none">por nível</span>
                       </div>
-                    </>
+                    </div>
                   )}
                   {!def && cl.name && (
                     <span className="text-[9px] text-stone-300 ml-1">…</span>

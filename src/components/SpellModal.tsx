@@ -284,12 +284,12 @@ export default function SpellModal({ spell, onClose, onEdit, itemLink, itemEffec
           aria-labelledby="spell-modal-title"
         >
           {/* ── Left sidebar (red) ── */}
-          <div className="w-24 sm:w-48 shrink-0 bg-tormenta-red overflow-y-auto flex flex-col">
+          <div className="w-28 sm:w-48 shrink-0 bg-tormenta-red overflow-y-auto flex flex-col">
             <div className="p-3 sm:p-5 flex-1 flex flex-col">
 
               {/* School */}
               <div className="mb-4">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1 hidden sm:block">
+                <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-red-200/50 mb-0.5 sm:mb-1">
                   Escola
                 </p>
                 <div className="flex items-center gap-1.5 text-white">
@@ -300,18 +300,18 @@ export default function SpellModal({ spell, onClose, onEdit, itemLink, itemEffec
 
               {/* Type */}
               <div className="mb-4">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1 hidden sm:block">
+                <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-red-200/50 mb-0.5 sm:mb-1">
                   Tipo
                 </p>
-                <span className="text-xs sm:text-sm font-medium text-white">{spell.type}</span>
+                <span className="text-[11px] sm:text-sm font-medium text-white">{spell.type}</span>
               </div>
 
               {/* Circle */}
               <div className="mb-5 pb-5 border-b border-red-700/60">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1 hidden sm:block">
+                <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-red-200/50 mb-0.5 sm:mb-1">
                   Círculo
                 </p>
-                <span className="text-xs sm:text-sm font-medium text-white">
+                <span className="text-[11px] sm:text-sm font-medium text-white">
                   {CIRCLE_LABEL[spell.circle - 1]}
                 </span>
               </div>
@@ -319,22 +319,22 @@ export default function SpellModal({ spell, onClose, onEdit, itemLink, itemEffec
               {/* Stats */}
               {stats.map(({ label, value, tooltip }) => (
                 <div key={label} className="mb-3.5">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-0.5 hidden sm:block">
+                  <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-red-200/50 mb-0.5 sm:mb-1">
                     {label}
                   </p>
                   {tooltip ? (
                     <Tooltip text={tooltip}>
-                      <span className="text-xs text-white/90">{value}</span>
+                      <span className="text-[10px] sm:text-xs text-white/90">{value}</span>
                     </Tooltip>
                   ) : (
-                    <span className="text-xs text-white/90">{value}</span>
+                    <span className="text-[10px] sm:text-xs text-white/90">{value}</span>
                   )}
                 </div>
               ))}
 
               {/* Publication */}
               <div className="mt-auto pt-5 border-t border-red-700/60">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-0.5 hidden sm:block">
+                <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-red-200/50 mb-0.5 sm:mb-1">
                   Publicação
                 </p>
                 <span className="text-xs text-white/60">{spell.publication}</span>

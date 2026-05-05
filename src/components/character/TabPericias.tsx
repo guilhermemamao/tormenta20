@@ -18,11 +18,12 @@ export default function TabPericias({ char, level, toggleSkill, patchSkill }: Ta
 
   const ICON_STYLE: CSSProperties = { filter: 'grayscale(1) opacity(0.45)', fontSize: '0.55rem' }
 
-  const ROW_COLS = '16px 120px 30px 35px 35px 35px 45px 40px'
+  const ROW_COLS = '12px 100px 22px 28px 28px 28px 34px 32px'
   const ROW_GRID: CSSProperties = {
     display: 'grid',
     gridTemplateColumns: ROW_COLS,
     alignItems: 'center',
+    columnGap: '3px',
   }
 
   const HDR = 'text-[9px] font-semibold uppercase tracking-wider text-stone-400'
@@ -30,12 +31,10 @@ export default function TabPericias({ char, level, toggleSkill, patchSkill }: Ta
   const NUM_INPUT = 'w-full text-center text-[11px] border border-stone-200 rounded px-0 py-0.5 bg-stone-50 focus:outline-none focus:ring-1 focus:ring-tormenta-red'
 
   const sortedSkills = [...ALL_SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt'))
-  const numRows = Math.ceil(sortedSkills.length / 2)
 
-  function HeaderRow({ col }: { col: number }) {
+  function HeaderRow() {
     return (
-      <div style={{ ...ROW_GRID, gridColumn: col, gridRow: 1 }}
-        className="border-b border-stone-200 pb-1.5">
+      <div style={ROW_GRID} className="border-b border-stone-200 pb-1.5">
         <div />
         <div className={`${HDR} text-left`}>Perícia</div>
         <div />
@@ -54,15 +53,9 @@ export default function TabPericias({ char, level, toggleSkill, patchSkill }: Ta
         Perícias
       </h3>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gridAutoFlow: 'column',
-        gridTemplateRows: `auto repeat(${numRows}, auto)`,
-        columnGap: '24px',
-      }}>
-        <HeaderRow col={1} />
-        <HeaderRow col={2} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+        <HeaderRow />
+        <div className="hidden sm:block"><HeaderRow /></div>
 
         {sortedSkills.map(skill => {
           const sk       = char.skills[skill.name] ?? DEFAULT_SKILL
@@ -80,7 +73,7 @@ export default function TabPericias({ char, level, toggleSkill, patchSkill }: Ta
               />
 
               <div
-                style={{ width: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                style={{ width: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                 className={`text-[11px] ${sk.trained ? 'font-semibold text-stone-800' : 'text-stone-500'}`}
                 title={skill.name}
               >
@@ -103,7 +96,7 @@ export default function TabPericias({ char, level, toggleSkill, patchSkill }: Ta
                 className={`${NUM_INPUT} ${inactive ? 'opacity-30 cursor-not-allowed' : ''}`}
               />
 
-              <div className={`text-right text-xs font-bold tabular-nums ${
+              <div className={`text-right text-xs font-bold tabular-nums whitespace-nowrap shrink-0 ${
                 inactive ? 'text-stone-300' : sk.trained ? 'text-tormenta-red' : 'text-stone-500'
               }`}>
                 {fmtBonus(total)}
