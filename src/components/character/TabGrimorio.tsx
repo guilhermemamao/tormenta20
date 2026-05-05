@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Plus, Trash2, Search, X } from 'lucide-react'
+import { Plus, Trash2, Search, X, Link } from 'lucide-react'
 import type { Character, CharacterSpell, Spell } from '../../types'
+import { ALL_EQUIPMENT, CATEGORY_ICONS, type EquipCategory } from '../../lib/equipment_data'
 import { supabase } from '../../lib/supabase'
 import {
   SCHOOL_ICONS, ATTR_CONFIG,
@@ -78,6 +79,144 @@ export function SpellPicker({ onAdd, onClose, alreadyAdded }: {
   )
 }
 
+// ─── ItemLinkField ────────────────────────────────────────────────────────────
+
+const LINK_ALLOWED = ['esoterico', 'roupa', 'item']
+
+type SuggestionItem = { name: string; category: EquipCategory; icon: string; effect?: string }
+
+function ItemLinkField({ value, onChange, onSelectEffect, charEquipment }: {
+  value: string
+  onChange: (v: string) => void
+  onSelectEffect?: (effect: string) => void
+  charEquipment: Character['equipment']
+}) {
+  const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState(value)
+  const [suggestions, setSuggestions] = useState<SuggestionItem[]>([])
+
+  useEffect(() => {
+    setSearch(value)
+  }, [value])
+
+  function getItemIcon(name: string): string {
+    const found = charEquipment.find(e => e.name === name)
+    if (!found?.category) return '📦'
+    return CATEGORY_ICONS[found.category as EquipCategory] ?? '📦'
+  }
+
+  function handleChange(val: string) {
+    setSearch(val)
+    onChange(val)
+    if (val.length >= 2) {
+      const q = val.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      setSuggestions(
+        charEquipment
+          .filter(e => LINK_ALLOWED.includes(e.category ?? '') &&
+            e.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').includes(q))
+          .map(e => ({
+            name: e.name,
+            category: (e.category ?? 'item') as EquipCategory,
+            icon: CATEGORY_ICONS[(e.category as EquipCategory) ?? 'item'] ?? '📦',
+            effect: e.effect,
+          }))
+          .slice(0, 6)
+      )
+    } else {
+      setSuggestions([])
+    }
+  }
+
+  if (!open && !value) {
+    return (
+      <button type="button" onClick={() => setOpen(true)}
+        className="text-[10px] text-stone-300 hover:text-tormenta-red transition-colors flex items-center gap-0.5 shrink-0">
+        <Link size={10} /> item
+      </button>
+    )
+  }
+
+  return (
+    <div className="relative flex items-center gap-1 shrink-0">
+      {value ? (
+        <span className="text-base shrink-0">{getItemIcon(value)}</span>
+      ) : (
+        <Link size={10} className="text-tormenta-red shrink-0" />
+      )}
+      <input
+        type="text"
+        value={search}
+        onChange={e => handleChange(e.target.value)}
+        onBlur={() => setTimeout(() => { setSuggestions([]); if (!value) setOpen(false) }, 200)}
+        placeholder="Efeito de item..."
+        autoFocus={open}
+        className="w-32 text-xs bg-stone-50 border border-stone-200 rounded px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-tormenta-red"
+      />
+      {value && (
+        <button type="button" onClick={() => { onChange(''); setSearch(''); setSelectedIcon(''); setOpen(false) }}
+          className="text-stone-300 hover:text-red-400 text-xs">✕</button>
+      )}
+      {suggestions.length > 0 && (
+        <div className="absolute z-20 top-full left-0 mt-1 w-56 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden">
+          {suggestions.map((s, i) => (
+            <button key={i} type="button"
+              onPointerDown={e => {
+                e.preventDefault()
+                onChange(s.name)
+                setSearch(s.name)
+                if (onSelectEffect) onSelectEffect(s.effect ?? '')
+                setSuggestions([])
+              }}
+              className="w-full text-left px-3 py-1.5 text-xs hover:bg-stone-50 border-b border-stone-50 last:border-0">
+              <span className="mr-1">{s.icon}</span>
+              {s.name}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── SpellRow ────────────────────────────────────────────────────────────────
+
+function SpellRow({ cs, openSpellModal, removeSpell, patchSpell, charEquipment }: {
+  cs: CharacterSpell
+  openSpellModal: (cs: CharacterSpell) => void
+  removeSpell: (spellId: string) => void
+  patchSpell: (spellId: string, field: keyof CharacterSpell, value: string) => void
+  charEquipment: Character['equipment']
+}) {
+  const Icon = SCHOOL_ICONS[cs.school]
+  return (
+    <div className="flex items-center justify-between py-1.5 group border-b border-stone-50 last:border-0">
+      <button onClick={() => openSpellModal(cs)}
+        className="flex items-center gap-2 text-left min-w-0 flex-1">
+        {Icon && <Icon size={12} className="text-stone-300 group-hover:text-tormenta-red shrink-0 transition-colors" />}
+        <span className="text-sm font-medium text-stone-800 group-hover:text-tormenta-red transition-colors truncate">{cs.spellName}</span>
+        <span className="text-[10px] text-stone-400 shrink-0">{cs.circle}°</span>
+        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0 ${
+          cs.type === 'Arcana'  ? 'bg-purple-100 text-purple-700' :
+          cs.type === 'Divina' ? 'bg-amber-100 text-amber-700' :
+          'bg-teal-100 text-teal-700'
+        }`}>{cs.type}</span>
+      </button>
+      <div className="flex items-center gap-2 ml-2 shrink-0">
+        <ItemLinkField
+          value={cs.itemLink ?? ''}
+          onChange={val => patchSpell(cs.spellId, 'itemLink', val)}
+          onSelectEffect={effect => patchSpell(cs.spellId, 'itemEffect', effect)}
+          charEquipment={charEquipment}
+        />
+        <button onClick={() => removeSpell(cs.spellId)}
+          className="text-stone-300 hover:text-red-500 transition-colors shrink-0">
+          <Trash2 size={13} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── TabGrimorio ─────────────────────────────────────────────────────────────
 
 interface TabGrimorioProps {
@@ -89,6 +228,8 @@ interface TabGrimorioProps {
   addedSpellIds: Set<string>
   removeSpell: (spellId: string) => void
   openSpellModal: (cs: CharacterSpell) => void
+  patchSpell: (spellId: string, field: keyof CharacterSpell, value: string) => void
+  charEquipment: Character['equipment']
   level: number
   id: string | undefined
 }
@@ -98,6 +239,7 @@ export default function TabGrimorio({
   grimSort, setGrimSort,
   setShowPicker,
   removeSpell, openSpellModal,
+  patchSpell, charEquipment,
   level, id,
 }: TabGrimorioProps) {
   const keyAttrKey = (char.spellKeyAttr || 'int') as keyof Character['attributes']
@@ -115,29 +257,6 @@ export default function TabGrimorio({
     a.circle - b.circle || a.spellName.localeCompare(b.spellName, 'pt')
   )
 
-  function SpellRow({ cs }: { cs: CharacterSpell }) {
-    const Icon = SCHOOL_ICONS[cs.school]
-    return (
-      <div className="flex items-center justify-between py-1.5 group border-b border-stone-50 last:border-0">
-        <button onClick={() => openSpellModal(cs)}
-          className="flex items-center gap-2 text-left min-w-0">
-          {Icon && <Icon size={12} className="text-stone-300 group-hover:text-tormenta-red shrink-0 transition-colors" />}
-          <span className="text-sm font-medium text-stone-800 group-hover:text-tormenta-red transition-colors truncate">{cs.spellName}</span>
-          <span className="text-[10px] text-stone-400 shrink-0">{cs.circle}°</span>
-          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0 ${
-            cs.type === 'Arcana'  ? 'bg-purple-100 text-purple-700' :
-            cs.type === 'Divina' ? 'bg-amber-100 text-amber-700' :
-            'bg-teal-100 text-teal-700'
-          }`}>{cs.type}</span>
-        </button>
-        <button onClick={() => removeSpell(cs.spellId)}
-          className="text-stone-200 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all ml-2 shrink-0">
-          <Trash2 size={13} />
-        </button>
-      </div>
-    )
-  }
-
   function renderSpellList() {
     if (char.spells.length === 0)
       return <p className="text-sm text-stone-400 text-center py-8">Nenhuma magia no grimório</p>
@@ -150,7 +269,7 @@ export default function TabGrimorio({
           <h4 className="text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-1 pb-1 border-b border-stone-200">
             {circle}° Círculo
           </h4>
-          {byCircle.get(circle)!.map(cs => <SpellRow key={cs.spellId} cs={cs} />)}
+          {byCircle.get(circle)!.map(cs => <SpellRow key={cs.spellId} cs={cs} openSpellModal={openSpellModal} removeSpell={removeSpell} patchSpell={patchSpell} charEquipment={charEquipment} />)}
         </div>
       ))
     }
@@ -165,13 +284,13 @@ export default function TabGrimorio({
             <h4 className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-1 pb-1 border-b border-stone-200">
               {Icon && <Icon size={10} />}{school}
             </h4>
-            {bySchool.get(school)!.map(cs => <SpellRow key={cs.spellId} cs={cs} />)}
+            {bySchool.get(school)!.map(cs => <SpellRow key={cs.spellId} cs={cs} openSpellModal={openSpellModal} removeSpell={removeSpell} patchSpell={patchSpell} charEquipment={charEquipment} />)}
           </div>
         )
       })
     }
 
-    return sorted.map(cs => <SpellRow key={cs.spellId} cs={cs} />)
+    return sorted.map(cs => <SpellRow key={cs.spellId} cs={cs} openSpellModal={openSpellModal} removeSpell={removeSpell} patchSpell={patchSpell} charEquipment={charEquipment} />)
   }
 
   const SORT_OPTIONS: { value: 'circle' | 'alpha' | 'school'; label: string }[] = [

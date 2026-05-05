@@ -106,6 +106,8 @@ export interface CharacterSpell {
   circle: number
   school: string
   type: string
+  itemLink?: string
+  itemEffect?: string
 }
 
 export interface Companion {
@@ -165,9 +167,11 @@ export interface Character {
     name: string
     quantity: number
     slots: number
-    location?: 'body' | 'bag'
+    location?: 'body' | 'bag' | 'carrier'
     description?: string
     category?: string
+    price?: string
+    effect?: string
   }[]
   money: number
   carryLimit: number
@@ -177,4 +181,5 @@ export interface Character {
   userId?: string
   companions?: Companion[]
   companionLimit?: number
+  carrierOpen?: boolean
 }

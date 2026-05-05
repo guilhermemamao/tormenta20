@@ -118,12 +118,21 @@ const acessorios: EquipmentEntry[] = (AcessoriosJson.items as SimpleItem[]).map(
   description: buildSimpleDesc(i),
 }))
 
+function mapItemCategory(category: string): EquipCategory {
+  const c = category.toLowerCase()
+  if (c.includes('alimenta')) return 'alimento'
+  if (c.includes('alquím') || c.includes('alquim')) return 'pocao'
+  if (c.includes('vestuário') || c.includes('vestuario')) return 'roupa'
+  if (c.includes('esotéric') || c.includes('esoteri')) return 'esoterico'
+  return 'item'
+}
+
 const itens: EquipmentEntry[] = (ItensJson.items as SimpleItem[]).map(i => ({
   name: i.name,
-  category: (i.category === 'Esotéricos' ? 'esoterico' : 'item') as EquipCategory,
+  category: mapItemCategory(i.category),
   price: i.price,
   spaces: i.spaces,
-  description: buildSimpleDesc(i),
+  description: [i.category && `Categoria: ${i.category}`, i.price && `Preço: ${i.price}`, i.spaces && `Espaços: ${i.spaces}`].filter(Boolean).join(' · '),
 }))
 
 export const ALL_EQUIPMENT: EquipmentEntry[] = [

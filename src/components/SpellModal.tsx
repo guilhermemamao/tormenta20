@@ -243,9 +243,11 @@ interface Props {
   spell: Spell
   onClose: () => void
   onEdit?: () => void
+  itemLink?: string
+  itemEffect?: string
 }
 
-export default function SpellModal({ spell, onClose, onEdit }: Props) {
+export default function SpellModal({ spell, onClose, onEdit, itemLink, itemEffect }: Props) {
   const [conditionKey, setConditionKey] = useState<string | null>(null)
   const Icon = SCHOOL_ICONS[spell.school]
 
@@ -270,14 +272,10 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
 
   return (
     <>
-      {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px]"
+        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-[2px] flex items-center justify-center p-4 sm:p-8"
         onClick={onClose}
-      />
-
-      {/* Modal container */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8">
+      >
         <div
           className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[88vh] flex overflow-hidden"
           onClick={e => e.stopPropagation()}
@@ -286,34 +284,34 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
           aria-labelledby="spell-modal-title"
         >
           {/* ── Left sidebar (red) ── */}
-          <div className="w-48 shrink-0 bg-tormenta-red overflow-y-auto flex flex-col">
-            <div className="p-5 flex-1 flex flex-col">
+          <div className="w-24 sm:w-48 shrink-0 bg-tormenta-red overflow-y-auto flex flex-col">
+            <div className="p-3 sm:p-5 flex-1 flex flex-col">
 
               {/* School */}
               <div className="mb-4">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1">
+                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1 hidden sm:block">
                   Escola
                 </p>
                 <div className="flex items-center gap-1.5 text-white">
                   <Icon size={13} className="shrink-0 text-red-300" />
-                  <span className="text-sm font-medium">{spell.school}</span>
+                  <span className="text-xs sm:text-sm font-medium">{spell.school}</span>
                 </div>
               </div>
 
               {/* Type */}
               <div className="mb-4">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1">
+                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1 hidden sm:block">
                   Tipo
                 </p>
-                <span className="text-sm font-medium text-white">{spell.type}</span>
+                <span className="text-xs sm:text-sm font-medium text-white">{spell.type}</span>
               </div>
 
               {/* Circle */}
               <div className="mb-5 pb-5 border-b border-red-700/60">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1">
+                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-1 hidden sm:block">
                   Círculo
                 </p>
-                <span className="text-sm font-medium text-white">
+                <span className="text-xs sm:text-sm font-medium text-white">
                   {CIRCLE_LABEL[spell.circle - 1]}
                 </span>
               </div>
@@ -321,7 +319,7 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
               {/* Stats */}
               {stats.map(({ label, value, tooltip }) => (
                 <div key={label} className="mb-3.5">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-0.5">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-0.5 hidden sm:block">
                     {label}
                   </p>
                   {tooltip ? (
@@ -336,7 +334,7 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
 
               {/* Publication */}
               <div className="mt-auto pt-5 border-t border-red-700/60">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-0.5">
+                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-200/50 mb-0.5 hidden sm:block">
                   Publicação
                 </p>
                 <span className="text-xs text-white/60">{spell.publication}</span>
@@ -360,7 +358,18 @@ export default function SpellModal({ spell, onClose, onEdit }: Props) {
                   >
                     {spell.name}
                   </h2>
-                  <AddToSheet spell={spell} />
+                  <div className="flex items-center gap-3 flex-wrap mt-2">
+                    <AddToSheet spell={spell} />
+                    {itemLink && (
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 rounded-lg">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Item:</span>
+                        <span className="text-xs font-medium text-amber-800">{itemLink}</span>
+                        {itemEffect && (
+                          <span className="text-xs text-amber-600 border-l border-amber-200 pl-1.5">{itemEffect}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0 mt-1">
                   {onEdit && (

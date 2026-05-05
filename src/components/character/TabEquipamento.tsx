@@ -7,7 +7,7 @@ import { ALL_EQUIPMENT, CATEGORY_ICONS, CATEGORY_LABELS, type EquipCategory } fr
 interface TabEquipamentoProps {
   char: Character
   patch: (p: Partial<Character>) => void
-  addEquip: (location: 'body' | 'bag') => void
+  addEquip: (location: 'body' | 'bag' | 'carrier') => void
   removeEquip: (i: number) => void
   patchEquip: (i: number, field: string, value: string | number) => void
   expandedEquip: Set<number>
@@ -16,8 +16,13 @@ interface TabEquipamentoProps {
   setBodyOpen: (v: boolean | ((prev: boolean) => boolean)) => void
   bagOpen: boolean
   setBagOpen: (v: boolean | ((prev: boolean) => boolean)) => void
+  carrierOpen: boolean
+  setCarrierOpen: (v: boolean | ((prev: boolean) => boolean)) => void
   slotsUsed: number
   carryLimit: number
+  carrierSlotsUsed: number
+  carrierLimit: number
+  setCarrierLimit: (v: number) => void
 }
 
 type EquipItem = Character['equipment'][number] & { idx: number }
@@ -98,44 +103,51 @@ function EquipRow({ item, patchEquip, removeEquip, toggleEquipExpand, expandedEq
           {icon}
         </button>
 
-        <div className="relative flex-1 min-w-0">
+        <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+          <div className="relative">
+            <input
+              maxLength={40}
+              value={item.name}
+              placeholder="Nome do item"
+              onChange={e => handleNameChange(e.target.value)}
+              onFocus={() => item.name.length >= 2 && setShowSug(true)}
+              onBlur={() => setTimeout(() => setShowSug(false), 200)}
+              className={`${INP_CARD} w-full text-xs`}
+            />
+            {showSug && suggestions.length > 0 && (
+              <div className="absolute z-20 top-full left-0 mt-1 w-64 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden">
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onPointerDown={e => { e.preventDefault(); selectSuggestion(s) }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-stone-50 border-b border-stone-50 last:border-0"
+                  >
+                    <span className="mr-1.5">{CATEGORY_ICONS[s.category]}</span>
+                    <span className="font-medium text-stone-800">{s.name}</span>
+                    <span className="text-[10px] text-stone-400 ml-1">{s.price}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <input
-            value={item.name}
-            placeholder="Nome do item"
-            onChange={e => handleNameChange(e.target.value)}
-            onFocus={() => item.name.length >= 2 && setShowSug(true)}
-            onBlur={() => setTimeout(() => setShowSug(false), 200)}
-            className={`${INP_CARD} w-full`}
+            maxLength={20}
+            value={item.effect ?? ''}
+            onChange={e => patchEquip(item.idx, 'effect', e.target.value)}
+            placeholder="Efeito (ex: +1 AC)"
+            className="w-full text-[10px] text-stone-500 bg-transparent border-0 border-b border-stone-100 px-0 py-0 focus:outline-none focus:border-tormenta-red placeholder:text-stone-300"
           />
-          {showSug && suggestions.length > 0 && (
-            <div className="absolute z-20 top-full left-0 mt-1 w-64 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden">
-              {suggestions.map((s, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onPointerDown={e => { e.preventDefault(); selectSuggestion(s) }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-stone-50 border-b border-stone-50 last:border-0"
-                >
-                  <span className="mr-1.5">{CATEGORY_ICONS[s.category]}</span>
-                  <span className="font-medium text-stone-800">{s.name}</span>
-                  <span className="text-[10px] text-stone-400 ml-1">{s.price}</span>
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
-        <input type="number" min={1} value={item.quantity}
-          onChange={e => patchEquip(item.idx, 'quantity', parseInt(e.target.value) || 1)}
-          className="w-14 text-center bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-tormenta-red shrink-0"
+        <input type="number" min={1} max={999} value={item.quantity}
+          onChange={e => patchEquip(item.idx, 'quantity', Math.min(999, parseInt(e.target.value) || 1))}
+          className="w-10 text-center bg-stone-50 border border-stone-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-tormenta-red shrink-0"
         />
-        <div className="flex items-center gap-1 shrink-0">
-          <input type="number" min={0} value={item.slots}
-            onChange={e => patchEquip(item.idx, 'slots', parseInt(e.target.value) || 0)}
-            className="w-10 text-center bg-stone-50 border border-stone-200 rounded-lg px-1 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-tormenta-red"
-          />
-          <span className="text-[10px] text-stone-400">esp.</span>
-        </div>
+        <input type="number" min={0} max={99} step={0.05} value={item.slots}
+          onChange={e => patchEquip(item.idx, 'slots', parseFloat(e.target.value) || 0)}
+          className="w-12 text-center bg-stone-50 border border-stone-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-tormenta-red shrink-0"
+        />
         <button onClick={() => removeEquip(item.idx)} className="text-stone-300 hover:text-red-500 shrink-0">
           <Trash2 size={13} />
         </button>
@@ -143,15 +155,39 @@ function EquipRow({ item, patchEquip, removeEquip, toggleEquipExpand, expandedEq
       <div className={`grid transition-all duration-200 ${expandedEquip.has(item.idx) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
         <div className="overflow-hidden">
           <div className="pl-7 pr-2 pb-2">
-            <textarea rows={2}
-              value={item.description ?? ''}
-              onChange={e => patchEquip(item.idx, 'description', e.target.value)}
-              placeholder="Descrição do item…"
-              className="w-full bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-xs text-stone-600 focus:outline-none focus:ring-1 focus:ring-tormenta-red resize-none"
-            />
+            <div className="flex gap-2 items-start">
+              <textarea rows={2}
+                value={item.description ?? ''}
+                onChange={e => patchEquip(item.idx, 'description', e.target.value)}
+                placeholder="Descrição do item…"
+                className="flex-1 bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-xs text-stone-600 focus:outline-none focus:ring-1 focus:ring-tormenta-red resize-none"
+              />
+              <div className="shrink-0 flex flex-col items-end gap-1">
+                <span className="text-[9px] text-stone-400 font-medium">Preço T$</span>
+                <input
+                  type="text"
+                  value={item.price ?? ''}
+                  onChange={e => patchEquip(item.idx, 'price', e.target.value)}
+                  className="w-16 text-right bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-tormenta-red"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function TableHeader() {
+  return (
+    <div className="flex items-center gap-2 px-1 py-1 text-[9px] font-semibold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1">
+      <span className="w-4 shrink-0" />
+      <span className="w-4 shrink-0" />
+      <span className="flex-1">Item</span>
+      <span className="w-10 text-center shrink-0">Qtd</span>
+      <span className="w-12 text-center shrink-0">Esp.</span>
+      <span className="w-4 shrink-0" />
     </div>
   )
 }
@@ -178,11 +214,15 @@ interface SectionProps extends ItemRowsProps {
   title: string
   open: boolean
   onToggle: () => void
-  location: 'body' | 'bag'
-  addEquip: (location: 'body' | 'bag') => void
+  location: 'body' | 'bag' | 'carrier'
+  addEquip: (location: 'body' | 'bag' | 'carrier') => void
+  carrierSlotsUsed?: number
+  carrierLimit?: number
+  setCarrierLimit?: (v: number) => void
 }
 
-function Section({ title, items, open, onToggle, location, addEquip, patchEquip, removeEquip, toggleEquipExpand, expandedEquip, onSelect }: SectionProps) {
+function Section({ title, items, open, onToggle, location, addEquip, patchEquip, removeEquip, toggleEquipExpand, expandedEquip, onSelect, carrierSlotsUsed, carrierLimit, setCarrierLimit }: SectionProps) {
+  const isCarrier = location === 'carrier'
   return (
     <div className="border border-stone-200 rounded-xl overflow-hidden">
       <button type="button" onClick={onToggle}
@@ -191,6 +231,21 @@ function Section({ title, items, open, onToggle, location, addEquip, patchEquip,
           {open ? <ChevronDown size={13} className="text-stone-400" /> : <ChevronRight size={13} className="text-stone-400" />}
           <span className="text-xs font-semibold text-stone-600">{title}</span>
           <span className="text-[10px] text-stone-400 bg-stone-200 rounded-full px-1.5 py-0.5 leading-none">{items.length}</span>
+          {isCarrier && carrierSlotsUsed !== undefined && carrierLimit !== undefined && setCarrierLimit && (
+            <div className="flex items-center gap-1.5 text-[10px] text-stone-400">
+              <span>Carga:</span>
+              <span className={carrierSlotsUsed > carrierLimit ? 'text-red-500 font-semibold' : 'text-stone-600 font-semibold'}>
+                {carrierSlotsUsed}
+              </span>
+              <span>/</span>
+              <input
+                type="number" min={1} max={999} value={carrierLimit}
+                onChange={e => setCarrierLimit(parseInt(e.target.value) || 1)}
+                onClick={e => e.stopPropagation()}
+                className="w-12 text-center bg-white border border-stone-200 rounded px-1 py-0.5 text-[10px] focus:outline-none focus:ring-1 focus:ring-tormenta-red"
+              />
+            </div>
+          )}
         </div>
         <button type="button" onClick={e => { e.stopPropagation(); addEquip(location) }}
           className="flex items-center gap-0.5 text-[11px] text-tormenta-red hover:text-tormenta-red-dark font-medium">
@@ -202,8 +257,11 @@ function Section({ title, items, open, onToggle, location, addEquip, patchEquip,
           <div className="px-4 py-2">
             {items.length === 0
               ? <p className="text-xs text-stone-400 text-center py-3">Nenhum item nesta seção</p>
-              : <ItemRows items={items} patchEquip={patchEquip} removeEquip={removeEquip}
-                  toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip} onSelect={onSelect} />
+              : <>
+                  <TableHeader />
+                  <ItemRows items={items} patchEquip={patchEquip} removeEquip={removeEquip}
+                    toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip} onSelect={onSelect} />
+                </>
             }
           </div>
         </div>
@@ -217,16 +275,31 @@ export default function TabEquipamento({
   addEquip, removeEquip, patchEquip,
   expandedEquip, toggleEquipExpand,
   bodyOpen, setBodyOpen, bagOpen, setBagOpen,
+  carrierOpen, setCarrierOpen,
   slotsUsed, carryLimit,
+  carrierSlotsUsed, carrierLimit, setCarrierLimit,
 }: TabEquipamentoProps) {
-  const [sortedEquipIds, setSortedEquipIds] = useState<number[] | null>(null)
+  const [sortedEquipIds, setSortedEquipIds] = useState<number[] | null>(() => {
+    try {
+      const saved = localStorage.getItem('equip-sort-ids')
+      return saved ? JSON.parse(saved) : null
+    } catch { return null }
+  })
+
+  function saveSortedIds(ids: number[] | null) {
+    setSortedEquipIds(ids)
+    try {
+      if (ids) localStorage.setItem('equip-sort-ids', JSON.stringify(ids))
+      else localStorage.removeItem('equip-sort-ids')
+    } catch {}
+  }
 
   function applySortByCategory() {
     if (sortedEquipIds) {
-      setSortedEquipIds(null)
+      saveSortedIds(null)
     } else {
       const allItems = char.equipment.map((e, i) => ({ ...e, idx: i }))
-      setSortedEquipIds(
+      saveSortedIds(
         [...allItems]
           .sort((a, b) => (CATEGORY_ORDER[a.category ?? ''] ?? 9) - (CATEGORY_ORDER[b.category ?? ''] ?? 9))
           .map(e => e.idx)
@@ -254,8 +327,9 @@ export default function TabEquipamento({
     patch({ equipment: newEquip })
   }
 
-  const bodyItems = sortItems(char.equipment.map((e, i) => ({ ...e, idx: i })).filter(e => e.location === 'body'))
-  const bagItems  = sortItems(char.equipment.map((e, i) => ({ ...e, idx: i })).filter(e => e.location !== 'body'))
+  const bodyItems    = sortItems(char.equipment.map((e, i) => ({ ...e, idx: i })).filter(e => e.location === 'body'))
+  const bagItems     = sortItems(char.equipment.map((e, i) => ({ ...e, idx: i })).filter(e => e.location === 'bag' || e.location == null))
+  const carrierItems = sortItems(char.equipment.map((e, i) => ({ ...e, idx: i })).filter(e => e.location === 'carrier'))
 
   return (
     <div className="space-y-5">
@@ -297,6 +371,12 @@ export default function TabEquipamento({
             patchEquip={patchEquip} removeEquip={removeEquip}
             toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
             onSelect={applyEquipSuggestion} />
+          <Section title="Companheiro de carga" items={carrierItems} open={carrierOpen}
+            onToggle={() => setCarrierOpen(o => !o)} location="carrier" addEquip={addEquip}
+            patchEquip={patchEquip} removeEquip={removeEquip}
+            toggleEquipExpand={toggleEquipExpand} expandedEquip={expandedEquip}
+            onSelect={applyEquipSuggestion}
+            carrierSlotsUsed={carrierSlotsUsed} carrierLimit={carrierLimit} setCarrierLimit={setCarrierLimit} />
         </div>
       </div>
 

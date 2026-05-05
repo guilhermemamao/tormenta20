@@ -101,12 +101,15 @@ export default function CharacterPage() {
   const [charError, setCharError] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>('geral')
   const [modalSpell, setModalSpell] = useState<Spell | null>(null)
+  const [modalSpellEntry, setModalSpellEntry] = useState<CharacterSpell | null>(null)
   const [showPicker, setShowPicker] = useState(false)
   const [saveState, setSaveState] = useState<SaveState>('idle')
   const [expandedEquip, setExpandedEquip] = useState<Set<number>>(new Set())
   const [expandedPowers, setExpandedPowers] = useState<Set<string>>(new Set())
   const [bodyOpen, setBodyOpen] = useState(true)
   const [bagOpen, setBagOpen] = useState(true)
+  const [carrierOpen, setCarrierOpen] = useState(true)
+  const [carrierLimit, setCarrierLimit] = useState(20)
   const [classDefsMap, setClassDefsMap] = useState<Record<string, ClassDef>>({})
   const [grimSort, setGrimSort] = useState<'circle' | 'alpha' | 'school'>('circle')
   const fetchedClassNames = useRef<Set<string>>(new Set())
@@ -285,7 +288,12 @@ export default function CharacterPage() {
   const strMod = attrMod(char.attributes.str)
   const defTotal = 10 + dexMod + char.defense.armor + char.defense.shield + char.defense.other
   const carryLimit = 10 + 2 * strMod
-  const slotsUsed = char.equipment.reduce((s, e) => s + e.slots * e.quantity, 0)
+  const slotsUsed = char.equipment
+    .filter(e => e.location !== 'carrier')
+    .reduce((s, e) => s + Math.ceil(e.slots * e.quantity), 0)
+  const carrierSlotsUsed = char.equipment
+    .filter(e => e.location === 'carrier')
+    .reduce((s, e) => s + Math.ceil(e.slots * e.quantity), 0)
   const addedSpellIds = useMemo(() => new Set(char.spells.map(s => s.spellId)), [char.spells])
 
   // ── Save ──
@@ -354,7 +362,7 @@ export default function CharacterPage() {
   }
 
   // ── Equipment helpers ──
-  function addEquip(location: 'body' | 'bag') {
+  function addEquip(location: 'body' | 'bag' | 'carrier') {
     markDirty()
     patch({ equipment: [...char.equipment, { name: '', quantity: 1, slots: 1, location, description: '' }] })
   }
@@ -369,6 +377,13 @@ export default function CharacterPage() {
   }
   function toggleEquipExpand(i: number) {
     setExpandedEquip(s => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n })
+  }
+  function patchSpell(spellId: string, field: keyof CharacterSpell, value: string) {
+    markDirty()
+    setChar(c => ({
+      ...c,
+      spells: c.spells.map(s => s.spellId === spellId ? { ...s, [field]: value } : s)
+    }))
   }
 
   // ── Power helpers ──
@@ -406,6 +421,7 @@ export default function CharacterPage() {
     patch({ spells: char.spells.filter(s => s.spellId !== spellId) })
   }
   async function openSpellModal(cs: CharacterSpell) {
+    setModalSpellEntry(cs)
     const { data } = await supabase.from('spells').select('*').eq('id', cs.spellId).single()
     if (data) setModalSpell(rowToSpell(data as DbSpellRow))
   }
@@ -503,6 +519,7 @@ export default function CharacterPage() {
           setShowPicker={setShowPicker}
           addedSpellIds={addedSpellIds}
           removeSpell={removeSpell} openSpellModal={openSpellModal}
+          patchSpell={patchSpell} charEquipment={char.equipment}
           level={level} id={id}
         />
       )}
@@ -513,7 +530,9 @@ export default function CharacterPage() {
           expandedEquip={expandedEquip} toggleEquipExpand={toggleEquipExpand}
           bodyOpen={bodyOpen} setBodyOpen={setBodyOpen}
           bagOpen={bagOpen} setBagOpen={setBagOpen}
+          carrierOpen={carrierOpen} setCarrierOpen={setCarrierOpen}
           slotsUsed={slotsUsed} carryLimit={carryLimit}
+          carrierSlotsUsed={carrierSlotsUsed} carrierLimit={carrierLimit} setCarrierLimit={setCarrierLimit}
         />
       )}
       {tab === 'companheiros' && (
@@ -559,7 +578,14 @@ export default function CharacterPage() {
       {showPicker && (
         <SpellPicker onAdd={addSpell} onClose={() => setShowPicker(false)} alreadyAdded={addedSpellIds} />
       )}
-      {modalSpell && <SpellModal spell={modalSpell} onClose={() => setModalSpell(null)} />}
+      {modalSpell && (
+        <SpellModal
+          spell={modalSpell}
+          itemLink={modalSpellEntry?.itemLink}
+          itemEffect={modalSpellEntry?.itemEffect}
+          onClose={() => { setModalSpell(null); setModalSpellEntry(null) }}
+        />
+      )}
 
       {/* Sticky save button */}
       <div className="fixed bottom-6 right-6 z-40">
