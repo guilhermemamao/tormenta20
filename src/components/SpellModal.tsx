@@ -90,7 +90,7 @@ function Tooltip({ text, children }: { text: string; children: React.ReactNode }
 function renderDescription(text: string, onTerm: (key: string) => void): React.ReactNode {
   const keys = Object.keys(CONDITION_DEFS).sort((a, b) => b.length - a.length)
   const escaped = keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-  const pattern = new RegExp(`(${escaped.join('|')})`, 'gi')
+  const pattern = new RegExp(`(?<![\\w\\u00C0-\\u017E])(${escaped.join('|')})(?![\\w\\u00C0-\\u017E])`, 'gi')
   return text.split(pattern).map((part, i) => {
     const key = keys.find(k => k.toLowerCase() === part.toLowerCase())
     if (key) {
@@ -122,7 +122,7 @@ function ConditionModal({ termKey, onClose, onNavigate }: { termKey: string; onC
   function renderInlineLinks(text: string): React.ReactNode {
     const keys = Object.keys(CONDITION_DEFS).sort((a, b) => b.length - a.length)
     const escaped = keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-    const pattern = new RegExp(`(${escaped.join('|')})`, 'gi')
+    const pattern = new RegExp(`(?<![\\w\\u00C0-\\u017E])(${escaped.join('|')})(?![\\w\\u00C0-\\u017E])`, 'gi')
     return text.split(pattern).map((part, i) => {
       const key = keys.find(k => k.toLowerCase() === part.toLowerCase())
       if (key && key !== termKey.toLowerCase()) {

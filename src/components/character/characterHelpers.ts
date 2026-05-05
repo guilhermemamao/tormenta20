@@ -145,12 +145,19 @@ export function parseMP(manaPoints: string): number {
   return match ? parseInt(match[1]) : 0
 }
 
+function trainBonus(trained: boolean, totalLevel: number): number {
+  if (!trained) return 0
+  if (totalLevel >= 15) return 6
+  if (totalLevel >= 7) return 4
+  return 2
+}
+
 export function calcSkillTotal(
   attrVal: number, sk: SkillEntry, lvl: number,
   trainedOnly: boolean, armorPen: number,
 ): number {
   if (trainedOnly && !sk.trained) return 0
-  return Math.floor(lvl / 2) + attrMod(attrVal) + (sk.trained ? 2 : 0) + sk.training + sk.outros - armorPen
+  return Math.floor(lvl / 2) + attrMod(attrVal) + trainBonus(sk.trained, lvl) + sk.training + sk.outros - armorPen
 }
 
 export function normalizeSkills(raw: Record<string, unknown>): Record<string, SkillEntry> {

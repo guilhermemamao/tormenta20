@@ -95,7 +95,7 @@ export default function TabPericias({ char, level, toggleSkill, patchSkill }: Ta
 
               <div className={`${VAL} ${inactive ? 'opacity-30' : ''}`}>{fmtMod(aVal)}</div>
 
-              <div className={`${VAL} ${inactive ? 'opacity-30' : ''}`}>{sk.trained ? '+2' : '0'}</div>
+              <div className={`${VAL} ${inactive ? 'opacity-30' : ''}`}>{sk.trained ? `+${level >= 15 ? 6 : level >= 7 ? 4 : 2}` : '0'}</div>
 
               <input
                 type="number" value={sk.outros} disabled={inactive}
