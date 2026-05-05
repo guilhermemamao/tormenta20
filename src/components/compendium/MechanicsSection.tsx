@@ -73,26 +73,6 @@ function searchNodes(nodes: MechanicsNode[], q: string): { item: MechanicsItem; 
   return results
 }
 
-function searchAllTopics(topics: MechanicsFolder[], q: string): { topicName: string; items: MechanicsItem[]; hasNameMatch: boolean }[] {
-  return topics
-    .map(topic => {
-      const results = searchNodes(topic.items, q)
-      const nameMatches = results.filter(r => r.nameMatch).map(r => r.item)
-      const descMatches = results.filter(r => !r.nameMatch).map(r => r.item)
-      return {
-        topicName: topic.name,
-        items: [...nameMatches, ...descMatches],
-        hasNameMatch: nameMatches.length > 0,
-      }
-    })
-    .filter(group => group.items.length > 0)
-    .sort((a, b) => {
-      if (a.hasNameMatch && !b.hasNameMatch) return -1
-      if (!a.hasNameMatch && b.hasNameMatch) return 1
-      return 0
-    })
-}
-
 // ─── NodeRenderer ─────────────────────────────────────────────────────────────
 
 function NodeRenderer({ node, depth = 0 }: { node: MechanicsNode; depth?: number }) {
