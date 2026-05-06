@@ -350,13 +350,20 @@ export default function CharacterPage() {
   // ── Attack helpers ──
   function addAttack() {
     markDirty()
-    patch({ attacks: [...char.attacks, { name: '', bonus: 0, damage: '1d6', critical: '×2', type: '', range: '' }] })
+    patch({ attacks: [...char.attacks, {
+      name: '', attackName: '', weaponType: '', range: 'Melee',
+      damageDie: '', companionDie: '', bonusDie: '',
+      attrBonus: 'str', fixedBonus: 0, styleBonus: 0, tempBonus: 0, penalty: 0,
+      threatRange: 20, critMultiplier: '2x',
+      hitDie: 'D20', hitBonus: 0, skillBonus: 'Luta',
+      hitTempBonus: 0, hitPersonalBonus: 0, hitFixedBonus: 0, hitPenalty: 0,
+    }] })
   }
   function removeAttack(i: number) {
     markDirty()
     patch({ attacks: char.attacks.filter((_, idx) => idx !== i) })
   }
-  function patchAttack(i: number, field: string, value: string | number) {
+  function patchAttack(i: number, field: string, value: string | number | string[]) {
     markDirty()
     patch({ attacks: char.attacks.map((a, idx) => idx === i ? { ...a, [field]: value } : a) })
   }

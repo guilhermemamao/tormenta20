@@ -103,6 +103,7 @@ export const ALL_SKILLS: SkillDef[] = [
   { name: 'Percepção',     attr: 'wis', armorPenalty: false, trainedOnly: false },
   { name: 'Pilotagem',     attr: 'dex', armorPenalty: false, trainedOnly: true  },
   { name: 'Pontaria',      attr: 'dex', armorPenalty: false, trainedOnly: false },
+  { name: 'Artilharia',   attr: 'dex', armorPenalty: false, trainedOnly: true  },
   { name: 'Reflexos',      attr: 'dex', armorPenalty: false, trainedOnly: false },
   { name: 'Religião',      attr: 'wis', armorPenalty: false, trainedOnly: true  },
   { name: 'Sobrevivência', attr: 'wis', armorPenalty: false, trainedOnly: false },

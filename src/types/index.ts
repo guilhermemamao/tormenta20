@@ -93,11 +93,32 @@ export interface CharacterClass {
 
 export interface Attack {
   name: string
-  bonus: number
-  damage: string
-  critical: string
-  type: string
+  attackName?: string
+  weaponType: string
   range: string
+
+  damageDie: string
+  damageDice?: string[]
+  companionDie: string
+  bonusDie: string
+
+  attrBonus: string
+  fixedBonus: number
+  styleBonus: number
+  tempBonus: number
+  penalty: number
+
+  threatRange: number
+  critMultiplier: string
+
+  hitDie: string
+  hitBonus: number
+  hitBonusDie?: string
+  skillBonus: string
+  hitTempBonus: number
+  hitPersonalBonus: number
+  hitFixedBonus: number
+  hitPenalty: number
 }
 
 export interface CharacterSpell {
