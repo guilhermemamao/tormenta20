@@ -101,6 +101,7 @@ export interface Attack {
   damageDice?: string[]
   companionDie: string
   bonusDie: string
+  extraDice?: string[]
 
   attrBonus: string
   fixedBonus: number

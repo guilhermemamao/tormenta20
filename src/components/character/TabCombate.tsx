@@ -53,11 +53,12 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
     name:             atk.name,
     attackName:       atk.attackName       ?? '',
     weaponType:       atk.weaponType       ?? '',
-    range:            atk.range,
+    range:            atk.range === 'C/C' ? 'Corpo a Corpo' : (atk.range ?? 'Melee'),
     damageDie:        atk.damageDie        ?? '',
     damageDice:       atk.damageDice,
     companionDie:     atk.companionDie     ?? '',
     bonusDie:         atk.bonusDie         ?? '',
+    extraDice:        atk.extraDice        ?? [],
     attrBonus:        atk.attrBonus        ?? 'str',
     fixedBonus:       atk.fixedBonus       ?? 0,
     styleBonus:       atk.styleBonus       ?? 0,
@@ -83,10 +84,13 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
 
   const skillName = safeAtk.skillBonus ?? 'Luta'
   const skillDef = ALL_SKILLS.find(s => s.name === skillName) ?? ALL_SKILLS.find(s => s.name === 'Luta')!
-  const skillKey = skillName.toLowerCase()
+  const skillKey = Object.keys(char.skills ?? {}).find(
+    k => k.toLowerCase() === skillName.toLowerCase()
+  ) ?? skillName
   const skillEntry = char.skills?.[skillKey] ?? DEFAULT_SKILL
   const skillAttrVal = char.attributes[skillDef.attr] ?? 10
-  const hitSkillMod = calcSkillTotal(skillAttrVal, skillEntry, level, skillDef.trainedOnly, 0)
+  const armorPen = skillDef.armorPenalty ? char.defense.penalty : 0
+  const hitSkillMod = calcSkillTotal(skillAttrVal, skillEntry, level, skillDef.trainedOnly, armorPen)
 
   const hitTotal = hitSkillMod + safeAtk.hitTempBonus + safeAtk.hitPersonalBonus + safeAtk.hitFixedBonus - Math.abs(safeAtk.hitPenalty)
 
@@ -137,9 +141,18 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
               )}
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              {safeAtk.weaponType && <span className="text-[10px] text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded">{safeAtk.weaponType}</span>}
-              {safeAtk.range && <span className="text-[10px] text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded">{safeAtk.range}</span>}
-              <span className="text-sm font-bold text-tormenta-red ml-1">{damageTotal >= 0 ? '+' : ''}{damageTotal}</span>
+              <div className="flex flex-col sm:flex-row items-end sm:items-center gap-0.5 sm:gap-1.5">
+                {safeAtk.weaponType && safeAtk.weaponType !== '' && (
+                  <span className="text-[10px] text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded leading-none">{safeAtk.weaponType}</span>
+                )}
+                {safeAtk.range && safeAtk.range !== '' && (
+                  <span className="text-[10px] text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded leading-none">{safeAtk.range}</span>
+                )}
+              </div>
+              <div className="text-right ml-1">
+                <p className="text-sm font-bold text-tormenta-red leading-none">{hitTotal >= 0 ? '+' : ''}{hitTotal}</p>
+                <p className="text-[8px] text-stone-400">acerto</p>
+              </div>
             </div>
           </div>
         </div>
@@ -205,7 +218,7 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
                 onChange={e => patchAttack(i, 'range', e.target.value)}
                 className="text-[10px] border border-stone-200 bg-white rounded px-1 py-0.5 text-stone-600 focus:outline-none shrink-0"
               >
-                {['Melee', 'Curto', 'Médio', 'Longo'].map(r => (
+                {['Melee', 'Corpo a Corpo', 'Curto', 'Médio', 'Longo'].map(r => (
                   <option key={r} value={r}>{r}</option>
                 ))}
               </select>
@@ -216,7 +229,7 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
           <div className="px-3 py-2">
             {/* Header DANO com total inline */}
             <div className="flex items-center justify-between bg-stone-100 px-3 py-1.5 -mx-3 mb-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-600">⚔️ DANO</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-stone-600">⚔️ DANO</p>
               <div className="text-right">
                 <p className="text-[8px] text-stone-400 uppercase tracking-wider">Total bônus</p>
                 <p className={`text-sm font-bold ${damageTotal >= 0 ? 'text-tormenta-red' : 'text-red-800'}`}>
@@ -263,12 +276,24 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
                   </div>
                   <button
                     type="button"
-                    onClick={() => patchAttack(i, 'damageDice', [...dice, ''])}
+                    onClick={() => patchAttack(i, 'extraDice', [...safeAtk.extraDice, ''])}
                     className="flex items-center gap-0.5 text-[10px] text-tormenta-red hover:text-red-800 font-medium self-end pb-1"
                     title="Adicionar dado extra"
                   >
                     <Plus size={10} /> dado
                   </button>
+                  {safeAtk.extraDice.map((d, di) => (
+                    <div key={di} className="flex items-center gap-0.5">
+                      <span className="text-stone-300 text-xs">+</span>
+                      <DiceField value={d} onChange={v => {
+                        const nd = [...safeAtk.extraDice]; nd[di] = v
+                        patchAttack(i, 'extraDice', nd)
+                      }} />
+                      <button type="button" onClick={() =>
+                        patchAttack(i, 'extraDice', safeAtk.extraDice.filter((_, j) => j !== di))
+                      } className="text-stone-300 hover:text-red-400 text-xs">✕</button>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -374,13 +399,14 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
             <div className="overflow-hidden">
               <div className="px-3 py-3 border-t border-stone-100 bg-stone-50/50 space-y-3">
 
-                {/* D20 + Perícia + Dado Habilidades */}
-                <div className="flex flex-wrap gap-3 items-end">
+                {/* D20 + Perícia + Habilidades + Buffs + Penalidade — tudo em linha */}
+                <div className="flex flex-wrap gap-2 items-end">
                   <div className="text-center">
                     <p className="text-[8px] text-stone-400 mb-0.5">Dado</p>
                     <div className="text-xs font-bold text-stone-600 bg-stone-100 rounded px-2 py-1">D20</div>
                   </div>
                   <span className="text-stone-300 text-xs">+</span>
+
                   <div className="text-center">
                     <p className="text-[8px] text-amber-500 mb-0.5">Perícia</p>
                     <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1.5">
@@ -399,60 +425,55 @@ function AttackCard({ atk, i, char, charEquipment, patchAttack, removeAttack }: 
                     </div>
                   </div>
                   <span className="text-stone-300 text-xs">+</span>
+
                   <div className="text-center">
                     <p className="text-[8px] text-stone-400 mb-0.5">Habilidades/Itens</p>
                     <DiceField value={safeAtk.hitBonusDie} onChange={v => patchAttack(i, 'hitBonusDie', v)} />
                   </div>
-                </div>
+                  <span className="text-stone-300 text-xs">+</span>
 
-                {/* Buffs fixos + temporários — amber box lado a lado */}
-                <div className="border border-amber-200 rounded-lg p-2 bg-amber-50/30">
-                  <div className="flex flex-wrap gap-3 items-end">
-                    <div>
-                      <p className="text-[7px] uppercase tracking-wider text-amber-500 font-semibold mb-1">Buffs Fixos</p>
-                      <div className="flex gap-2 items-end">
-                        <div className="text-center">
-                          <p className="text-[8px] text-stone-400 mb-0.5">Externos</p>
-                          {inp('hitTempBonus', 'number', 'w-8')}
-                        </div>
-                        <span className="text-stone-300 text-xs">+</span>
-                        <div className="text-center">
-                          <p className="text-[8px] text-stone-400 mb-0.5">Pessoais</p>
-                          {inp('hitPersonalBonus', 'number', 'w-8')}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="h-8 w-px bg-amber-200" />
-                    <div>
-                      <p className="text-[7px] uppercase tracking-wider text-amber-500 font-semibold mb-1">Buffs Temporários</p>
+                  <div className="text-center">
+                    <p className="text-[7px] uppercase tracking-wider text-amber-500 font-semibold mb-0.5">Buffs Fixos</p>
+                    <div className="flex gap-1 items-center">
                       <div className="text-center">
-                        <p className="text-[8px] text-stone-400 mb-0.5">Item/Habilidade</p>
-                        {inp('hitFixedBonus', 'number', 'w-8')}
+                        <p className="text-[8px] text-stone-400 mb-0.5">Externos</p>
+                        {inp('hitTempBonus', 'number', 'w-8')}
                       </div>
-                    </div>
-                    <div className="h-8 w-px bg-amber-200" />
-                    <div className="text-center">
-                      <p className="text-[8px] text-red-400 mb-0.5 font-semibold">Penalidade</p>
-                      <input
-                        type="number"
-                        value={safeAtk.hitPenalty}
-                        onChange={e => patchAttack(i, 'hitPenalty', parseInt(e.target.value) || 0)}
-                        className="bg-stone-50 border border-red-200 rounded px-1 py-0.5 text-xs text-center focus:outline-none focus:ring-1 focus:ring-tormenta-red w-8 bg-red-50 text-red-700"
-                      />
+                      <span className="text-stone-300 text-xs">+</span>
+                      <div className="text-center">
+                        <p className="text-[8px] text-stone-400 mb-0.5">Pessoais</p>
+                        {inp('hitPersonalBonus', 'number', 'w-8')}
+                      </div>
                     </div>
                   </div>
-                </div>
+                  <span className="text-stone-300 text-xs">+</span>
 
-                {/* Botão rolar */}
-                <div className="flex justify-end pt-1">
+                  <div className="text-center">
+                    <p className="text-[7px] uppercase tracking-wider text-amber-500 font-semibold mb-0.5">Buffs Temporários</p>
+                    <div className="text-center">
+                      <p className="text-[8px] text-stone-400 mb-0.5">Item/Habilidade</p>
+                      {inp('hitFixedBonus', 'number', 'w-8')}
+                    </div>
+                  </div>
+                  <span className="text-stone-300 text-xs">−</span>
+
+                  <div className="text-center">
+                    <p className="text-[8px] text-red-400 mb-0.5 font-semibold">Penalidade</p>
+                    <input
+                      type="number"
+                      value={safeAtk.hitPenalty}
+                      onChange={e => patchAttack(i, 'hitPenalty', parseInt(e.target.value) || 0)}
+                      className="bg-stone-50 border border-red-200 bg-red-50 rounded px-1 py-0.5 text-xs text-center text-red-700 focus:outline-none focus:ring-1 focus:ring-red-400 w-8"
+                    />
+                  </div>
+
                   <button
                     type="button"
                     disabled
-                    title="Em breve: rolagem automática"
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-100 text-stone-400 rounded-lg text-xs font-medium cursor-not-allowed opacity-60"
+                    title="Em breve"
+                    className="flex items-center gap-1 px-2 py-1 bg-stone-100 text-stone-400 rounded text-xs cursor-not-allowed opacity-60 self-end"
                   >
-                    <Dice6 size={14} />
-                    Rolar D20
+                    <Dice6 size={12} /> D20
                   </button>
                 </div>
 
