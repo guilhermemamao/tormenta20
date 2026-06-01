@@ -83,7 +83,10 @@ export default function CharactersListPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-3xl font-semibold text-tormenta-red">Minhas Fichas</h1>
+          <div className="flex items-center gap-3">
+            <img src="/icone-fichas.png" alt="" className="w-10 h-10 object-contain" />
+            <h1 className="font-display text-3xl font-semibold text-tormenta-red">Minhas Fichas</h1>
+          </div>
           <p className="text-stone-500 text-sm mt-1">Gerencie seus personagens</p>
         </div>
         <button

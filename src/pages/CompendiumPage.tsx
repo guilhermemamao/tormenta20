@@ -758,7 +758,10 @@ export default function CompendiumPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-6">
       <div className="mb-6">
-        <h1 className="font-display text-3xl font-semibold text-tormenta-red">Compêndio</h1>
+        <div className="flex items-center gap-3">
+          <img src="/icone-compendio.png" alt="" className="w-10 h-10 object-contain" />
+          <h1 className="font-display text-3xl font-semibold text-tormenta-red">Compêndio</h1>
+        </div>
         <p className="text-stone-400 text-sm mt-0.5">Referência completa de Tormenta20</p>
       </div>
 

@@ -279,6 +279,7 @@ export default function SpellsPage() {
   const [sort, setSort] = useState<SortBy>('circle')
   const [modalSpell, setModalSpell] = useState<Spell | null>(null)
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     supabase
@@ -425,73 +426,111 @@ export default function SpellsPage() {
   return (
     <div className="flex min-h-[calc(100vh-48px)]">
       {/* ── Sidebar ── */}
-      <aside className="w-56 shrink-0 border-r border-stone-200 bg-white p-4 overflow-y-auto">
-        <div className="relative mb-4">
-          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
-          <input
-            type="text"
-            placeholder="Buscar magia..."
-            value={filters.search}
-            onChange={e => setFilters(f => ({ ...f, search: e.target.value }))}
-            className="w-full pl-8 pr-3 py-1.5 text-sm border border-stone-200 rounded-lg bg-stone-50 focus:outline-none focus:ring-1 focus:ring-tormenta-red focus:border-tormenta-red"
-          />
-        </div>
-
-        {activeCount > 0 && (
-          <button
-            onClick={() => setFilters(EMPTY_FILTERS)}
-            className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark mb-4 transition-colors"
-          >
-            <X size={11} />
-            Limpar filtros ({activeCount})
-          </button>
-        )}
-
-        <FilterSection
-          title="Tipo"
-          tooltip="Magias Universais podem ser usadas tanto por conjuradores divinos quanto arcanos e aparecem nos dois filtros"
+      <>
+        {/* Botão flutuante para abrir filtros no mobile */}
+        <button
+          className="md:hidden fixed bottom-4 right-4 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-sm font-medium shadow-lg"
+          style={{ background: 'linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%)', border: '1px solid rgba(201,168,76,0.3)' }}
+          onClick={() => setSidebarOpen(true)}
         >
-          {SPELL_TYPES.map(t => (
-            <CheckboxItem
-              key={t} label={t} checked={filters.types.has(t)}
-              onChange={() => setFilters(f => ({ ...f, types: toggleSet(f.types, t) }))}
-            />
-          ))}
-        </FilterSection>
+          <Search size={15} />
+          Filtros {activeCount > 0 && `(${activeCount})`}
+        </button>
 
-        <FilterSection title="Escola">
-          {SPELL_SCHOOLS.map(s => (
-            <CheckboxItem
-              key={s} label={s} checked={filters.schools.has(s)}
-              onChange={() => setFilters(f => ({ ...f, schools: toggleSet(f.schools, s) }))}
-            />
-          ))}
-        </FilterSection>
-
-        <FilterSection title="Círculo">
-          {CIRCLES.map(c => (
-            <CheckboxItem
-              key={c} label={CIRCLE_LABEL[c - 1]} checked={filters.circles.has(c)}
-              onChange={() => setFilters(f => ({ ...f, circles: toggleSet(f.circles, c) }))}
-            />
-          ))}
-        </FilterSection>
-
-        {user && (
-          <FilterSection title="Favoritos">
-            <CheckboxItem
-              label="Mostrar apenas favoritas"
-              checked={filters.onlyFavorites}
-              onChange={() => setFilters(f => ({ ...f, onlyFavorites: !f.onlyFavorites }))}
-            />
-          </FilterSection>
+        {/* Overlay mobile */}
+        {sidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 z-40 bg-black/50"
+            onClick={() => setSidebarOpen(false)}
+          />
         )}
-      </aside>
+
+        {/* Sidebar — drawer no mobile, fixo no desktop */}
+        <aside className={`
+          fixed md:static inset-y-0 left-0 z-50 md:z-auto
+          w-72 md:w-56 shrink-0
+          border-r border-stone-200 bg-white p-4 overflow-y-auto
+          transition-transform duration-300 md:transform-none
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}>
+          {/* Botão fechar no mobile */}
+          <div className="flex items-center justify-between mb-4 md:hidden">
+            <span className="font-display text-sm font-semibold text-tormenta-red">Filtros</span>
+            <button onClick={() => setSidebarOpen(false)} className="text-stone-400 hover:text-stone-600">
+              <X size={18} />
+            </button>
+          </div>
+
+          <div className="relative mb-4">
+            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
+            <input
+              type="text"
+              placeholder="Buscar magia..."
+              value={filters.search}
+              onChange={e => setFilters(f => ({ ...f, search: e.target.value }))}
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-stone-200 rounded-lg bg-stone-50 focus:outline-none focus:ring-1 focus:ring-tormenta-red focus:border-tormenta-red"
+            />
+          </div>
+
+          {activeCount > 0 && (
+            <button
+              onClick={() => setFilters(EMPTY_FILTERS)}
+              className="flex items-center gap-1 text-xs text-tormenta-red hover:text-tormenta-red-dark mb-4 transition-colors"
+            >
+              <X size={11} />
+              Limpar filtros ({activeCount})
+            </button>
+          )}
+
+          <FilterSection
+            title="Tipo"
+            tooltip="Magias Universais podem ser usadas tanto por conjuradores divinos quanto arcanos e aparecem nos dois filtros"
+          >
+            {SPELL_TYPES.map(t => (
+              <CheckboxItem
+                key={t} label={t} checked={filters.types.has(t)}
+                onChange={() => setFilters(f => ({ ...f, types: toggleSet(f.types, t) }))}
+              />
+            ))}
+          </FilterSection>
+
+          <FilterSection title="Escola">
+            {SPELL_SCHOOLS.map(s => (
+              <CheckboxItem
+                key={s} label={s} checked={filters.schools.has(s)}
+                onChange={() => setFilters(f => ({ ...f, schools: toggleSet(f.schools, s) }))}
+              />
+            ))}
+          </FilterSection>
+
+          <FilterSection title="Círculo">
+            {CIRCLES.map(c => (
+              <CheckboxItem
+                key={c} label={CIRCLE_LABEL[c - 1]} checked={filters.circles.has(c)}
+                onChange={() => setFilters(f => ({ ...f, circles: toggleSet(f.circles, c) }))}
+              />
+            ))}
+          </FilterSection>
+
+          {user && (
+            <FilterSection title="Favoritos">
+              <CheckboxItem
+                label="Mostrar apenas favoritas"
+                checked={filters.onlyFavorites}
+                onChange={() => setFilters(f => ({ ...f, onlyFavorites: !f.onlyFavorites }))}
+              />
+            </FilterSection>
+          )}
+        </aside>
+      </>
 
       {/* ── Main area ── */}
-      <main className="flex-1 p-6 overflow-y-auto min-w-0">
+      <main className="flex-1 p-6 overflow-y-auto min-w-0 pb-20 md:pb-6">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-2xl font-semibold text-tormenta-red">Magias</h1>
+          <div className="flex items-center gap-3">
+            <img src="/icone-magias.png" alt="" className="w-12 h-12 object-contain" />
+            <h1 className="font-display text-2xl font-semibold text-tormenta-red">Magias</h1>
+          </div>
           <div className="flex items-center gap-4">
             {!loading && !error && (
               <span className="text-sm text-stone-400">

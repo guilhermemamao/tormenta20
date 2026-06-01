@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
 
 @theme {
   --color-tormenta-red: #8B1A1A;
@@ -9,11 +9,21 @@
   --color-tormenta-cream-dark: #E8E0D0;
   --color-tormenta-dark: #1A1A1A;
   --font-display: 'Cinzel', serif;
+  --color-tormenta-gold: #C9A84C;
+  --color-tormenta-gold-dark: #A8893A;
+  --color-tormenta-gold-light: #E8C96A;
+  --color-tormenta-dark: #0F0A0A;
+  --color-tormenta-dark-mid: #1C1010;
+  --color-tormenta-parchment: #F2ECD8;
+  --font-display-decorative: 'Cinzel Decorative', serif;
 }
 
 @layer base {
   body {
     @apply bg-stone-50 text-stone-900;
+    background-image:
+      radial-gradient(ellipse at top, rgba(139,26,26,0.04) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238B1A1A' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
   button:not(:disabled), a, label {
     cursor: pointer;
@@ -22,13 +32,28 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-tormenta-red text-white px-4 py-2 rounded-lg hover:bg-tormenta-red-dark transition-colors font-medium text-sm cursor-pointer;
+    @apply bg-tormenta-red text-white px-4 py-2 rounded-lg font-medium text-sm cursor-pointer transition-all;
+    background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(201,168,76,0.15);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #A52020 0%, #8B1A1A 100%);
+    box-shadow: 0 3px 8px rgba(139,26,26,0.4), inset 0 1px 0 rgba(201,168,76,0.2);
+  }
+  .btn-gold {
+    @apply px-4 py-2 rounded-lg font-medium text-sm cursor-pointer transition-all;
+    background: linear-gradient(135deg, #C9A84C 0%, #A8893A 100%);
+    color: #1C1010;
+    border: 1px solid rgba(201,168,76,0.5);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
   .btn-secondary {
     @apply border border-tormenta-red text-tormenta-red px-4 py-2 rounded-lg hover:bg-tormenta-red hover:text-white transition-colors font-medium text-sm cursor-pointer;
   }
   .card {
     @apply bg-white border border-stone-200 rounded-xl p-4 shadow-sm;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(139,26,26,0.04);
   }
   .tag-arcana {
     @apply text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-800;
